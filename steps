@@ -1,0 +1,39 @@
+-decidere linguaggio da usare c/java
+
+-decidere per cosa costruire compilatore (un linguaggio per formule fisiche ?) qualcosa di semplice senza incasinarci la vita
+
+-steps per lo sviluppo:
+
+1-lexical analyser: (LEX)
+
+ -scrivi lista di tutti i possibili token del linguaggio. (each token is encoded as an integer number.) + reserved keywords
+
+ -trova regex per tutti i token. (Le regex per le keywords devono essere inserite prima di quelle dei token)
+
+ -scrivi grammar (productions) del linguaggio (CFG /BNF) che poi verrà letta dal LALR parser di yacc(?)
+
+ -disambiguate grammar (multiple trees for same input) / scrivi disambiguating rules
+
+ -costruisci un automaton per ogni token.
+
+ -combina tutti gli automata in un singolo grande automaton aggiungendo un nuovo start state e collegando con un epsilon a tutti gli start states degli automata dei token.
+
+ -implementare con LEX (vedi lab in cui lo spiegava) risolvendo i conflitti (ordine delle regex / max lexeme length (Change the response to non-acceptance). Usa begin/forward per leggere l'input buffer o lo fa gia lex in automatico (?)
+
+A questo punto si ha la symbol table con le varie pair <token, attribute> da cui può partire il parser durante la syntax analysis (?)
+
+
+2-syntax analysis: (YACC che è bottom-up quindi vedi solo slides su bottom-up parsing
+
+ -error handler
+
+ -costruire parse tree per capire la struttura dell'input e per capire se appartiene al linguaggio (puo essere ricavata attraverso derivations)
+
+-costruire parsing table con goto/reduce/shift/action..  o lo fa già yacc in automatico(?)
+
+
+3-semantic analysis : vuoto totale
+
+
+Implementare stack per il predictive parser e una queue per l'input buffer o lo fa già yacc in automatico(?)
+
