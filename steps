@@ -6,7 +6,7 @@
 
 1-lexical analyser: (LEX)
 
- -scrivi lista di tutti i possibili token del linguaggio. (each token is encoded as an integer number.) + reserved keywords
+ -scrivi lista di tutti i possibili token del linguaggio + reserved keywords
 
  -trova regex per tutti i token. (Le regex per le keywords devono essere inserite prima di quelle dei token)
 
@@ -14,12 +14,8 @@
 
  -disambiguate grammar (multiple trees for same input) / scrivi disambiguating rules
 
- -costruisci un automaton per ogni token.
-
- -combina tutti gli automata in un singolo grande automaton aggiungendo un nuovo start state e collegando con un epsilon a tutti gli start states degli automata dei token.
-
- -implementare con LEX (vedi lab in cui lo spiegava) risolvendo i conflitti (ordine delle regex / max lexeme length (Change the response to non-acceptance). Usa begin/forward per leggere l'input buffer o lo fa gia lex in automatico (?)
-
+ -implementare con LEX (vedi lab in cui lo spiegava) risolvendo i conflitti (ordine delle regex).
+ 
 A questo punto si ha la symbol table con le varie pair <token, attribute> da cui può partire il parser durante la syntax analysis (?)
 
 
