@@ -1,35 +1,32 @@
--decidere linguaggio da usare c/java
-
 -decidere per cosa costruire compilatore (un linguaggio per formule fisiche ?) qualcosa di semplice senza incasinarci la vita
 
 -steps per lo sviluppo:
 
 1-lexical analyser: (LEX)
 
+ 
  -scrivi lista di tutti i possibili token del linguaggio + reserved keywords
+ 
+ -scrivi regular names/definitions dei regex e trova regex per tutti i token e le keywords. (Le regex per le keywords devono essere inserite prima di quelle dei token)
 
- -trova regex per tutti i token. (Le regex per le keywords devono essere inserite prima di quelle dei token)
-
- -scrivi grammar (productions) del linguaggio (CFG /BNF) che poi verrà letta dal LALR parser di yacc(?)
-
- -disambiguate grammar (multiple trees for same input) / scrivi disambiguating rules
-
- -implementare con LEX (vedi lab in cui lo spiegava) risolvendo i conflitti (ordine delle regex).
+ -implementare con LEX risolvendo i conflitti (ordine delle regex), aggiungi action per ogni token ( Typically an action returns a 
+ token that represents the matched string for subsequent use by the parser).
+ 
+ - all the automata and the control logic is automatically done by lex (conflicts solving: longest string matched,first regex matched precedence) 
+ 
+ -yylex(): calling this function will generate lex.yy.c file, this file contains all the automata and the control logic 
+ needed for the next phase (parsing).
  
 A questo punto si ha la symbol table con le varie pair <token, attribute> da cui può partire il parser durante la syntax analysis (?)
 
+2-syntax analysis e semantic analysis (YACC):
 
-2-syntax analysis: (YACC che è bottom-up quindi vedi solo slides su bottom-up parsing
-
- -error handler
+ -riscrivi lista dei tokens
+ -scrivi le productions/rules della grammatica BNF (context-free) del linguaggio
+ -gestisci shift/reduce conflicts
+ -chiama yyparse()
 
  -costruire parse tree per capire la struttura dell'input e per capire se appartiene al linguaggio (puo essere ricavata attraverso derivations)
 
 -costruire parsing table con goto/reduce/shift/action..  o lo fa già yacc in automatico(?)
-
-
-3-semantic analysis : vuoto totale
-
-
-Implementare stack per il predictive parser e una queue per l'input buffer o lo fa già yacc in automatico(?)
 
