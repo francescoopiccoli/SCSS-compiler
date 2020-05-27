@@ -1,0 +1,22 @@
+tokens in prolog:
+
+An atom is a general-purpose name with no inherent meaning. Examples of atoms include x, red, 'Taco', and 'some atom'.
+Numbers can be floats or integers.
+Variables are denoted by a string consisting of letters, numbers and underscore characters, and beginning with an upper-case letter or underscore. 
+A compound term is composed of an atom called a "functor" and a number of "arguments", which are again terms.
+Compound terms are ordinarily written as a functor followed by a comma-separated list of argument terms, which is contained in parentheses. 
+The number of arguments is called the term's arity. An atom can be regarded as a compound term with arity zero.
+An example of a compound term is person_friends(zelda,[tom,jim]).
+
+Special cases of compound terms:
+A List is an ordered collection of terms. It is denoted by square brackets with the terms separated by commas, 
+or in the case of the empty list, by []. For example, [1,2,3] or [red,green,blue].
+Strings: A sequence of characters surrounded by quotes is equivalent to either a list of (numeric) character codes, a list of characters (atoms of length 1), 
+or an atom depending on the value of the Prolog flag double_quotes. For example, "to be, or not to be".[15]
+
+"is"
+\+
+\=
+=
++*-\
+,
