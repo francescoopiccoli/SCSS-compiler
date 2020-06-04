@@ -1,4 +1,4 @@
-proj_name = imaginair
+proj_name = flc
 build_dir = build
 build_name = $(proj_name).out
 
@@ -37,9 +37,6 @@ run:
 
 clean:
 	@echo "Clean build directory..."
-    # delete content of entire build dir and eventually recreate dir
-	rm -rf ./$(build_dir)/*
-	mkdir -p $(build_dir)
 
 test:
 	$(build_dir)/$(proj_name).out test.in

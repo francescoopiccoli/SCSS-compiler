@@ -13,21 +13,15 @@ int lineno = 0;
 %}
 
 DIGIT       [0-9]
-INTEGER     {DIGIT}+
 NUM         {DIGIT}+(\.{DIGIT}+)? //teniamo anche i float?
 LETTER      [a-zA-Z]
 ID          {LETTER}({LETTER}|{DIGIT}|\-_)* 
-VAR         ${ID}
-COMMENT     (//.*\n)+
+COMMENT     \/\/.*\n
 %%
 
 [ \t\n]       { ; } // ignore whitespace
 {COMMENT}     { ; } // ignore comments of type "//"
-"/\*.*\*/"          {     char c; //penso che questa roba copi i commenti da mantenere
-                    do { c = input();
-                    } while (c != '\n');
-                    lineno++;
-              }     //  handle // style comments
+"/\*.*\*/"    ECHO  // report identically in new file
 
 
 {NUM}       {yylval.value = atof(yytext); 
@@ -42,8 +36,6 @@ COMMENT     (//.*\n)+
             yylval.symbol = s;
             return ID;
             }
-
-{VAR}       ...
 
 "+"         {return OP_PLUS;}   // operators 
 "-"         {return OP_MINUS;}

@@ -58,19 +58,31 @@
 // line and statement rules
 
 S
+    :
+    | ST S
+    |
+
+    ;
     
-    : STMT
+ST
+    :
+    | VARDECL
+    | CSSRULE
 
     ;
 
-STMT
-    
-    : € 
-    | (vardecl | cssrule)  STMT
+VARDECL
+    :
+    | NUM
 
     ;
 
-  .....
+CSSRULE
+    :
+    | NUM
+
+    ;
+
 %%
 #include "lex.yy.c"
 

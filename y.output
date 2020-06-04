@@ -1,0 +1,186 @@
+Terminale, die in Grammatik unbenutzt sind
+
+    LP
+    RP
+    SEMI
+    OP_ASSIGN
+    OP_EXP
+    ID
+    EXIT
+    RETURN
+    QUIT
+    OP_COMP
+    OP_MINUS
+    OP_PLUS
+    OP_MULT
+    OP_DIV
+    UMINUS
+    OP_I
+
+
+Regeln nutzlos im Parser wegen Konflikten
+
+    3 S: %empty
+
+    4 ST: %empty
+
+    7 VARDECL: %empty
+
+    9 CSSRULE: %empty
+   10        | NUM
+
+
+Zustand 0 Konflikte: 1 Schiebe/Reduziere, 6 Reduziere/Reduziere
+Zustand 1 Konflikte: 2 Reduziere/Reduziere
+Zustand 3 Konflikte: 1 Schiebe/Reduziere, 6 Reduziere/Reduziere
+
+
+Grammatik
+
+    0 $accept: S $end
+
+    1 S: %empty
+    2  | ST S
+    3  | %empty
+
+    4 ST: %empty
+    5   | VARDECL
+    6   | CSSRULE
+
+    7 VARDECL: %empty
+    8        | NUM
+
+    9 CSSRULE: %empty
+   10        | NUM
+
+
+Terminale und die Regeln, in denen sie verwendet werden
+
+    $end (0) 0
+    error (256)
+    LP (258)
+    RP (259)
+    NUM (260) 8 10
+    SEMI (261)
+    OP_ASSIGN (262)
+    OP_EXP (263)
+    ID (264)
+    EXIT (265)
+    RETURN (266)
+    QUIT (267)
+    OP_COMP (268)
+    OP_MINUS (269)
+    OP_PLUS (270)
+    OP_MULT (271)
+    OP_DIV (272)
+    UMINUS (273)
+    OP_I (274)
+
+
+Nicht-Terminal und die Regeln, in denen sie verwendet werden
+
+    $accept (20)
+        auf der linken Seite: 0
+    S (21)
+        auf der linken Seite: 1 2 3
+        auf der rechten Seite: 0 2
+    ST (22)
+        auf der linken Seite: 4 5 6
+        auf der rechten Seite: 2
+    VARDECL (23)
+        auf der linken Seite: 7 8
+        auf der rechten Seite: 5
+    CSSRULE (24)
+        auf der linken Seite: 9 10
+        auf der rechten Seite: 6
+
+
+Zustand 0
+
+    0 $accept: . S $end
+
+    NUM  schiebe und gehe zu Zustand 1 über
+
+    $end      reduziere mit Regel 1 (S)
+    $end      [reduziere mit Regel 3 (S)]
+    $end      [reduziere mit Regel 4 (ST)]
+    $end      [reduziere mit Regel 7 (VARDECL)]
+    $end      [reduziere mit Regel 9 (CSSRULE)]
+    NUM       [reduziere mit Regel 4 (ST)]
+    NUM       [reduziere mit Regel 7 (VARDECL)]
+    NUM       [reduziere mit Regel 9 (CSSRULE)]
+    $default  reduziere mit Regel 1 (S)
+
+    S        gehe zu Zustand 2 über
+    ST       gehe zu Zustand 3 über
+    VARDECL  gehe zu Zustand 4 über
+    CSSRULE  gehe zu Zustand 5 über
+
+
+Zustand 1
+
+    8 VARDECL: NUM .
+   10 CSSRULE: NUM .
+
+    $end      reduziere mit Regel 8 (VARDECL)
+    $end      [reduziere mit Regel 10 (CSSRULE)]
+    NUM       reduziere mit Regel 8 (VARDECL)
+    NUM       [reduziere mit Regel 10 (CSSRULE)]
+    $default  reduziere mit Regel 8 (VARDECL)
+
+
+Zustand 2
+
+    0 $accept: S . $end
+
+    $end  schiebe und gehe zu Zustand 6 über
+
+
+Zustand 3
+
+    2 S: ST . S
+
+    NUM  schiebe und gehe zu Zustand 1 über
+
+    $end      reduziere mit Regel 1 (S)
+    $end      [reduziere mit Regel 3 (S)]
+    $end      [reduziere mit Regel 4 (ST)]
+    $end      [reduziere mit Regel 7 (VARDECL)]
+    $end      [reduziere mit Regel 9 (CSSRULE)]
+    NUM       [reduziere mit Regel 4 (ST)]
+    NUM       [reduziere mit Regel 7 (VARDECL)]
+    NUM       [reduziere mit Regel 9 (CSSRULE)]
+    $default  reduziere mit Regel 1 (S)
+
+    S        gehe zu Zustand 7 über
+    ST       gehe zu Zustand 3 über
+    VARDECL  gehe zu Zustand 4 über
+    CSSRULE  gehe zu Zustand 5 über
+
+
+Zustand 4
+
+    5 ST: VARDECL .
+
+    $default  reduziere mit Regel 5 (ST)
+
+
+Zustand 5
+
+    6 ST: CSSRULE .
+
+    $default  reduziere mit Regel 6 (ST)
+
+
+Zustand 6
+
+    0 $accept: S $end .
+
+    $default  annehmen
+
+
+Zustand 7
+
+    2 S: ST S .
+
+    $default  reduziere mit Regel 2 (S)
