@@ -46,6 +46,17 @@
 %token            QUIT
 %token            OP_COMP
 
+%token            T_DOLLAR
+%token            T_SEMICOLON
+%token            T_COLON
+%token            T_PL
+%token            T_PR
+%token            T_OP
+%token            T_OM
+%token            T_OS
+%token            T_OD
+
+
 %left OP_MINUS OP_PLUS 
 %left OP_MULT OP_DIV 
 %right UMINUS OP_I
@@ -73,7 +84,7 @@ ST
 
 VARDECL
     :
-    | NUM
+    | T_DOLLAR NUM
 
     ;
 

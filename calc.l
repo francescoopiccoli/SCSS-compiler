@@ -15,8 +15,11 @@ int lineno = 0;
 DIGIT       [0-9]
 NUM         {DIGIT}+(\.{DIGIT}+)? //teniamo anche i float?
 LETTER      [a-zA-Z]
-ID          {LETTER}({LETTER}|{DIGIT}|\-_)* 
+ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-_)* 
 COMMENT     \/\/.*\n
+UNIT        %|px
+ATOM        black|red|white|blue|green
+PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited)?
 %%
 
 [ \t\n]       { ; } // ignore whitespace
