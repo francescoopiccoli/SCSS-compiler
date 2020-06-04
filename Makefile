@@ -8,7 +8,7 @@ all: clean .flex .yacc .gcc .cleanwd
 	
 
 run: 
-	$(build_dir)/$(proj_name).out 
+	$(build_dir)/$(proj_name)
 
 .flex:
 	@echo "Running flex..."
@@ -28,11 +28,10 @@ run:
 
 
 .cleanwd:
-	@echo "Cleanup working directory by moving files to build folder..."
 	mv y.* lex.yy.c ./$(build_dir)/
 
 clean:
-	@echo "Clean build directory..."
+	mkdir -p $(build_dir)
 
 test:
 	$(build_dir)/$(proj_name).out test.in
