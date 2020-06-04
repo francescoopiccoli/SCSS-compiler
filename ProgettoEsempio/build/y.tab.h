@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.6.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,10 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -40,36 +45,44 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    LP = 258,
-    RP = 259,
-    NUM = 260,
-    SEMI = 261,
-    OP_ASSIGN = 262,
-    OP_EXP = 263,
-    IF = 264,
-    THEN = 265,
-    ELSE = 266,
-    ID = 267,
-    EXIT = 268,
-    RETURN = 269,
-    QUIT = 270,
-    OP_COMP = 271,
-    VAR_TYPE = 272,
-    CMP_TYPE = 273,
-    OP_MINUS = 274,
-    OP_PLUS = 275,
-    OP_MULT = 276,
-    OP_DIV = 277,
-    UMINUS = 278,
-    OP_I = 279
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    LP = 258,                      /* LP  */
+    RP = 259,                      /* RP  */
+    NUM = 260,                     /* NUM  */
+    SEMI = 261,                    /* SEMI  */
+    OP_ASSIGN = 262,               /* OP_ASSIGN  */
+    OP_EXP = 263,                  /* OP_EXP  */
+    IF = 264,                      /* IF  */
+    THEN = 265,                    /* THEN  */
+    ELSE = 266,                    /* ELSE  */
+    ID = 267,                      /* ID  */
+    EXIT = 268,                    /* EXIT  */
+    RETURN = 269,                  /* RETURN  */
+    QUIT = 270,                    /* QUIT  */
+    OP_COMP = 271,                 /* OP_COMP  */
+    VAR_TYPE = 272,                /* VAR_TYPE  */
+    CMP_TYPE = 273,                /* CMP_TYPE  */
+    OP_MINUS = 274,                /* OP_MINUS  */
+    OP_PLUS = 275,                 /* OP_PLUS  */
+    OP_MULT = 276,                 /* OP_MULT  */
+    OP_DIV = 277,                  /* OP_DIV  */
+    UMINUS = 278,                  /* UMINUS  */
+    OP_I = 279                     /* OP_I  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
+/* Token kinds.  */
+#define YYEOF 0
+#define YYerror 256
+#define YYUNDEF 257
 #define LP 258
 #define RP 259
 #define NUM 260
@@ -95,10 +108,9 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 31 "calc.y" /* yacc.c:1915  */
+#line 31 "calc.y"
 
        char* lexeme;			// token text itself
        double value;			// value of an identifier of type NUM
@@ -107,9 +119,9 @@ union YYSTYPE
        enum var_type varType;
        
 
-#line 111 "y.tab.h" /* yacc.c:1915  */
-};
+#line 123 "y.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

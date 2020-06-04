@@ -1,15 +1,14 @@
 # todo: rivedere da zero
 
-PROJECT=flc
-BUILDDIR=build
-BUILDOUT=$(PROJECT).out
+proj_name=flc
+build_dir=build
 
 
 all: clean .flex .yacc .gcc .cleanwd
 	
 
 run: 
-	$(BUILDDIR)/$(PROJECT).out 
+	$(build_dir)/$(proj_name).out 
 
 .flex:
 	@echo "Running flex..."
@@ -25,17 +24,17 @@ run:
 .gcc:
 	@echo "Compiling with GNU compiler..."
     #the - in front of command forces make to continue even with errors
-	gcc y.tab.c -ly -ll -ggdb -o $(BUILDDIR)/$(build_name) 
+	gcc y.tab.c -ly -ggdb -o $(build_dir)/$(proj_name) 
 
 
 .cleanwd:
 	@echo "Cleanup working directory by moving files to build folder..."
-	mv y.* lex.yy.c ./$(BUILDDIR)/
+	mv y.* lex.yy.c ./$(build_dir)/
 
 clean:
 	@echo "Clean build directory..."
 
 test:
-	$(BUILDDIR)/$(PROJECT).out test.in
+	$(build_dir)/$(proj_name).out test.in
 
 

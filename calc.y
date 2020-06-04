@@ -51,6 +51,8 @@
 %token            UNIT
 %token            ATOM
 %token            INHERIT
+%token            PSEUDO
+
 
 %token            T_DOLLAR
 %token            T_SEMICOLON
@@ -58,10 +60,12 @@
 %token            T_DOT
 %token            T_COMMA
 %token            T_HASH
+%token            T_PERCENT
+%token            T_PX
 %token            T_PL
 %token            T_PR
-%token            T_PCL
-%token            T_PCR
+%token            T_CBL
+%token            T_CBR
 %token            T_OP
 %token            T_OM
 %token            T_OS
@@ -75,6 +79,7 @@
 %start S
 
 // here we define the grammar
+
 %%
 
 // line and statement rules
@@ -122,7 +127,7 @@ PARAMS
   ;
 
 CSSRULE
-  : SELECTORS T_PCL DECLS T_PCR
+  : SELECTORS T_CBL DECLS T_CBR
   ;
 
 SELECTORS
@@ -138,7 +143,9 @@ SELECTOR
 
 PSEUDOCLASS
   :
+  | PSEUDO
   ;
+  
 DECLS
   :
   | DECL DECLS
@@ -150,6 +157,7 @@ DECL
   | VARDECL
 
 %%
+
 #include "lex.yy.c"
 
 int main(int argc, char *argv[]) 
@@ -177,3 +185,10 @@ int main(int argc, char *argv[])
       }
 }
 
+int yyerror (char const *message)
+{
+  return fprintf (stderr, "%s\n", message);
+  fputs (message, stderr);
+  fputc ('\n', stderr);
+  return 0;
+}

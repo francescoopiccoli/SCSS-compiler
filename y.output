@@ -1,4 +1,4 @@
-Terminals unused in grammar
+Terminale, die in Grammatik unbenutzt sind
 
     LP
     RP
@@ -11,6 +11,8 @@ Terminals unused in grammar
     RETURN
     QUIT
     OP_COMP
+    T_PERCENT
+    T_PX
     OP_MINUS
     OP_PLUS
     OP_MULT
@@ -19,7 +21,7 @@ Terminals unused in grammar
     OP_I
 
 
-Rules useless in parser due to conflicts
+Regeln nutzlos im Parser wegen Konflikten
 
    18 P: %empty
 
@@ -27,28 +29,28 @@ Rules useless in parser due to conflicts
 
    24 SELECTORS: %empty
 
-   30 DECLS: %empty
+   31 DECLS: %empty
 
 
-State 0 conflicts: 1 shift/reduce, 3 reduce/reduce
-State 3 conflicts: 1 shift/reduce, 3 reduce/reduce
-State 5 conflicts: 5 shift/reduce
-State 16 conflicts: 4 shift/reduce
-State 19 conflicts: 2 shift/reduce, 3 reduce/reduce
-State 20 conflicts: 1 reduce/reduce
-State 23 conflicts: 5 shift/reduce
-State 24 conflicts: 5 shift/reduce
-State 25 conflicts: 5 shift/reduce
-State 26 conflicts: 5 shift/reduce
-State 35 conflicts: 2 shift/reduce, 3 reduce/reduce
-State 36 conflicts: 1 reduce/reduce
-State 39 conflicts: 4 shift/reduce
-State 40 conflicts: 4 shift/reduce
-State 41 conflicts: 4 shift/reduce
-State 42 conflicts: 4 shift/reduce
+Zustand 0 Konflikte: 1 Schiebe/Reduziere, 3 Reduziere/Reduziere
+Zustand 3 Konflikte: 1 Schiebe/Reduziere, 3 Reduziere/Reduziere
+Zustand 5 Konflikte: 5 Schiebe/Reduziere
+Zustand 16 Konflikte: 4 Schiebe/Reduziere
+Zustand 19 Konflikte: 2 Schiebe/Reduziere, 3 Reduziere/Reduziere
+Zustand 20 Konflikte: 1 Reduziere/Reduziere
+Zustand 23 Konflikte: 5 Schiebe/Reduziere
+Zustand 24 Konflikte: 5 Schiebe/Reduziere
+Zustand 25 Konflikte: 5 Schiebe/Reduziere
+Zustand 26 Konflikte: 5 Schiebe/Reduziere
+Zustand 35 Konflikte: 2 Schiebe/Reduziere, 3 Reduziere/Reduziere
+Zustand 36 Konflikte: 1 Reduziere/Reduziere
+Zustand 39 Konflikte: 4 Schiebe/Reduziere
+Zustand 40 Konflikte: 4 Schiebe/Reduziere
+Zustand 41 Konflikte: 4 Schiebe/Reduziere
+Zustand 42 Konflikte: 4 Schiebe/Reduziere
 
 
-Grammar
+Grammatik
 
     0 $accept: S $end
 
@@ -82,7 +84,7 @@ Grammar
    21 PARAMS: %empty
    22       | T_COMMA EXPR
 
-   23 CSSRULE: SELECTORS T_PCL DECLS T_PCR
+   23 CSSRULE: SELECTORS T_CBL DECLS T_CBR
 
    24 SELECTORS: %empty
    25          | SELECTORS INHERIT SELECTOR PSEUDOCLASS
@@ -92,16 +94,17 @@ Grammar
    28         | T_DOT IDENTIFIER
 
    29 PSEUDOCLASS: %empty
+   30            | PSEUDO
 
-   30 DECLS: %empty
-   31      | DECL DECLS
+   31 DECLS: %empty
+   32      | DECL DECLS
 
-   32 DECL: IDENTIFIER T_COLON EXPR T_SEMICOLON
-   33     | CSSRULE
-   34     | VARDECL
+   33 DECL: IDENTIFIER T_COLON EXPR T_SEMICOLON
+   34     | CSSRULE
+   35     | VARDECL
 
 
-Terminals, with rules where they appear
+Terminale und die Regeln, in denen sie verwendet werden
 
     $end (0) 0
     error (256)
@@ -116,253 +119,256 @@ Terminals, with rules where they appear
     RETURN (266)
     QUIT (267)
     OP_COMP (268)
-    IDENTIFIER (269) 7 17 26 27 28 32
+    IDENTIFIER (269) 7 17 26 27 28 33
     NUMBER (270) 9
     UNIT (271) 9
     ATOM (272) 10
     INHERIT (273) 25
-    T_DOLLAR (274) 7
-    T_SEMICOLON (275) 32
-    T_COLON (276) 32
-    T_DOT (277) 28
-    T_COMMA (278) 22
-    T_HASH (279) 27
-    T_PL (280) 12 17
-    T_PR (281) 12 17
-    T_PCL (282) 23
-    T_PCR (283) 23
-    T_OP (284) 13
-    T_OM (285) 14
-    T_OS (286) 15
-    T_OD (287) 16
-    OP_MINUS (288)
-    OP_PLUS (289)
-    OP_MULT (290)
-    OP_DIV (291)
-    UMINUS (292)
-    OP_I (293)
+    PSEUDO (274) 30
+    T_DOLLAR (275) 7
+    T_SEMICOLON (276) 33
+    T_COLON (277) 33
+    T_DOT (278) 28
+    T_COMMA (279) 22
+    T_HASH (280) 27
+    T_PERCENT (281)
+    T_PX (282)
+    T_PL (283) 12 17
+    T_PR (284) 12 17
+    T_CBL (285) 23
+    T_CBR (286) 23
+    T_OP (287) 13
+    T_OM (288) 14
+    T_OS (289) 15
+    T_OD (290) 16
+    OP_MINUS (291)
+    OP_PLUS (292)
+    OP_MULT (293)
+    OP_DIV (294)
+    UMINUS (295)
+    OP_I (296)
 
 
-Nonterminals, with rules where they appear
+Nicht-Terminal und die Regeln, in denen sie verwendet werden
 
-    $accept (39)
-        on left: 0
-    S (40)
-        on left: 1 2
-        on right: 0 2
-    ST (41)
-        on left: 3 4
-        on right: 2
-    VARDECL (42)
-        on left: 5
-        on right: 3 34
-    VAR (43)
-        on left: 6 7
-        on right: 5 8
-    EXPR (44)
-        on left: 8 9 10 11 12 13 14 15 16
-        on right: 5 12 13 14 15 16 19 20 22 32
-    FNCALL (45)
-        on left: 17
-        on right: 11
-    P (46)
-        on left: 18 19 20
-        on right: 17
-    PARAMS (47)
-        on left: 21 22
-        on right: 20
-    CSSRULE (48)
-        on left: 23
-        on right: 4 33
-    SELECTORS (49)
-        on left: 24 25
-        on right: 23 25
-    SELECTOR (50)
-        on left: 26 27 28
-        on right: 25
-    PSEUDOCLASS (51)
-        on left: 29
-        on right: 25
-    DECLS (52)
-        on left: 30 31
-        on right: 23 31
-    DECL (53)
-        on left: 32 33 34
-        on right: 31
+    $accept (42)
+        auf der linken Seite: 0
+    S (43)
+        auf der linken Seite: 1 2
+        auf der rechten Seite: 0 2
+    ST (44)
+        auf der linken Seite: 3 4
+        auf der rechten Seite: 2
+    VARDECL (45)
+        auf der linken Seite: 5
+        auf der rechten Seite: 3 35
+    VAR (46)
+        auf der linken Seite: 6 7
+        auf der rechten Seite: 5 8
+    EXPR (47)
+        auf der linken Seite: 8 9 10 11 12 13 14 15 16
+        auf der rechten Seite: 5 12 13 14 15 16 19 20 22 33
+    FNCALL (48)
+        auf der linken Seite: 17
+        auf der rechten Seite: 11
+    P (49)
+        auf der linken Seite: 18 19 20
+        auf der rechten Seite: 17
+    PARAMS (50)
+        auf der linken Seite: 21 22
+        auf der rechten Seite: 20
+    CSSRULE (51)
+        auf der linken Seite: 23
+        auf der rechten Seite: 4 34
+    SELECTORS (52)
+        auf der linken Seite: 24 25
+        auf der rechten Seite: 23 25
+    SELECTOR (53)
+        auf der linken Seite: 26 27 28
+        auf der rechten Seite: 25
+    PSEUDOCLASS (54)
+        auf der linken Seite: 29 30
+        auf der rechten Seite: 25
+    DECLS (55)
+        auf der linken Seite: 31 32
+        auf der rechten Seite: 23 32
+    DECL (56)
+        auf der linken Seite: 33 34 35
+        auf der rechten Seite: 32
 
 
-State 0
+Zustand 0
 
     0 $accept: . S $end
 
-    T_DOLLAR  shift, and go to state 1
+    T_DOLLAR  schiebe und gehe zu Zustand 1 über
 
-    $end      reduce using rule 1 (S)
-    $end      [reduce using rule 6 (VAR)]
-    INHERIT   reduce using rule 6 (VAR)
-    INHERIT   [reduce using rule 24 (SELECTORS)]
-    T_DOLLAR  [reduce using rule 6 (VAR)]
-    T_PCL     reduce using rule 6 (VAR)
-    T_PCL     [reduce using rule 24 (SELECTORS)]
-    $default  reduce using rule 6 (VAR)
+    $end      reduziere mit Regel 1 (S)
+    $end      [reduziere mit Regel 6 (VAR)]
+    INHERIT   reduziere mit Regel 6 (VAR)
+    INHERIT   [reduziere mit Regel 24 (SELECTORS)]
+    T_DOLLAR  [reduziere mit Regel 6 (VAR)]
+    T_CBL     reduziere mit Regel 6 (VAR)
+    T_CBL     [reduziere mit Regel 24 (SELECTORS)]
+    $default  reduziere mit Regel 6 (VAR)
 
-    S          go to state 2
-    ST         go to state 3
-    VARDECL    go to state 4
-    VAR        go to state 5
-    CSSRULE    go to state 6
-    SELECTORS  go to state 7
+    S          gehe zu Zustand 2 über
+    ST         gehe zu Zustand 3 über
+    VARDECL    gehe zu Zustand 4 über
+    VAR        gehe zu Zustand 5 über
+    CSSRULE    gehe zu Zustand 6 über
+    SELECTORS  gehe zu Zustand 7 über
 
 
-State 1
+Zustand 1
 
     7 VAR: T_DOLLAR . IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 8
+    IDENTIFIER  schiebe und gehe zu Zustand 8 über
 
 
-State 2
+Zustand 2
 
     0 $accept: S . $end
 
-    $end  shift, and go to state 9
+    $end  schiebe und gehe zu Zustand 9 über
 
 
-State 3
+Zustand 3
 
     2 S: ST . S
 
-    T_DOLLAR  shift, and go to state 1
+    T_DOLLAR  schiebe und gehe zu Zustand 1 über
 
-    $end      reduce using rule 1 (S)
-    $end      [reduce using rule 6 (VAR)]
-    INHERIT   reduce using rule 6 (VAR)
-    INHERIT   [reduce using rule 24 (SELECTORS)]
-    T_DOLLAR  [reduce using rule 6 (VAR)]
-    T_PCL     reduce using rule 6 (VAR)
-    T_PCL     [reduce using rule 24 (SELECTORS)]
-    $default  reduce using rule 6 (VAR)
+    $end      reduziere mit Regel 1 (S)
+    $end      [reduziere mit Regel 6 (VAR)]
+    INHERIT   reduziere mit Regel 6 (VAR)
+    INHERIT   [reduziere mit Regel 24 (SELECTORS)]
+    T_DOLLAR  [reduziere mit Regel 6 (VAR)]
+    T_CBL     reduziere mit Regel 6 (VAR)
+    T_CBL     [reduziere mit Regel 24 (SELECTORS)]
+    $default  reduziere mit Regel 6 (VAR)
 
-    S          go to state 10
-    ST         go to state 3
-    VARDECL    go to state 4
-    VAR        go to state 5
-    CSSRULE    go to state 6
-    SELECTORS  go to state 7
+    S          gehe zu Zustand 10 über
+    ST         gehe zu Zustand 3 über
+    VARDECL    gehe zu Zustand 4 über
+    VAR        gehe zu Zustand 5 über
+    CSSRULE    gehe zu Zustand 6 über
+    SELECTORS  gehe zu Zustand 7 über
 
 
-State 4
+Zustand 4
 
     3 ST: VARDECL .
 
-    $default  reduce using rule 3 (ST)
+    $default  reduziere mit Regel 3 (ST)
 
 
-State 5
+Zustand 5
 
     5 VARDECL: VAR . EXPR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    NUMBER      [reduce using rule 6 (VAR)]
-    ATOM        [reduce using rule 6 (VAR)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PL        [reduce using rule 6 (VAR)]
-    $default    reduce using rule 6 (VAR)
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    NUMBER      [reduziere mit Regel 6 (VAR)]
+    ATOM        [reduziere mit Regel 6 (VAR)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_PL        [reduziere mit Regel 6 (VAR)]
+    $default    reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 16
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 16 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 6
+Zustand 6
 
     4 ST: CSSRULE .
 
-    $default  reduce using rule 4 (ST)
+    $default  reduziere mit Regel 4 (ST)
 
 
-State 7
+Zustand 7
 
-   23 CSSRULE: SELECTORS . T_PCL DECLS T_PCR
+   23 CSSRULE: SELECTORS . T_CBL DECLS T_CBR
    25 SELECTORS: SELECTORS . INHERIT SELECTOR PSEUDOCLASS
 
-    INHERIT  shift, and go to state 18
-    T_PCL    shift, and go to state 19
+    INHERIT  schiebe und gehe zu Zustand 18 über
+    T_CBL    schiebe und gehe zu Zustand 19 über
 
 
-State 8
+Zustand 8
 
     7 VAR: T_DOLLAR IDENTIFIER .
 
-    $default  reduce using rule 7 (VAR)
+    $default  reduziere mit Regel 7 (VAR)
 
 
-State 9
+Zustand 9
 
     0 $accept: S $end .
 
-    $default  accept
+    $default  annehmen
 
 
-State 10
+Zustand 10
 
     2 S: ST S .
 
-    $default  reduce using rule 2 (S)
+    $default  reduziere mit Regel 2 (S)
 
 
-State 11
+Zustand 11
 
    17 FNCALL: IDENTIFIER . T_PL P T_PR
 
-    T_PL  shift, and go to state 20
+    T_PL  schiebe und gehe zu Zustand 20 über
 
 
-State 12
+Zustand 12
 
     9 EXPR: NUMBER . UNIT
 
-    UNIT  shift, and go to state 21
+    UNIT  schiebe und gehe zu Zustand 21 über
 
 
-State 13
+Zustand 13
 
    10 EXPR: ATOM .
 
-    $default  reduce using rule 10 (EXPR)
+    $default  reduziere mit Regel 10 (EXPR)
 
 
-State 14
+Zustand 14
 
    12 EXPR: T_PL . EXPR T_PR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    $default  reduce using rule 6 (VAR)
+    $default  reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 22
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 22 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 15
+Zustand 15
 
     8 EXPR: VAR .
 
-    $default  reduce using rule 8 (EXPR)
+    $default  reduziere mit Regel 8 (EXPR)
 
 
-State 16
+Zustand 16
 
     5 VARDECL: VAR EXPR .
    13 EXPR: EXPR . T_OP EXPR
@@ -370,89 +376,89 @@ State 16
    15     | EXPR . T_OS EXPR
    16     | EXPR . T_OD EXPR
 
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
-    T_OP      [reduce using rule 5 (VARDECL)]
-    T_OM      [reduce using rule 5 (VARDECL)]
-    T_OS      [reduce using rule 5 (VARDECL)]
-    T_OD      [reduce using rule 5 (VARDECL)]
-    $default  reduce using rule 5 (VARDECL)
+    T_OP      [reduziere mit Regel 5 (VARDECL)]
+    T_OM      [reduziere mit Regel 5 (VARDECL)]
+    T_OS      [reduziere mit Regel 5 (VARDECL)]
+    T_OD      [reduziere mit Regel 5 (VARDECL)]
+    $default  reduziere mit Regel 5 (VARDECL)
 
 
-State 17
+Zustand 17
 
    11 EXPR: FNCALL .
 
-    $default  reduce using rule 11 (EXPR)
+    $default  reduziere mit Regel 11 (EXPR)
 
 
-State 18
+Zustand 18
 
    25 SELECTORS: SELECTORS INHERIT . SELECTOR PSEUDOCLASS
 
-    IDENTIFIER  shift, and go to state 27
-    T_DOT       shift, and go to state 28
-    T_HASH      shift, and go to state 29
+    IDENTIFIER  schiebe und gehe zu Zustand 27 über
+    T_DOT       schiebe und gehe zu Zustand 28 über
+    T_HASH      schiebe und gehe zu Zustand 29 über
 
-    SELECTOR  go to state 30
-
-
-State 19
-
-   23 CSSRULE: SELECTORS T_PCL . DECLS T_PCR
-
-    IDENTIFIER  shift, and go to state 31
-    T_DOLLAR    shift, and go to state 1
-
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    INHERIT     reduce using rule 6 (VAR)
-    INHERIT     [reduce using rule 24 (SELECTORS)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PCL       reduce using rule 6 (VAR)
-    T_PCL       [reduce using rule 24 (SELECTORS)]
-    T_PCR       reduce using rule 6 (VAR)
-    T_PCR       [reduce using rule 30 (DECLS)]
-    $default    reduce using rule 6 (VAR)
-
-    VARDECL    go to state 32
-    VAR        go to state 5
-    CSSRULE    go to state 33
-    SELECTORS  go to state 7
-    DECLS      go to state 34
-    DECL       go to state 35
+    SELECTOR  gehe zu Zustand 30 über
 
 
-State 20
+Zustand 19
+
+   23 CSSRULE: SELECTORS T_CBL . DECLS T_CBR
+
+    IDENTIFIER  schiebe und gehe zu Zustand 31 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    INHERIT     reduziere mit Regel 6 (VAR)
+    INHERIT     [reduziere mit Regel 24 (SELECTORS)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_CBL       reduziere mit Regel 6 (VAR)
+    T_CBL       [reduziere mit Regel 24 (SELECTORS)]
+    T_CBR       reduziere mit Regel 6 (VAR)
+    T_CBR       [reduziere mit Regel 31 (DECLS)]
+    $default    reduziere mit Regel 6 (VAR)
+
+    VARDECL    gehe zu Zustand 32 über
+    VAR        gehe zu Zustand 5 über
+    CSSRULE    gehe zu Zustand 33 über
+    SELECTORS  gehe zu Zustand 7 über
+    DECLS      gehe zu Zustand 34 über
+    DECL       gehe zu Zustand 35 über
+
+
+Zustand 20
 
    17 FNCALL: IDENTIFIER T_PL . P T_PR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    T_PR      reduce using rule 6 (VAR)
-    T_PR      [reduce using rule 18 (P)]
-    $default  reduce using rule 6 (VAR)
+    T_PR      reduziere mit Regel 6 (VAR)
+    T_PR      [reduziere mit Regel 18 (P)]
+    $default  reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 36
-    FNCALL  go to state 17
-    P       go to state 37
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 36 über
+    FNCALL  gehe zu Zustand 17 über
+    P       gehe zu Zustand 37 über
 
 
-State 21
+Zustand 21
 
     9 EXPR: NUMBER UNIT .
 
-    $default  reduce using rule 9 (EXPR)
+    $default  reduziere mit Regel 9 (EXPR)
 
 
-State 22
+Zustand 22
 
    12 EXPR: T_PL EXPR . T_PR
    13     | EXPR . T_OP EXPR
@@ -460,185 +466,187 @@ State 22
    15     | EXPR . T_OS EXPR
    16     | EXPR . T_OD EXPR
 
-    T_PR  shift, and go to state 38
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_PR  schiebe und gehe zu Zustand 38 über
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
 
-State 23
+Zustand 23
 
    13 EXPR: EXPR T_OP . EXPR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    NUMBER      [reduce using rule 6 (VAR)]
-    ATOM        [reduce using rule 6 (VAR)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PL        [reduce using rule 6 (VAR)]
-    $default    reduce using rule 6 (VAR)
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    NUMBER      [reduziere mit Regel 6 (VAR)]
+    ATOM        [reduziere mit Regel 6 (VAR)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_PL        [reduziere mit Regel 6 (VAR)]
+    $default    reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 39
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 39 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 24
+Zustand 24
 
    14 EXPR: EXPR T_OM . EXPR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    NUMBER      [reduce using rule 6 (VAR)]
-    ATOM        [reduce using rule 6 (VAR)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PL        [reduce using rule 6 (VAR)]
-    $default    reduce using rule 6 (VAR)
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    NUMBER      [reduziere mit Regel 6 (VAR)]
+    ATOM        [reduziere mit Regel 6 (VAR)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_PL        [reduziere mit Regel 6 (VAR)]
+    $default    reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 40
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 40 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 25
+Zustand 25
 
    15 EXPR: EXPR T_OS . EXPR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    NUMBER      [reduce using rule 6 (VAR)]
-    ATOM        [reduce using rule 6 (VAR)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PL        [reduce using rule 6 (VAR)]
-    $default    reduce using rule 6 (VAR)
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    NUMBER      [reduziere mit Regel 6 (VAR)]
+    ATOM        [reduziere mit Regel 6 (VAR)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_PL        [reduziere mit Regel 6 (VAR)]
+    $default    reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 41
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 41 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 26
+Zustand 26
 
    16 EXPR: EXPR T_OD . EXPR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    NUMBER      [reduce using rule 6 (VAR)]
-    ATOM        [reduce using rule 6 (VAR)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PL        [reduce using rule 6 (VAR)]
-    $default    reduce using rule 6 (VAR)
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    NUMBER      [reduziere mit Regel 6 (VAR)]
+    ATOM        [reduziere mit Regel 6 (VAR)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_PL        [reduziere mit Regel 6 (VAR)]
+    $default    reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 42
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 42 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 27
+Zustand 27
 
    26 SELECTOR: IDENTIFIER .
 
-    $default  reduce using rule 26 (SELECTOR)
+    $default  reduziere mit Regel 26 (SELECTOR)
 
 
-State 28
+Zustand 28
 
    28 SELECTOR: T_DOT . IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 43
+    IDENTIFIER  schiebe und gehe zu Zustand 43 über
 
 
-State 29
+Zustand 29
 
    27 SELECTOR: T_HASH . IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 44
+    IDENTIFIER  schiebe und gehe zu Zustand 44 über
 
 
-State 30
+Zustand 30
 
    25 SELECTORS: SELECTORS INHERIT SELECTOR . PSEUDOCLASS
 
-    $default  reduce using rule 29 (PSEUDOCLASS)
+    PSEUDO  schiebe und gehe zu Zustand 45 über
 
-    PSEUDOCLASS  go to state 45
+    $default  reduziere mit Regel 29 (PSEUDOCLASS)
 
-
-State 31
-
-   32 DECL: IDENTIFIER . T_COLON EXPR T_SEMICOLON
-
-    T_COLON  shift, and go to state 46
+    PSEUDOCLASS  gehe zu Zustand 46 über
 
 
-State 32
+Zustand 31
 
-   34 DECL: VARDECL .
+   33 DECL: IDENTIFIER . T_COLON EXPR T_SEMICOLON
 
-    $default  reduce using rule 34 (DECL)
-
-
-State 33
-
-   33 DECL: CSSRULE .
-
-    $default  reduce using rule 33 (DECL)
+    T_COLON  schiebe und gehe zu Zustand 47 über
 
 
-State 34
+Zustand 32
 
-   23 CSSRULE: SELECTORS T_PCL DECLS . T_PCR
+   35 DECL: VARDECL .
 
-    T_PCR  shift, and go to state 47
-
-
-State 35
-
-   31 DECLS: DECL . DECLS
-
-    IDENTIFIER  shift, and go to state 31
-    T_DOLLAR    shift, and go to state 1
-
-    IDENTIFIER  [reduce using rule 6 (VAR)]
-    INHERIT     reduce using rule 6 (VAR)
-    INHERIT     [reduce using rule 24 (SELECTORS)]
-    T_DOLLAR    [reduce using rule 6 (VAR)]
-    T_PCL       reduce using rule 6 (VAR)
-    T_PCL       [reduce using rule 24 (SELECTORS)]
-    T_PCR       reduce using rule 6 (VAR)
-    T_PCR       [reduce using rule 30 (DECLS)]
-    $default    reduce using rule 6 (VAR)
-
-    VARDECL    go to state 32
-    VAR        go to state 5
-    CSSRULE    go to state 33
-    SELECTORS  go to state 7
-    DECLS      go to state 48
-    DECL       go to state 35
+    $default  reduziere mit Regel 35 (DECL)
 
 
-State 36
+Zustand 33
+
+   34 DECL: CSSRULE .
+
+    $default  reduziere mit Regel 34 (DECL)
+
+
+Zustand 34
+
+   23 CSSRULE: SELECTORS T_CBL DECLS . T_CBR
+
+    T_CBR  schiebe und gehe zu Zustand 48 über
+
+
+Zustand 35
+
+   32 DECLS: DECL . DECLS
+
+    IDENTIFIER  schiebe und gehe zu Zustand 31 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+
+    IDENTIFIER  [reduziere mit Regel 6 (VAR)]
+    INHERIT     reduziere mit Regel 6 (VAR)
+    INHERIT     [reduziere mit Regel 24 (SELECTORS)]
+    T_DOLLAR    [reduziere mit Regel 6 (VAR)]
+    T_CBL       reduziere mit Regel 6 (VAR)
+    T_CBL       [reduziere mit Regel 24 (SELECTORS)]
+    T_CBR       reduziere mit Regel 6 (VAR)
+    T_CBR       [reduziere mit Regel 31 (DECLS)]
+    $default    reduziere mit Regel 6 (VAR)
+
+    VARDECL    gehe zu Zustand 32 über
+    VAR        gehe zu Zustand 5 über
+    CSSRULE    gehe zu Zustand 33 über
+    SELECTORS  gehe zu Zustand 7 über
+    DECLS      gehe zu Zustand 49 über
+    DECL       gehe zu Zustand 35 über
+
+
+Zustand 36
 
    13 EXPR: EXPR . T_OP EXPR
    14     | EXPR . T_OM EXPR
@@ -647,34 +655,34 @@ State 36
    19 P: EXPR .
    20  | EXPR . PARAMS
 
-    T_COMMA  shift, and go to state 49
-    T_OP     shift, and go to state 23
-    T_OM     shift, and go to state 24
-    T_OS     shift, and go to state 25
-    T_OD     shift, and go to state 26
+    T_COMMA  schiebe und gehe zu Zustand 50 über
+    T_OP     schiebe und gehe zu Zustand 23 über
+    T_OM     schiebe und gehe zu Zustand 24 über
+    T_OS     schiebe und gehe zu Zustand 25 über
+    T_OD     schiebe und gehe zu Zustand 26 über
 
-    T_PR      reduce using rule 19 (P)
-    T_PR      [reduce using rule 21 (PARAMS)]
-    $default  reduce using rule 19 (P)
+    T_PR      reduziere mit Regel 19 (P)
+    T_PR      [reduziere mit Regel 21 (PARAMS)]
+    $default  reduziere mit Regel 19 (P)
 
-    PARAMS  go to state 50
+    PARAMS  gehe zu Zustand 51 über
 
 
-State 37
+Zustand 37
 
    17 FNCALL: IDENTIFIER T_PL P . T_PR
 
-    T_PR  shift, and go to state 51
+    T_PR  schiebe und gehe zu Zustand 52 über
 
 
-State 38
+Zustand 38
 
    12 EXPR: T_PL EXPR T_PR .
 
-    $default  reduce using rule 12 (EXPR)
+    $default  reduziere mit Regel 12 (EXPR)
 
 
-State 39
+Zustand 39
 
    13 EXPR: EXPR . T_OP EXPR
    13     | EXPR T_OP EXPR .
@@ -682,19 +690,19 @@ State 39
    15     | EXPR . T_OS EXPR
    16     | EXPR . T_OD EXPR
 
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
-    T_OP      [reduce using rule 13 (EXPR)]
-    T_OM      [reduce using rule 13 (EXPR)]
-    T_OS      [reduce using rule 13 (EXPR)]
-    T_OD      [reduce using rule 13 (EXPR)]
-    $default  reduce using rule 13 (EXPR)
+    T_OP      [reduziere mit Regel 13 (EXPR)]
+    T_OM      [reduziere mit Regel 13 (EXPR)]
+    T_OS      [reduziere mit Regel 13 (EXPR)]
+    T_OD      [reduziere mit Regel 13 (EXPR)]
+    $default  reduziere mit Regel 13 (EXPR)
 
 
-State 40
+Zustand 40
 
    13 EXPR: EXPR . T_OP EXPR
    14     | EXPR . T_OM EXPR
@@ -702,19 +710,19 @@ State 40
    15     | EXPR . T_OS EXPR
    16     | EXPR . T_OD EXPR
 
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
-    T_OP      [reduce using rule 14 (EXPR)]
-    T_OM      [reduce using rule 14 (EXPR)]
-    T_OS      [reduce using rule 14 (EXPR)]
-    T_OD      [reduce using rule 14 (EXPR)]
-    $default  reduce using rule 14 (EXPR)
+    T_OP      [reduziere mit Regel 14 (EXPR)]
+    T_OM      [reduziere mit Regel 14 (EXPR)]
+    T_OS      [reduziere mit Regel 14 (EXPR)]
+    T_OD      [reduziere mit Regel 14 (EXPR)]
+    $default  reduziere mit Regel 14 (EXPR)
 
 
-State 41
+Zustand 41
 
    13 EXPR: EXPR . T_OP EXPR
    14     | EXPR . T_OM EXPR
@@ -722,19 +730,19 @@ State 41
    15     | EXPR T_OS EXPR .
    16     | EXPR . T_OD EXPR
 
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
-    T_OP      [reduce using rule 15 (EXPR)]
-    T_OM      [reduce using rule 15 (EXPR)]
-    T_OS      [reduce using rule 15 (EXPR)]
-    T_OD      [reduce using rule 15 (EXPR)]
-    $default  reduce using rule 15 (EXPR)
+    T_OP      [reduziere mit Regel 15 (EXPR)]
+    T_OM      [reduziere mit Regel 15 (EXPR)]
+    T_OS      [reduziere mit Regel 15 (EXPR)]
+    T_OD      [reduziere mit Regel 15 (EXPR)]
+    $default  reduziere mit Regel 15 (EXPR)
 
 
-State 42
+Zustand 42
 
    13 EXPR: EXPR . T_OP EXPR
    14     | EXPR . T_OM EXPR
@@ -742,117 +750,124 @@ State 42
    16     | EXPR . T_OD EXPR
    16     | EXPR T_OD EXPR .
 
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
-    T_OP      [reduce using rule 16 (EXPR)]
-    T_OM      [reduce using rule 16 (EXPR)]
-    T_OS      [reduce using rule 16 (EXPR)]
-    T_OD      [reduce using rule 16 (EXPR)]
-    $default  reduce using rule 16 (EXPR)
+    T_OP      [reduziere mit Regel 16 (EXPR)]
+    T_OM      [reduziere mit Regel 16 (EXPR)]
+    T_OS      [reduziere mit Regel 16 (EXPR)]
+    T_OD      [reduziere mit Regel 16 (EXPR)]
+    $default  reduziere mit Regel 16 (EXPR)
 
 
-State 43
+Zustand 43
 
    28 SELECTOR: T_DOT IDENTIFIER .
 
-    $default  reduce using rule 28 (SELECTOR)
+    $default  reduziere mit Regel 28 (SELECTOR)
 
 
-State 44
+Zustand 44
 
    27 SELECTOR: T_HASH IDENTIFIER .
 
-    $default  reduce using rule 27 (SELECTOR)
+    $default  reduziere mit Regel 27 (SELECTOR)
 
 
-State 45
+Zustand 45
+
+   30 PSEUDOCLASS: PSEUDO .
+
+    $default  reduziere mit Regel 30 (PSEUDOCLASS)
+
+
+Zustand 46
 
    25 SELECTORS: SELECTORS INHERIT SELECTOR PSEUDOCLASS .
 
-    $default  reduce using rule 25 (SELECTORS)
+    $default  reduziere mit Regel 25 (SELECTORS)
 
 
-State 46
+Zustand 47
 
-   32 DECL: IDENTIFIER T_COLON . EXPR T_SEMICOLON
+   33 DECL: IDENTIFIER T_COLON . EXPR T_SEMICOLON
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    $default  reduce using rule 6 (VAR)
+    $default  reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 52
-    FNCALL  go to state 17
-
-
-State 47
-
-   23 CSSRULE: SELECTORS T_PCL DECLS T_PCR .
-
-    $default  reduce using rule 23 (CSSRULE)
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 53 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 48
+Zustand 48
 
-   31 DECLS: DECL DECLS .
+   23 CSSRULE: SELECTORS T_CBL DECLS T_CBR .
 
-    $default  reduce using rule 31 (DECLS)
+    $default  reduziere mit Regel 23 (CSSRULE)
 
 
-State 49
+Zustand 49
+
+   32 DECLS: DECL DECLS .
+
+    $default  reduziere mit Regel 32 (DECLS)
+
+
+Zustand 50
 
    22 PARAMS: T_COMMA . EXPR
 
-    IDENTIFIER  shift, and go to state 11
-    NUMBER      shift, and go to state 12
-    ATOM        shift, and go to state 13
-    T_DOLLAR    shift, and go to state 1
-    T_PL        shift, and go to state 14
+    IDENTIFIER  schiebe und gehe zu Zustand 11 über
+    NUMBER      schiebe und gehe zu Zustand 12 über
+    ATOM        schiebe und gehe zu Zustand 13 über
+    T_DOLLAR    schiebe und gehe zu Zustand 1 über
+    T_PL        schiebe und gehe zu Zustand 14 über
 
-    $default  reduce using rule 6 (VAR)
+    $default  reduziere mit Regel 6 (VAR)
 
-    VAR     go to state 15
-    EXPR    go to state 53
-    FNCALL  go to state 17
+    VAR     gehe zu Zustand 15 über
+    EXPR    gehe zu Zustand 54 über
+    FNCALL  gehe zu Zustand 17 über
 
 
-State 50
+Zustand 51
 
    20 P: EXPR PARAMS .
 
-    $default  reduce using rule 20 (P)
+    $default  reduziere mit Regel 20 (P)
 
 
-State 51
+Zustand 52
 
    17 FNCALL: IDENTIFIER T_PL P T_PR .
 
-    $default  reduce using rule 17 (FNCALL)
+    $default  reduziere mit Regel 17 (FNCALL)
 
 
-State 52
+Zustand 53
 
    13 EXPR: EXPR . T_OP EXPR
    14     | EXPR . T_OM EXPR
    15     | EXPR . T_OS EXPR
    16     | EXPR . T_OD EXPR
-   32 DECL: IDENTIFIER T_COLON EXPR . T_SEMICOLON
+   33 DECL: IDENTIFIER T_COLON EXPR . T_SEMICOLON
 
-    T_SEMICOLON  shift, and go to state 54
-    T_OP         shift, and go to state 23
-    T_OM         shift, and go to state 24
-    T_OS         shift, and go to state 25
-    T_OD         shift, and go to state 26
+    T_SEMICOLON  schiebe und gehe zu Zustand 55 über
+    T_OP         schiebe und gehe zu Zustand 23 über
+    T_OM         schiebe und gehe zu Zustand 24 über
+    T_OS         schiebe und gehe zu Zustand 25 über
+    T_OD         schiebe und gehe zu Zustand 26 über
 
 
-State 53
+Zustand 54
 
    13 EXPR: EXPR . T_OP EXPR
    14     | EXPR . T_OM EXPR
@@ -860,16 +875,16 @@ State 53
    16     | EXPR . T_OD EXPR
    22 PARAMS: T_COMMA EXPR .
 
-    T_OP  shift, and go to state 23
-    T_OM  shift, and go to state 24
-    T_OS  shift, and go to state 25
-    T_OD  shift, and go to state 26
+    T_OP  schiebe und gehe zu Zustand 23 über
+    T_OM  schiebe und gehe zu Zustand 24 über
+    T_OS  schiebe und gehe zu Zustand 25 über
+    T_OD  schiebe und gehe zu Zustand 26 über
 
-    $default  reduce using rule 22 (PARAMS)
+    $default  reduziere mit Regel 22 (PARAMS)
 
 
-State 54
+Zustand 55
 
-   32 DECL: IDENTIFIER T_COLON EXPR T_SEMICOLON .
+   33 DECL: IDENTIFIER T_COLON EXPR T_SEMICOLON .
 
-    $default  reduce using rule 32 (DECL)
+    $default  reduziere mit Regel 33 (DECL)

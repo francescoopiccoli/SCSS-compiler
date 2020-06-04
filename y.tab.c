@@ -153,26 +153,29 @@ extern int yydebug;
     UNIT = 271,                    /* UNIT  */
     ATOM = 272,                    /* ATOM  */
     INHERIT = 273,                 /* INHERIT  */
-    T_DOLLAR = 274,                /* T_DOLLAR  */
-    T_SEMICOLON = 275,             /* T_SEMICOLON  */
-    T_COLON = 276,                 /* T_COLON  */
-    T_DOT = 277,                   /* T_DOT  */
-    T_COMMA = 278,                 /* T_COMMA  */
-    T_HASH = 279,                  /* T_HASH  */
-    T_PL = 280,                    /* T_PL  */
-    T_PR = 281,                    /* T_PR  */
-    T_PCL = 282,                   /* T_PCL  */
-    T_PCR = 283,                   /* T_PCR  */
-    T_OP = 284,                    /* T_OP  */
-    T_OM = 285,                    /* T_OM  */
-    T_OS = 286,                    /* T_OS  */
-    T_OD = 287,                    /* T_OD  */
-    OP_MINUS = 288,                /* OP_MINUS  */
-    OP_PLUS = 289,                 /* OP_PLUS  */
-    OP_MULT = 290,                 /* OP_MULT  */
-    OP_DIV = 291,                  /* OP_DIV  */
-    UMINUS = 292,                  /* UMINUS  */
-    OP_I = 293                     /* OP_I  */
+    PSEUDO = 274,                  /* PSEUDO  */
+    T_DOLLAR = 275,                /* T_DOLLAR  */
+    T_SEMICOLON = 276,             /* T_SEMICOLON  */
+    T_COLON = 277,                 /* T_COLON  */
+    T_DOT = 278,                   /* T_DOT  */
+    T_COMMA = 279,                 /* T_COMMA  */
+    T_HASH = 280,                  /* T_HASH  */
+    T_PERCENT = 281,               /* T_PERCENT  */
+    T_PX = 282,                    /* T_PX  */
+    T_PL = 283,                    /* T_PL  */
+    T_PR = 284,                    /* T_PR  */
+    T_CBL = 285,                   /* T_CBL  */
+    T_CBR = 286,                   /* T_CBR  */
+    T_OP = 287,                    /* T_OP  */
+    T_OM = 288,                    /* T_OM  */
+    T_OS = 289,                    /* T_OS  */
+    T_OD = 290,                    /* T_OD  */
+    OP_MINUS = 291,                /* OP_MINUS  */
+    OP_PLUS = 292,                 /* OP_PLUS  */
+    OP_MULT = 293,                 /* OP_MULT  */
+    OP_DIV = 294,                  /* OP_DIV  */
+    UMINUS = 295,                  /* UMINUS  */
+    OP_I = 296                     /* OP_I  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -196,26 +199,29 @@ extern int yydebug;
 #define UNIT 271
 #define ATOM 272
 #define INHERIT 273
-#define T_DOLLAR 274
-#define T_SEMICOLON 275
-#define T_COLON 276
-#define T_DOT 277
-#define T_COMMA 278
-#define T_HASH 279
-#define T_PL 280
-#define T_PR 281
-#define T_PCL 282
-#define T_PCR 283
-#define T_OP 284
-#define T_OM 285
-#define T_OS 286
-#define T_OD 287
-#define OP_MINUS 288
-#define OP_PLUS 289
-#define OP_MULT 290
-#define OP_DIV 291
-#define UMINUS 292
-#define OP_I 293
+#define PSEUDO 274
+#define T_DOLLAR 275
+#define T_SEMICOLON 276
+#define T_COLON 277
+#define T_DOT 278
+#define T_COMMA 279
+#define T_HASH 280
+#define T_PERCENT 281
+#define T_PX 282
+#define T_PL 283
+#define T_PR 284
+#define T_CBL 285
+#define T_CBR 286
+#define T_OP 287
+#define T_OM 288
+#define T_OS 289
+#define T_OD 290
+#define OP_MINUS 291
+#define OP_PLUS 292
+#define OP_MULT 293
+#define OP_DIV 294
+#define UMINUS 295
+#define OP_I 296
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -226,7 +232,7 @@ union YYSTYPE
        
        
 
-#line 230 "y.tab.c"
+#line 236 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -263,41 +269,44 @@ enum yysymbol_kind_t
   YYSYMBOL_UNIT = 16,                      /* UNIT  */
   YYSYMBOL_ATOM = 17,                      /* ATOM  */
   YYSYMBOL_INHERIT = 18,                   /* INHERIT  */
-  YYSYMBOL_T_DOLLAR = 19,                  /* T_DOLLAR  */
-  YYSYMBOL_T_SEMICOLON = 20,               /* T_SEMICOLON  */
-  YYSYMBOL_T_COLON = 21,                   /* T_COLON  */
-  YYSYMBOL_T_DOT = 22,                     /* T_DOT  */
-  YYSYMBOL_T_COMMA = 23,                   /* T_COMMA  */
-  YYSYMBOL_T_HASH = 24,                    /* T_HASH  */
-  YYSYMBOL_T_PL = 25,                      /* T_PL  */
-  YYSYMBOL_T_PR = 26,                      /* T_PR  */
-  YYSYMBOL_T_PCL = 27,                     /* T_PCL  */
-  YYSYMBOL_T_PCR = 28,                     /* T_PCR  */
-  YYSYMBOL_T_OP = 29,                      /* T_OP  */
-  YYSYMBOL_T_OM = 30,                      /* T_OM  */
-  YYSYMBOL_T_OS = 31,                      /* T_OS  */
-  YYSYMBOL_T_OD = 32,                      /* T_OD  */
-  YYSYMBOL_OP_MINUS = 33,                  /* OP_MINUS  */
-  YYSYMBOL_OP_PLUS = 34,                   /* OP_PLUS  */
-  YYSYMBOL_OP_MULT = 35,                   /* OP_MULT  */
-  YYSYMBOL_OP_DIV = 36,                    /* OP_DIV  */
-  YYSYMBOL_UMINUS = 37,                    /* UMINUS  */
-  YYSYMBOL_OP_I = 38,                      /* OP_I  */
-  YYSYMBOL_YYACCEPT = 39,                  /* $accept  */
-  YYSYMBOL_S = 40,                         /* S  */
-  YYSYMBOL_ST = 41,                        /* ST  */
-  YYSYMBOL_VARDECL = 42,                   /* VARDECL  */
-  YYSYMBOL_VAR = 43,                       /* VAR  */
-  YYSYMBOL_EXPR = 44,                      /* EXPR  */
-  YYSYMBOL_FNCALL = 45,                    /* FNCALL  */
-  YYSYMBOL_P = 46,                         /* P  */
-  YYSYMBOL_PARAMS = 47,                    /* PARAMS  */
-  YYSYMBOL_CSSRULE = 48,                   /* CSSRULE  */
-  YYSYMBOL_SELECTORS = 49,                 /* SELECTORS  */
-  YYSYMBOL_SELECTOR = 50,                  /* SELECTOR  */
-  YYSYMBOL_PSEUDOCLASS = 51,               /* PSEUDOCLASS  */
-  YYSYMBOL_DECLS = 52,                     /* DECLS  */
-  YYSYMBOL_DECL = 53                       /* DECL  */
+  YYSYMBOL_PSEUDO = 19,                    /* PSEUDO  */
+  YYSYMBOL_T_DOLLAR = 20,                  /* T_DOLLAR  */
+  YYSYMBOL_T_SEMICOLON = 21,               /* T_SEMICOLON  */
+  YYSYMBOL_T_COLON = 22,                   /* T_COLON  */
+  YYSYMBOL_T_DOT = 23,                     /* T_DOT  */
+  YYSYMBOL_T_COMMA = 24,                   /* T_COMMA  */
+  YYSYMBOL_T_HASH = 25,                    /* T_HASH  */
+  YYSYMBOL_T_PERCENT = 26,                 /* T_PERCENT  */
+  YYSYMBOL_T_PX = 27,                      /* T_PX  */
+  YYSYMBOL_T_PL = 28,                      /* T_PL  */
+  YYSYMBOL_T_PR = 29,                      /* T_PR  */
+  YYSYMBOL_T_CBL = 30,                     /* T_CBL  */
+  YYSYMBOL_T_CBR = 31,                     /* T_CBR  */
+  YYSYMBOL_T_OP = 32,                      /* T_OP  */
+  YYSYMBOL_T_OM = 33,                      /* T_OM  */
+  YYSYMBOL_T_OS = 34,                      /* T_OS  */
+  YYSYMBOL_T_OD = 35,                      /* T_OD  */
+  YYSYMBOL_OP_MINUS = 36,                  /* OP_MINUS  */
+  YYSYMBOL_OP_PLUS = 37,                   /* OP_PLUS  */
+  YYSYMBOL_OP_MULT = 38,                   /* OP_MULT  */
+  YYSYMBOL_OP_DIV = 39,                    /* OP_DIV  */
+  YYSYMBOL_UMINUS = 40,                    /* UMINUS  */
+  YYSYMBOL_OP_I = 41,                      /* OP_I  */
+  YYSYMBOL_YYACCEPT = 42,                  /* $accept  */
+  YYSYMBOL_S = 43,                         /* S  */
+  YYSYMBOL_ST = 44,                        /* ST  */
+  YYSYMBOL_VARDECL = 45,                   /* VARDECL  */
+  YYSYMBOL_VAR = 46,                       /* VAR  */
+  YYSYMBOL_EXPR = 47,                      /* EXPR  */
+  YYSYMBOL_FNCALL = 48,                    /* FNCALL  */
+  YYSYMBOL_P = 49,                         /* P  */
+  YYSYMBOL_PARAMS = 50,                    /* PARAMS  */
+  YYSYMBOL_CSSRULE = 51,                   /* CSSRULE  */
+  YYSYMBOL_SELECTORS = 52,                 /* SELECTORS  */
+  YYSYMBOL_SELECTOR = 53,                  /* SELECTOR  */
+  YYSYMBOL_PSEUDOCLASS = 54,               /* PSEUDOCLASS  */
+  YYSYMBOL_DECLS = 55,                     /* DECLS  */
+  YYSYMBOL_DECL = 56                       /* DECL  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -610,15 +619,15 @@ union yyalloc
 #define YYLAST   60
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  39
+#define YYNTOKENS  42
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  15
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  35
+#define YYNRULES  36
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  55
+#define YYNSTATES  56
 
-#define YYMAXUTOK   293
+#define YYMAXUTOK   296
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -661,17 +670,17 @@ static const yytype_int8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38
+      35,    36,    37,    38,    39,    40,    41
 };
 
 #if YYDEBUG
   /* YYRLINEYYN -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    82,    82,    83,    86,    87,    91,    94,    95,    99,
-     100,   101,   102,   103,   104,   105,   106,   107,   111,   114,
-     115,   116,   120,   121,   125,   129,   130,   134,   135,   136,
-     140,   143,   144,   148,   149,   150
+       0,    87,    87,    88,    91,    92,    96,    99,   100,   104,
+     105,   106,   107,   108,   109,   110,   111,   112,   116,   119,
+     120,   121,   125,   126,   130,   134,   135,   139,   140,   141,
+     145,   146,   150,   151,   155,   156,   157
 };
 #endif
 
@@ -689,12 +698,12 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "LP", "RP", "NUM",
   "SEMI", "OP_ASSIGN", "OP_EXP", "ID", "EXIT", "RETURN", "QUIT", "OP_COMP",
-  "IDENTIFIER", "NUMBER", "UNIT", "ATOM", "INHERIT", "T_DOLLAR",
-  "T_SEMICOLON", "T_COLON", "T_DOT", "T_COMMA", "T_HASH", "T_PL", "T_PR",
-  "T_PCL", "T_PCR", "T_OP", "T_OM", "T_OS", "T_OD", "OP_MINUS", "OP_PLUS",
-  "OP_MULT", "OP_DIV", "UMINUS", "OP_I", "$accept", "S", "ST", "VARDECL",
-  "VAR", "EXPR", "FNCALL", "P", "PARAMS", "CSSRULE", "SELECTORS",
-  "SELECTOR", "PSEUDOCLASS", "DECLS", "DECL", YY_NULLPTR
+  "IDENTIFIER", "NUMBER", "UNIT", "ATOM", "INHERIT", "PSEUDO", "T_DOLLAR",
+  "T_SEMICOLON", "T_COLON", "T_DOT", "T_COMMA", "T_HASH", "T_PERCENT",
+  "T_PX", "T_PL", "T_PR", "T_CBL", "T_CBR", "T_OP", "T_OM", "T_OS", "T_OD",
+  "OP_MINUS", "OP_PLUS", "OP_MULT", "OP_DIV", "UMINUS", "OP_I", "$accept",
+  "S", "ST", "VARDECL", "VAR", "EXPR", "FNCALL", "P", "PARAMS", "CSSRULE",
+  "SELECTORS", "SELECTOR", "PSEUDOCLASS", "DECLS", "DECL", YY_NULLPTR
 };
 
 static const char *
@@ -712,11 +721,12 @@ static const yytype_int16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293
+     285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
+     295,   296
 };
 #endif
 
-#define YYPACT_NINF (-17)
+#define YYPACT_NINF (-19)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -730,12 +740,12 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       2,    -6,    24,     2,   -17,    12,   -17,    -5,   -17,   -17,
-     -17,    -7,     9,   -17,    12,   -17,    22,   -17,    16,    14,
-      12,   -17,    13,    12,    12,    12,    12,   -17,    20,    32,
-     -17,    34,   -17,   -17,    28,    14,    18,    31,   -17,    22,
-      22,    22,    22,   -17,   -17,   -17,    12,   -17,   -17,    12,
-     -17,   -17,   -15,    22,   -17
+       3,    -7,     8,     3,   -19,    -1,   -19,     4,   -19,   -19,
+     -19,     0,     9,   -19,    -1,   -19,     6,   -19,     1,    28,
+      -1,   -19,    18,    -1,    -1,    -1,    -1,   -19,    35,    40,
+      36,    34,   -19,   -19,    26,    28,    11,    29,   -19,     6,
+       6,     6,     6,   -19,   -19,   -19,   -19,    -1,   -19,   -19,
+      -1,   -19,   -19,    -3,     6,   -19
 };
 
   /* YYDEFACTSTATE-NUM -- Default reduction number in state STATE-NUM.
@@ -746,23 +756,23 @@ static const yytype_int8 yydefact[] =
        7,     0,     0,     7,     4,     7,     5,     0,     8,     1,
        3,     0,     0,    11,     7,     9,     6,    12,     0,     7,
        7,    10,     0,     7,     7,     7,     7,    27,     0,     0,
-      30,     0,    35,    34,     0,     7,    20,     0,    13,    14,
-      15,    16,    17,    29,    28,    26,     7,    24,    32,     7,
-      21,    18,     0,    23,    33
+      30,     0,    36,    35,     0,     7,    20,     0,    13,    14,
+      15,    16,    17,    29,    28,    31,    26,     7,    24,    33,
+       7,    21,    18,     0,    23,    34
 };
 
   /* YYPGOTONTERM-NUM.  */
 static const yytype_int8 yypgoto[] =
 {
-     -17,    55,   -17,   -16,     1,   -14,   -17,   -17,   -17,   -12,
-     -17,   -17,   -17,    25,   -17
+     -19,    56,   -19,   -18,     2,   -14,   -19,   -19,   -19,   -15,
+     -19,   -19,   -19,    25,   -19
 };
 
   /* YYDEFGOTONTERM-NUM.  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,     3,     4,    15,    16,    17,    37,    50,     6,
-       7,    30,    45,    34,    35
+      -1,     2,     3,     4,    15,    16,    17,    37,    51,     6,
+       7,    30,    46,    34,    35
 };
 
   /* YYTABLEYYPACT[STATE-NUM] -- What to do in state STATE-NUM.  If
@@ -770,23 +780,23 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      22,     5,    -2,    32,     5,    54,    36,    33,     8,    39,
-      40,    41,    42,    18,    23,    24,    25,    26,    20,    32,
-       5,     1,    19,    33,     9,    21,    11,    12,    31,    13,
-      27,     1,    52,     1,    43,    53,     5,    14,    28,    38,
-      29,    49,    23,    24,    25,    26,    44,    23,    24,    25,
-      26,    23,    24,    25,    26,    46,    47,    51,    10,     0,
-      48
+      22,    32,     5,    -2,    33,     5,    36,     8,     9,    39,
+      40,    41,    42,    11,    12,    27,    13,    32,    55,     1,
+      33,     5,    18,     1,    28,    21,    29,    14,    20,    23,
+      24,    25,    26,    53,    19,    50,    54,     5,    23,    24,
+      25,    26,    31,    23,    24,    25,    26,    38,     1,    43,
+      23,    24,    25,    26,    44,    45,    47,    48,    52,    10,
+      49
 };
 
 static const yytype_int8 yycheck[] =
 {
-      14,     0,     0,    19,     3,    20,    20,    19,    14,    23,
-      24,    25,    26,    18,    29,    30,    31,    32,    25,    35,
-      19,    19,    27,    35,     0,    16,    14,    15,    14,    17,
-      14,    19,    46,    19,    14,    49,    35,    25,    22,    26,
-      24,    23,    29,    30,    31,    32,    14,    29,    30,    31,
-      32,    29,    30,    31,    32,    21,    28,    26,     3,    -1,
+      14,    19,     0,     0,    19,     3,    20,    14,     0,    23,
+      24,    25,    26,    14,    15,    14,    17,    35,    21,    20,
+      35,    19,    18,    20,    23,    16,    25,    28,    28,    32,
+      33,    34,    35,    47,    30,    24,    50,    35,    32,    33,
+      34,    35,    14,    32,    33,    34,    35,    29,    20,    14,
+      32,    33,    34,    35,    14,    19,    22,    31,    29,     3,
       35
 };
 
@@ -794,21 +804,21 @@ static const yytype_int8 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,    19,    40,    41,    42,    43,    48,    49,    14,     0,
-      40,    14,    15,    17,    25,    43,    44,    45,    18,    27,
-      25,    16,    44,    29,    30,    31,    32,    14,    22,    24,
-      50,    14,    42,    48,    52,    53,    44,    46,    26,    44,
-      44,    44,    44,    14,    14,    51,    21,    28,    52,    23,
-      47,    26,    44,    44,    20
+       0,    20,    43,    44,    45,    46,    51,    52,    14,     0,
+      43,    14,    15,    17,    28,    46,    47,    48,    18,    30,
+      28,    16,    47,    32,    33,    34,    35,    14,    23,    25,
+      53,    14,    45,    51,    55,    56,    47,    49,    29,    47,
+      47,    47,    47,    14,    14,    19,    54,    22,    31,    55,
+      24,    50,    29,    47,    47,    21
 };
 
   /* YYR1YYN -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    39,    40,    40,    41,    41,    42,    43,    43,    44,
-      44,    44,    44,    44,    44,    44,    44,    44,    45,    46,
-      46,    46,    47,    47,    48,    49,    49,    50,    50,    50,
-      51,    52,    52,    53,    53,    53
+       0,    42,    43,    43,    44,    44,    45,    46,    46,    47,
+      47,    47,    47,    47,    47,    47,    47,    47,    48,    49,
+      49,    49,    50,    50,    51,    52,    52,    53,    53,    53,
+      54,    54,    55,    55,    56,    56,    56
 };
 
   /* YYR2YYN -- Number of symbols on the right hand side of rule YYN.  */
@@ -817,7 +827,7 @@ static const yytype_int8 yyr2[] =
        0,     2,     0,     2,     1,     1,     2,     0,     2,     1,
        2,     1,     1,     3,     3,     3,     3,     3,     4,     0,
        1,     2,     0,     2,     4,     0,     4,     1,     2,     2,
-       0,     0,     2,     4,     1,     1
+       0,     1,     0,     2,     4,     1,     1
 };
 
 
@@ -1298,7 +1308,7 @@ yyreduce:
   switch (yyn)
     {
 
-#line 1302 "y.tab.c"
+#line 1312 "y.tab.c"
 
       default: break;
     }
@@ -1492,7 +1502,8 @@ yyreturn:
   return yyresult;
 }
 
-#line 152 "calc.y"
+#line 159 "calc.y"
+
 
 #include "lex.yy.c"
 
@@ -1521,3 +1532,10 @@ int main(int argc, char *argv[])
       }
 }
 
+int yyerror (char const *message)
+{
+  return fprintf (stderr, "%s\n", message);
+  fputs (message, stderr);
+  fputc ('\n', stderr);
+  return 0;
+}

@@ -70,26 +70,29 @@ extern int yydebug;
     UNIT = 271,                    /* UNIT  */
     ATOM = 272,                    /* ATOM  */
     INHERIT = 273,                 /* INHERIT  */
-    T_DOLLAR = 274,                /* T_DOLLAR  */
-    T_SEMICOLON = 275,             /* T_SEMICOLON  */
-    T_COLON = 276,                 /* T_COLON  */
-    T_DOT = 277,                   /* T_DOT  */
-    T_COMMA = 278,                 /* T_COMMA  */
-    T_HASH = 279,                  /* T_HASH  */
-    T_PL = 280,                    /* T_PL  */
-    T_PR = 281,                    /* T_PR  */
-    T_PCL = 282,                   /* T_PCL  */
-    T_PCR = 283,                   /* T_PCR  */
-    T_OP = 284,                    /* T_OP  */
-    T_OM = 285,                    /* T_OM  */
-    T_OS = 286,                    /* T_OS  */
-    T_OD = 287,                    /* T_OD  */
-    OP_MINUS = 288,                /* OP_MINUS  */
-    OP_PLUS = 289,                 /* OP_PLUS  */
-    OP_MULT = 290,                 /* OP_MULT  */
-    OP_DIV = 291,                  /* OP_DIV  */
-    UMINUS = 292,                  /* UMINUS  */
-    OP_I = 293                     /* OP_I  */
+    PSEUDO = 274,                  /* PSEUDO  */
+    T_DOLLAR = 275,                /* T_DOLLAR  */
+    T_SEMICOLON = 276,             /* T_SEMICOLON  */
+    T_COLON = 277,                 /* T_COLON  */
+    T_DOT = 278,                   /* T_DOT  */
+    T_COMMA = 279,                 /* T_COMMA  */
+    T_HASH = 280,                  /* T_HASH  */
+    T_PERCENT = 281,               /* T_PERCENT  */
+    T_PX = 282,                    /* T_PX  */
+    T_PL = 283,                    /* T_PL  */
+    T_PR = 284,                    /* T_PR  */
+    T_CBL = 285,                   /* T_CBL  */
+    T_CBR = 286,                   /* T_CBR  */
+    T_OP = 287,                    /* T_OP  */
+    T_OM = 288,                    /* T_OM  */
+    T_OS = 289,                    /* T_OS  */
+    T_OD = 290,                    /* T_OD  */
+    OP_MINUS = 291,                /* OP_MINUS  */
+    OP_PLUS = 292,                 /* OP_PLUS  */
+    OP_MULT = 293,                 /* OP_MULT  */
+    OP_DIV = 294,                  /* OP_DIV  */
+    UMINUS = 295,                  /* UMINUS  */
+    OP_I = 296                     /* OP_I  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -113,26 +116,29 @@ extern int yydebug;
 #define UNIT 271
 #define ATOM 272
 #define INHERIT 273
-#define T_DOLLAR 274
-#define T_SEMICOLON 275
-#define T_COLON 276
-#define T_DOT 277
-#define T_COMMA 278
-#define T_HASH 279
-#define T_PL 280
-#define T_PR 281
-#define T_PCL 282
-#define T_PCR 283
-#define T_OP 284
-#define T_OM 285
-#define T_OS 286
-#define T_OD 287
-#define OP_MINUS 288
-#define OP_PLUS 289
-#define OP_MULT 290
-#define OP_DIV 291
-#define UMINUS 292
-#define OP_I 293
+#define PSEUDO 274
+#define T_DOLLAR 275
+#define T_SEMICOLON 276
+#define T_COLON 277
+#define T_DOT 278
+#define T_COMMA 279
+#define T_HASH 280
+#define T_PERCENT 281
+#define T_PX 282
+#define T_PL 283
+#define T_PR 284
+#define T_CBL 285
+#define T_CBR 286
+#define T_OP 287
+#define T_OM 288
+#define T_OS 289
+#define T_OD 290
+#define OP_MINUS 291
+#define OP_PLUS 292
+#define OP_MULT 293
+#define OP_DIV 294
+#define UMINUS 295
+#define OP_I 296
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -143,7 +149,7 @@ union YYSTYPE
        
        
 
-#line 147 "y.tab.h"
+#line 153 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
