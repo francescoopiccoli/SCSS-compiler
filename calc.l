@@ -3,6 +3,8 @@
 %{
 #include <stdlib.h>
 #include <string.h>
+#include "header/scssFunctions.h"
+#include "header/symtable.h"
 
 //variabili usate spesso che potrebbero tornare utili
 int badtoken_cnt = 0;
@@ -17,7 +19,6 @@ NUM         {DIGIT}+(\.{DIGIT}+)? //teniamo anche i float?
 LETTER      [a-zA-Z]
 ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-_)* 
 COMMENT     \/\/.*\n
-UNIT        %|px
 ATOM        black|red|white|blue|green
 PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited)?
 %%
@@ -30,16 +31,17 @@ PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-t
 {NUM}       {yylval.value = atof(yytext); 
             return NUM;}
 
-{ID}        { //qualcosa che ha a che fare con la symbol table da rivedere
-            char* name = strdup(yytext); 
-            symrec* s = getSymbol(name);
-            if(s == 0) {
-                  s = createSymbol(name);
-            }
-            yylval.symbol = s;
-            return ID;
-            }
+{ID}        {yylval.lexeme = strdup(yytext);
+             return ID;}
 
+
+{ATOM}       {yylval.lexeme = strdup(yytext);
+              return ATOM;}
+
+{PSEUDOCLASS} {yylval.lexeme = strdup(yytext);
+              return PSEUDOCLASS;}
+
+"px"        {return PX}
 "+"         {return OP_PLUS;}   // operators 
 "-"         {return OP_MINUS;}
 "*"         {return OP_MULT;}
@@ -50,6 +52,12 @@ PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-t
 "^"         {return OP_EXP;}      
 ":"         {return OP_I;}
 "=="        {return OP_COMP;}
-";"         {return SEMI;}   
+";"         {return SEMI;} 
+"{"         {return LBRACE;}
+"}"         {return RBRACE;}  
+","         {return COMMA;}
+"."         {return DOT;}
+"#"         {return HASH;}
+"%"         {return PERCENT}
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 %%
