@@ -2,6 +2,7 @@ Terminals unused in grammar
 
     LP
     RP
+    NUM
     SEMI
     OP_ASSIGN
     OP_EXP
@@ -20,19 +21,31 @@ Terminals unused in grammar
 
 Rules useless in parser due to conflicts
 
-    3 S: %empty
+   18 P: %empty
 
-    4 ST: %empty
+   21 PARAMS: %empty
 
-    7 VARDECL: %empty
+   24 SELECTORS: %empty
 
-    9 CSSRULE: %empty
-   10        | NUM
+   30 DECLS: %empty
 
 
-State 0 conflicts: 1 shift/reduce, 6 reduce/reduce
-State 1 conflicts: 2 reduce/reduce
-State 3 conflicts: 1 shift/reduce, 6 reduce/reduce
+State 0 conflicts: 1 shift/reduce, 3 reduce/reduce
+State 3 conflicts: 1 shift/reduce, 3 reduce/reduce
+State 5 conflicts: 5 shift/reduce
+State 16 conflicts: 4 shift/reduce
+State 19 conflicts: 2 shift/reduce, 3 reduce/reduce
+State 20 conflicts: 1 reduce/reduce
+State 23 conflicts: 5 shift/reduce
+State 24 conflicts: 5 shift/reduce
+State 25 conflicts: 5 shift/reduce
+State 26 conflicts: 5 shift/reduce
+State 35 conflicts: 2 shift/reduce, 3 reduce/reduce
+State 36 conflicts: 1 reduce/reduce
+State 39 conflicts: 4 shift/reduce
+State 40 conflicts: 4 shift/reduce
+State 41 conflicts: 4 shift/reduce
+State 42 conflicts: 4 shift/reduce
 
 
 Grammar
@@ -41,17 +54,51 @@ Grammar
 
     1 S: %empty
     2  | ST S
-    3  | %empty
 
-    4 ST: %empty
-    5   | VARDECL
-    6   | CSSRULE
+    3 ST: VARDECL
+    4   | CSSRULE
 
-    7 VARDECL: %empty
-    8        | NUM
+    5 VARDECL: VAR EXPR
 
-    9 CSSRULE: %empty
-   10        | NUM
+    6 VAR: %empty
+    7    | T_DOLLAR IDENTIFIER
+
+    8 EXPR: VAR
+    9     | NUMBER UNIT
+   10     | ATOM
+   11     | FNCALL
+   12     | T_PL EXPR T_PR
+   13     | EXPR T_OP EXPR
+   14     | EXPR T_OM EXPR
+   15     | EXPR T_OS EXPR
+   16     | EXPR T_OD EXPR
+
+   17 FNCALL: IDENTIFIER T_PL P T_PR
+
+   18 P: %empty
+   19  | EXPR
+   20  | EXPR PARAMS
+
+   21 PARAMS: %empty
+   22       | T_COMMA EXPR
+
+   23 CSSRULE: SELECTORS T_PCL DECLS T_PCR
+
+   24 SELECTORS: %empty
+   25          | SELECTORS INHERIT SELECTOR PSEUDOCLASS
+
+   26 SELECTOR: IDENTIFIER
+   27         | T_HASH IDENTIFIER
+   28         | T_DOT IDENTIFIER
+
+   29 PSEUDOCLASS: %empty
+
+   30 DECLS: %empty
+   31      | DECL DECLS
+
+   32 DECL: IDENTIFIER T_COLON EXPR T_SEMICOLON
+   33     | CSSRULE
+   34     | VARDECL
 
 
 Terminals, with rules where they appear
@@ -60,7 +107,7 @@ Terminals, with rules where they appear
     error (256)
     LP (258)
     RP (259)
-    NUM (260) 8 10
+    NUM (260)
     SEMI (261)
     OP_ASSIGN (262)
     OP_EXP (263)
@@ -69,118 +116,760 @@ Terminals, with rules where they appear
     RETURN (266)
     QUIT (267)
     OP_COMP (268)
-    OP_MINUS (269)
-    OP_PLUS (270)
-    OP_MULT (271)
-    OP_DIV (272)
-    UMINUS (273)
-    OP_I (274)
+    IDENTIFIER (269) 7 17 26 27 28 32
+    NUMBER (270) 9
+    UNIT (271) 9
+    ATOM (272) 10
+    INHERIT (273) 25
+    T_DOLLAR (274) 7
+    T_SEMICOLON (275) 32
+    T_COLON (276) 32
+    T_DOT (277) 28
+    T_COMMA (278) 22
+    T_HASH (279) 27
+    T_PL (280) 12 17
+    T_PR (281) 12 17
+    T_PCL (282) 23
+    T_PCR (283) 23
+    T_OP (284) 13
+    T_OM (285) 14
+    T_OS (286) 15
+    T_OD (287) 16
+    OP_MINUS (288)
+    OP_PLUS (289)
+    OP_MULT (290)
+    OP_DIV (291)
+    UMINUS (292)
+    OP_I (293)
 
 
 Nonterminals, with rules where they appear
 
-    $accept (20)
+    $accept (39)
         on left: 0
-    S (21)
-        on left: 1 2 3
+    S (40)
+        on left: 1 2
         on right: 0 2
-    ST (22)
-        on left: 4 5 6
+    ST (41)
+        on left: 3 4
         on right: 2
-    VARDECL (23)
-        on left: 7 8
-        on right: 5
-    CSSRULE (24)
-        on left: 9 10
-        on right: 6
+    VARDECL (42)
+        on left: 5
+        on right: 3 34
+    VAR (43)
+        on left: 6 7
+        on right: 5 8
+    EXPR (44)
+        on left: 8 9 10 11 12 13 14 15 16
+        on right: 5 12 13 14 15 16 19 20 22 32
+    FNCALL (45)
+        on left: 17
+        on right: 11
+    P (46)
+        on left: 18 19 20
+        on right: 17
+    PARAMS (47)
+        on left: 21 22
+        on right: 20
+    CSSRULE (48)
+        on left: 23
+        on right: 4 33
+    SELECTORS (49)
+        on left: 24 25
+        on right: 23 25
+    SELECTOR (50)
+        on left: 26 27 28
+        on right: 25
+    PSEUDOCLASS (51)
+        on left: 29
+        on right: 25
+    DECLS (52)
+        on left: 30 31
+        on right: 23 31
+    DECL (53)
+        on left: 32 33 34
+        on right: 31
 
 
 State 0
 
     0 $accept: . S $end
 
-    NUM  shift, and go to state 1
+    T_DOLLAR  shift, and go to state 1
 
     $end      reduce using rule 1 (S)
-    $end      [reduce using rule 3 (S)]
-    $end      [reduce using rule 4 (ST)]
-    $end      [reduce using rule 7 (VARDECL)]
-    $end      [reduce using rule 9 (CSSRULE)]
-    NUM       [reduce using rule 4 (ST)]
-    NUM       [reduce using rule 7 (VARDECL)]
-    NUM       [reduce using rule 9 (CSSRULE)]
-    $default  reduce using rule 1 (S)
+    $end      [reduce using rule 6 (VAR)]
+    INHERIT   reduce using rule 6 (VAR)
+    INHERIT   [reduce using rule 24 (SELECTORS)]
+    T_DOLLAR  [reduce using rule 6 (VAR)]
+    T_PCL     reduce using rule 6 (VAR)
+    T_PCL     [reduce using rule 24 (SELECTORS)]
+    $default  reduce using rule 6 (VAR)
 
-    S        go to state 2
-    ST       go to state 3
-    VARDECL  go to state 4
-    CSSRULE  go to state 5
+    S          go to state 2
+    ST         go to state 3
+    VARDECL    go to state 4
+    VAR        go to state 5
+    CSSRULE    go to state 6
+    SELECTORS  go to state 7
 
 
 State 1
 
-    8 VARDECL: NUM .
-   10 CSSRULE: NUM .
+    7 VAR: T_DOLLAR . IDENTIFIER
 
-    $end      reduce using rule 8 (VARDECL)
-    $end      [reduce using rule 10 (CSSRULE)]
-    NUM       reduce using rule 8 (VARDECL)
-    NUM       [reduce using rule 10 (CSSRULE)]
-    $default  reduce using rule 8 (VARDECL)
+    IDENTIFIER  shift, and go to state 8
 
 
 State 2
 
     0 $accept: S . $end
 
-    $end  shift, and go to state 6
+    $end  shift, and go to state 9
 
 
 State 3
 
     2 S: ST . S
 
-    NUM  shift, and go to state 1
+    T_DOLLAR  shift, and go to state 1
 
     $end      reduce using rule 1 (S)
-    $end      [reduce using rule 3 (S)]
-    $end      [reduce using rule 4 (ST)]
-    $end      [reduce using rule 7 (VARDECL)]
-    $end      [reduce using rule 9 (CSSRULE)]
-    NUM       [reduce using rule 4 (ST)]
-    NUM       [reduce using rule 7 (VARDECL)]
-    NUM       [reduce using rule 9 (CSSRULE)]
-    $default  reduce using rule 1 (S)
+    $end      [reduce using rule 6 (VAR)]
+    INHERIT   reduce using rule 6 (VAR)
+    INHERIT   [reduce using rule 24 (SELECTORS)]
+    T_DOLLAR  [reduce using rule 6 (VAR)]
+    T_PCL     reduce using rule 6 (VAR)
+    T_PCL     [reduce using rule 24 (SELECTORS)]
+    $default  reduce using rule 6 (VAR)
 
-    S        go to state 7
-    ST       go to state 3
-    VARDECL  go to state 4
-    CSSRULE  go to state 5
+    S          go to state 10
+    ST         go to state 3
+    VARDECL    go to state 4
+    VAR        go to state 5
+    CSSRULE    go to state 6
+    SELECTORS  go to state 7
 
 
 State 4
 
-    5 ST: VARDECL .
+    3 ST: VARDECL .
 
-    $default  reduce using rule 5 (ST)
+    $default  reduce using rule 3 (ST)
 
 
 State 5
 
-    6 ST: CSSRULE .
+    5 VARDECL: VAR . EXPR
 
-    $default  reduce using rule 6 (ST)
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    NUMBER      [reduce using rule 6 (VAR)]
+    ATOM        [reduce using rule 6 (VAR)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PL        [reduce using rule 6 (VAR)]
+    $default    reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 16
+    FNCALL  go to state 17
 
 
 State 6
+
+    4 ST: CSSRULE .
+
+    $default  reduce using rule 4 (ST)
+
+
+State 7
+
+   23 CSSRULE: SELECTORS . T_PCL DECLS T_PCR
+   25 SELECTORS: SELECTORS . INHERIT SELECTOR PSEUDOCLASS
+
+    INHERIT  shift, and go to state 18
+    T_PCL    shift, and go to state 19
+
+
+State 8
+
+    7 VAR: T_DOLLAR IDENTIFIER .
+
+    $default  reduce using rule 7 (VAR)
+
+
+State 9
 
     0 $accept: S $end .
 
     $default  accept
 
 
-State 7
+State 10
 
     2 S: ST S .
 
     $default  reduce using rule 2 (S)
+
+
+State 11
+
+   17 FNCALL: IDENTIFIER . T_PL P T_PR
+
+    T_PL  shift, and go to state 20
+
+
+State 12
+
+    9 EXPR: NUMBER . UNIT
+
+    UNIT  shift, and go to state 21
+
+
+State 13
+
+   10 EXPR: ATOM .
+
+    $default  reduce using rule 10 (EXPR)
+
+
+State 14
+
+   12 EXPR: T_PL . EXPR T_PR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    $default  reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 22
+    FNCALL  go to state 17
+
+
+State 15
+
+    8 EXPR: VAR .
+
+    $default  reduce using rule 8 (EXPR)
+
+
+State 16
+
+    5 VARDECL: VAR EXPR .
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+    T_OP      [reduce using rule 5 (VARDECL)]
+    T_OM      [reduce using rule 5 (VARDECL)]
+    T_OS      [reduce using rule 5 (VARDECL)]
+    T_OD      [reduce using rule 5 (VARDECL)]
+    $default  reduce using rule 5 (VARDECL)
+
+
+State 17
+
+   11 EXPR: FNCALL .
+
+    $default  reduce using rule 11 (EXPR)
+
+
+State 18
+
+   25 SELECTORS: SELECTORS INHERIT . SELECTOR PSEUDOCLASS
+
+    IDENTIFIER  shift, and go to state 27
+    T_DOT       shift, and go to state 28
+    T_HASH      shift, and go to state 29
+
+    SELECTOR  go to state 30
+
+
+State 19
+
+   23 CSSRULE: SELECTORS T_PCL . DECLS T_PCR
+
+    IDENTIFIER  shift, and go to state 31
+    T_DOLLAR    shift, and go to state 1
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    INHERIT     reduce using rule 6 (VAR)
+    INHERIT     [reduce using rule 24 (SELECTORS)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PCL       reduce using rule 6 (VAR)
+    T_PCL       [reduce using rule 24 (SELECTORS)]
+    T_PCR       reduce using rule 6 (VAR)
+    T_PCR       [reduce using rule 30 (DECLS)]
+    $default    reduce using rule 6 (VAR)
+
+    VARDECL    go to state 32
+    VAR        go to state 5
+    CSSRULE    go to state 33
+    SELECTORS  go to state 7
+    DECLS      go to state 34
+    DECL       go to state 35
+
+
+State 20
+
+   17 FNCALL: IDENTIFIER T_PL . P T_PR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    T_PR      reduce using rule 6 (VAR)
+    T_PR      [reduce using rule 18 (P)]
+    $default  reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 36
+    FNCALL  go to state 17
+    P       go to state 37
+
+
+State 21
+
+    9 EXPR: NUMBER UNIT .
+
+    $default  reduce using rule 9 (EXPR)
+
+
+State 22
+
+   12 EXPR: T_PL EXPR . T_PR
+   13     | EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+
+    T_PR  shift, and go to state 38
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+
+State 23
+
+   13 EXPR: EXPR T_OP . EXPR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    NUMBER      [reduce using rule 6 (VAR)]
+    ATOM        [reduce using rule 6 (VAR)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PL        [reduce using rule 6 (VAR)]
+    $default    reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 39
+    FNCALL  go to state 17
+
+
+State 24
+
+   14 EXPR: EXPR T_OM . EXPR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    NUMBER      [reduce using rule 6 (VAR)]
+    ATOM        [reduce using rule 6 (VAR)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PL        [reduce using rule 6 (VAR)]
+    $default    reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 40
+    FNCALL  go to state 17
+
+
+State 25
+
+   15 EXPR: EXPR T_OS . EXPR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    NUMBER      [reduce using rule 6 (VAR)]
+    ATOM        [reduce using rule 6 (VAR)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PL        [reduce using rule 6 (VAR)]
+    $default    reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 41
+    FNCALL  go to state 17
+
+
+State 26
+
+   16 EXPR: EXPR T_OD . EXPR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    NUMBER      [reduce using rule 6 (VAR)]
+    ATOM        [reduce using rule 6 (VAR)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PL        [reduce using rule 6 (VAR)]
+    $default    reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 42
+    FNCALL  go to state 17
+
+
+State 27
+
+   26 SELECTOR: IDENTIFIER .
+
+    $default  reduce using rule 26 (SELECTOR)
+
+
+State 28
+
+   28 SELECTOR: T_DOT . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 43
+
+
+State 29
+
+   27 SELECTOR: T_HASH . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 44
+
+
+State 30
+
+   25 SELECTORS: SELECTORS INHERIT SELECTOR . PSEUDOCLASS
+
+    $default  reduce using rule 29 (PSEUDOCLASS)
+
+    PSEUDOCLASS  go to state 45
+
+
+State 31
+
+   32 DECL: IDENTIFIER . T_COLON EXPR T_SEMICOLON
+
+    T_COLON  shift, and go to state 46
+
+
+State 32
+
+   34 DECL: VARDECL .
+
+    $default  reduce using rule 34 (DECL)
+
+
+State 33
+
+   33 DECL: CSSRULE .
+
+    $default  reduce using rule 33 (DECL)
+
+
+State 34
+
+   23 CSSRULE: SELECTORS T_PCL DECLS . T_PCR
+
+    T_PCR  shift, and go to state 47
+
+
+State 35
+
+   31 DECLS: DECL . DECLS
+
+    IDENTIFIER  shift, and go to state 31
+    T_DOLLAR    shift, and go to state 1
+
+    IDENTIFIER  [reduce using rule 6 (VAR)]
+    INHERIT     reduce using rule 6 (VAR)
+    INHERIT     [reduce using rule 24 (SELECTORS)]
+    T_DOLLAR    [reduce using rule 6 (VAR)]
+    T_PCL       reduce using rule 6 (VAR)
+    T_PCL       [reduce using rule 24 (SELECTORS)]
+    T_PCR       reduce using rule 6 (VAR)
+    T_PCR       [reduce using rule 30 (DECLS)]
+    $default    reduce using rule 6 (VAR)
+
+    VARDECL    go to state 32
+    VAR        go to state 5
+    CSSRULE    go to state 33
+    SELECTORS  go to state 7
+    DECLS      go to state 48
+    DECL       go to state 35
+
+
+State 36
+
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+   19 P: EXPR .
+   20  | EXPR . PARAMS
+
+    T_COMMA  shift, and go to state 49
+    T_OP     shift, and go to state 23
+    T_OM     shift, and go to state 24
+    T_OS     shift, and go to state 25
+    T_OD     shift, and go to state 26
+
+    T_PR      reduce using rule 19 (P)
+    T_PR      [reduce using rule 21 (PARAMS)]
+    $default  reduce using rule 19 (P)
+
+    PARAMS  go to state 50
+
+
+State 37
+
+   17 FNCALL: IDENTIFIER T_PL P . T_PR
+
+    T_PR  shift, and go to state 51
+
+
+State 38
+
+   12 EXPR: T_PL EXPR T_PR .
+
+    $default  reduce using rule 12 (EXPR)
+
+
+State 39
+
+   13 EXPR: EXPR . T_OP EXPR
+   13     | EXPR T_OP EXPR .
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+    T_OP      [reduce using rule 13 (EXPR)]
+    T_OM      [reduce using rule 13 (EXPR)]
+    T_OS      [reduce using rule 13 (EXPR)]
+    T_OD      [reduce using rule 13 (EXPR)]
+    $default  reduce using rule 13 (EXPR)
+
+
+State 40
+
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   14     | EXPR T_OM EXPR .
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+    T_OP      [reduce using rule 14 (EXPR)]
+    T_OM      [reduce using rule 14 (EXPR)]
+    T_OS      [reduce using rule 14 (EXPR)]
+    T_OD      [reduce using rule 14 (EXPR)]
+    $default  reduce using rule 14 (EXPR)
+
+
+State 41
+
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   15     | EXPR T_OS EXPR .
+   16     | EXPR . T_OD EXPR
+
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+    T_OP      [reduce using rule 15 (EXPR)]
+    T_OM      [reduce using rule 15 (EXPR)]
+    T_OS      [reduce using rule 15 (EXPR)]
+    T_OD      [reduce using rule 15 (EXPR)]
+    $default  reduce using rule 15 (EXPR)
+
+
+State 42
+
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+   16     | EXPR T_OD EXPR .
+
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+    T_OP      [reduce using rule 16 (EXPR)]
+    T_OM      [reduce using rule 16 (EXPR)]
+    T_OS      [reduce using rule 16 (EXPR)]
+    T_OD      [reduce using rule 16 (EXPR)]
+    $default  reduce using rule 16 (EXPR)
+
+
+State 43
+
+   28 SELECTOR: T_DOT IDENTIFIER .
+
+    $default  reduce using rule 28 (SELECTOR)
+
+
+State 44
+
+   27 SELECTOR: T_HASH IDENTIFIER .
+
+    $default  reduce using rule 27 (SELECTOR)
+
+
+State 45
+
+   25 SELECTORS: SELECTORS INHERIT SELECTOR PSEUDOCLASS .
+
+    $default  reduce using rule 25 (SELECTORS)
+
+
+State 46
+
+   32 DECL: IDENTIFIER T_COLON . EXPR T_SEMICOLON
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    $default  reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 52
+    FNCALL  go to state 17
+
+
+State 47
+
+   23 CSSRULE: SELECTORS T_PCL DECLS T_PCR .
+
+    $default  reduce using rule 23 (CSSRULE)
+
+
+State 48
+
+   31 DECLS: DECL DECLS .
+
+    $default  reduce using rule 31 (DECLS)
+
+
+State 49
+
+   22 PARAMS: T_COMMA . EXPR
+
+    IDENTIFIER  shift, and go to state 11
+    NUMBER      shift, and go to state 12
+    ATOM        shift, and go to state 13
+    T_DOLLAR    shift, and go to state 1
+    T_PL        shift, and go to state 14
+
+    $default  reduce using rule 6 (VAR)
+
+    VAR     go to state 15
+    EXPR    go to state 53
+    FNCALL  go to state 17
+
+
+State 50
+
+   20 P: EXPR PARAMS .
+
+    $default  reduce using rule 20 (P)
+
+
+State 51
+
+   17 FNCALL: IDENTIFIER T_PL P T_PR .
+
+    $default  reduce using rule 17 (FNCALL)
+
+
+State 52
+
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+   32 DECL: IDENTIFIER T_COLON EXPR . T_SEMICOLON
+
+    T_SEMICOLON  shift, and go to state 54
+    T_OP         shift, and go to state 23
+    T_OM         shift, and go to state 24
+    T_OS         shift, and go to state 25
+    T_OD         shift, and go to state 26
+
+
+State 53
+
+   13 EXPR: EXPR . T_OP EXPR
+   14     | EXPR . T_OM EXPR
+   15     | EXPR . T_OS EXPR
+   16     | EXPR . T_OD EXPR
+   22 PARAMS: T_COMMA EXPR .
+
+    T_OP  shift, and go to state 23
+    T_OM  shift, and go to state 24
+    T_OS  shift, and go to state 25
+    T_OD  shift, and go to state 26
+
+    $default  reduce using rule 22 (PARAMS)
+
+
+State 54
+
+   32 DECL: IDENTIFIER T_COLON EXPR T_SEMICOLON .
+
+    $default  reduce using rule 32 (DECL)

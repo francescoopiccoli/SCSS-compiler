@@ -65,12 +65,31 @@ extern int yydebug;
     RETURN = 266,                  /* RETURN  */
     QUIT = 267,                    /* QUIT  */
     OP_COMP = 268,                 /* OP_COMP  */
-    OP_MINUS = 269,                /* OP_MINUS  */
-    OP_PLUS = 270,                 /* OP_PLUS  */
-    OP_MULT = 271,                 /* OP_MULT  */
-    OP_DIV = 272,                  /* OP_DIV  */
-    UMINUS = 273,                  /* UMINUS  */
-    OP_I = 274                     /* OP_I  */
+    IDENTIFIER = 269,              /* IDENTIFIER  */
+    NUMBER = 270,                  /* NUMBER  */
+    UNIT = 271,                    /* UNIT  */
+    ATOM = 272,                    /* ATOM  */
+    INHERIT = 273,                 /* INHERIT  */
+    T_DOLLAR = 274,                /* T_DOLLAR  */
+    T_SEMICOLON = 275,             /* T_SEMICOLON  */
+    T_COLON = 276,                 /* T_COLON  */
+    T_DOT = 277,                   /* T_DOT  */
+    T_COMMA = 278,                 /* T_COMMA  */
+    T_HASH = 279,                  /* T_HASH  */
+    T_PL = 280,                    /* T_PL  */
+    T_PR = 281,                    /* T_PR  */
+    T_PCL = 282,                   /* T_PCL  */
+    T_PCR = 283,                   /* T_PCR  */
+    T_OP = 284,                    /* T_OP  */
+    T_OM = 285,                    /* T_OM  */
+    T_OS = 286,                    /* T_OS  */
+    T_OD = 287,                    /* T_OD  */
+    OP_MINUS = 288,                /* OP_MINUS  */
+    OP_PLUS = 289,                 /* OP_PLUS  */
+    OP_MULT = 290,                 /* OP_MULT  */
+    OP_DIV = 291,                  /* OP_DIV  */
+    UMINUS = 292,                  /* UMINUS  */
+    OP_I = 293                     /* OP_I  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -89,12 +108,31 @@ extern int yydebug;
 #define RETURN 266
 #define QUIT 267
 #define OP_COMP 268
-#define OP_MINUS 269
-#define OP_PLUS 270
-#define OP_MULT 271
-#define OP_DIV 272
-#define UMINUS 273
-#define OP_I 274
+#define IDENTIFIER 269
+#define NUMBER 270
+#define UNIT 271
+#define ATOM 272
+#define INHERIT 273
+#define T_DOLLAR 274
+#define T_SEMICOLON 275
+#define T_COLON 276
+#define T_DOT 277
+#define T_COMMA 278
+#define T_HASH 279
+#define T_PL 280
+#define T_PR 281
+#define T_PCL 282
+#define T_PCR 283
+#define T_OP 284
+#define T_OM 285
+#define T_OS 286
+#define T_OD 287
+#define OP_MINUS 288
+#define OP_PLUS 289
+#define OP_MULT 290
+#define OP_DIV 291
+#define UMINUS 292
+#define OP_I 293
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -105,7 +143,7 @@ union YYSTYPE
        
        
 
-#line 109 "y.tab.h"
+#line 147 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

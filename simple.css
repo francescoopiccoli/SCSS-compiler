@@ -1,0 +1,23 @@
+$var : 20px;
+$var : (20%)-2px;
+$var : red + rgb(10,10,10);
+
+//hi
+/* hi */
+
+.code {
+    --attr: functionname(20 - fn2($var));
+    
+    a {
+        attr2: 0;
+        
+        b {
+            
+        }
+    }
+}
+
+a li {}
+a > li {}
+a .li {}
+a:li {}

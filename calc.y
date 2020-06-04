@@ -46,11 +46,22 @@
 %token            QUIT
 %token            OP_COMP
 
+%token            IDENTIFIER
+%token            NUMBER
+%token            UNIT
+%token            ATOM
+%token            INHERIT
+
 %token            T_DOLLAR
 %token            T_SEMICOLON
 %token            T_COLON
+%token            T_DOT
+%token            T_COMMA
+%token            T_HASH
 %token            T_PL
 %token            T_PR
+%token            T_PCL
+%token            T_PCR
 %token            T_OP
 %token            T_OM
 %token            T_OS
@@ -68,31 +79,75 @@
 
 // line and statement rules
 
-S
-    :
-    | ST S
-    |
-
-    ;
+S :
+  | ST S
+  ;
     
-ST
-    :
-    | VARDECL
-    | CSSRULE
-
-    ;
+ST: VARDECL
+  | CSSRULE
+  ;
 
 VARDECL
-    :
-    | T_DOLLAR NUM
+  : VAR EXPR
+  ;
 
-    ;
+VAR:
+  | T_DOLLAR IDENTIFIER
+  ;
+
+EXPR
+  : VAR
+  | NUMBER UNIT
+  | ATOM
+  | FNCALL
+  | T_PL EXPR T_PR
+  | EXPR T_OP EXPR
+  | EXPR T_OM EXPR
+  | EXPR T_OS EXPR
+  | EXPR T_OD EXPR
+  ;
+
+FNCALL
+  : IDENTIFIER T_PL P T_PR
+  ;
+
+P :
+  | EXPR
+  | EXPR PARAMS
+  ;
+
+PARAMS
+  :
+  | T_COMMA EXPR
+  ;
 
 CSSRULE
-    :
-    | NUM
+  : SELECTORS T_PCL DECLS T_PCR
+  ;
 
-    ;
+SELECTORS
+  :
+  | SELECTORS INHERIT SELECTOR PSEUDOCLASS
+  ;
+
+SELECTOR
+  : IDENTIFIER
+  | T_HASH IDENTIFIER
+  | T_DOT IDENTIFIER
+  ;
+
+PSEUDOCLASS
+  :
+  ;
+DECLS
+  :
+  | DECL DECLS
+  ;
+  
+DECL
+  : IDENTIFIER T_COLON EXPR T_SEMICOLON
+  | CSSRULE
+  | VARDECL
 
 %%
 #include "lex.yy.c"
@@ -103,7 +158,7 @@ int main(int argc, char *argv[])
  // interactive mode or file mode
       if(argc < 2) 
       {
-            printf("Welcome to ScssTocss compiler, a simple preprocessor which converts scss to css! To exit at any time, type \"exit;\".\n");
+            printf("Welcome to ScssTocss compiler, a simple preprocessor which converts scss to css!\n");
             return yyparse();
       } 
       else 

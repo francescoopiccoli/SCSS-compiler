@@ -21,6 +21,8 @@ ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-_)*
 COMMENT     \/\/.*\n
 ATOM        black|red|white|blue|green
 PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited)?
+
+
 %%
 
 [ \t\n]       { ; } // ignore whitespace
