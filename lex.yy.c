@@ -911,137 +911,137 @@ case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
 #line 29 "calc.l"
-{ ; } // ignore whitespace
+{} // ignore whitespace
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
 #line 30 "calc.l"
-{ ; } // ignore comments of type "//"
+{} // ignore comments of type "//"
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 31 "calc.l"
-ECHO  // report identically in new file
+{}  ECHO; // report identically in new file
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "calc.l"
+#line 33 "calc.l"
 {return T_PX;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "calc.l"
+#line 34 "calc.l"
 {return T_OP;}   // operators 
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 34 "calc.l"
+#line 35 "calc.l"
 {return T_OM;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "calc.l"
+#line 36 "calc.l"
 {return T_OS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 36 "calc.l"
+#line 37 "calc.l"
 {return T_OD;}     
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 37 "calc.l"
+#line 38 "calc.l"
 {return T_PL;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 38 "calc.l"
+#line 39 "calc.l"
 {return T_PR;}     
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 39 "calc.l"
+#line 40 "calc.l"
 {return T_CBL;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "calc.l"
+#line 41 "calc.l"
 {return T_CBR;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 41 "calc.l"
+#line 42 "calc.l"
 {return OP_ASSIGN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 42 "calc.l"
+#line 43 "calc.l"
 {return OP_EXP;}      
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "calc.l"
+#line 44 "calc.l"
 {return T_COLON;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 44 "calc.l"
+#line 45 "calc.l"
 {return OP_COMP;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 45 "calc.l"
+#line 46 "calc.l"
 {return T_SEMICOLON;} 
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 46 "calc.l"
+#line 47 "calc.l"
 {return T_COMMA;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 47 "calc.l"
+#line 48 "calc.l"
 {return T_DOT;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 48 "calc.l"
+#line 49 "calc.l"
 {return T_HASH;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 49 "calc.l"
+#line 50 "calc.l"
 {return T_PERCENT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 51 "calc.l"
+#line 52 "calc.l"
 {/*yylval.lexeme = atof(yytext); return NUM; */}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 54 "calc.l"
+#line 55 "calc.l"
 {/*yylval.lexeme = strdup(yytext); return ATOM; */}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 56 "calc.l"
+#line 57 "calc.l"
 {/*yylval.lexeme = strdup(yytext); return ID; */}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 58 "calc.l"
+#line 59 "calc.l"
 {/*yylval.lexeme = strdup(yytext); return PSEUDO; */}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 60 "calc.l"
+#line 61 "calc.l"
 { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 62 "calc.l"
+#line 63 "calc.l"
 ECHO;
 	YY_BREAK
 #line 1047 "lex.yy.c"
@@ -2061,6 +2061,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 62 "calc.l"
+#line 63 "calc.l"
 
 

@@ -26,9 +26,9 @@ PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-t
 
 %%
 
-[ \t\n]       { ; } // ignore whitespace
-{COMMENT}     { ; } // ignore comments of type "//"
-"/\*.*\*/"    ECHO  // report identically in new file
+[ \t\n]       {} // ignore whitespace
+{COMMENT}     {} // ignore comments of type "//"
+"/\*.*\*/"    {}  ECHO; // report identically in new file
 
 "px"        {return T_PX;}
 "+"         {return T_OP;}   // operators 
