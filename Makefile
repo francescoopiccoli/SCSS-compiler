@@ -13,7 +13,7 @@ run:
 .flex:
 	@echo "Running flex..."
     	# -l, --lex-compat maximal compatibility with original lex cd into build directory, note the semicolon and rule in one line
-	flex -l *.l
+	flex -d -l *.l
 
 .yacc:
 	@echo "Running yacc..."

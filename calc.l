@@ -21,16 +21,16 @@ int lineno = 0;
 DIGIT       [0-9]
 NUM         {DIGIT}+(\.{DIGIT}+)?
 LETTER      [a-zA-Z]
-ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-|_)*
+ID          ({LETTER}|_)({LETTER}|{DIGIT}|\-|_)*
 COMMENT     \/\/.*\n
-UNIT        px|em|\%
+UNIT        (px|em|\%)
 ATOM        black|red|white|blue|green
 PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
 
 %%
 
-\/\*.*\*\/  ECHO; // report identically in output
-[ \t\n]       {} // ignore whitespace
+\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ ECHO; // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
+[ \t\n]       {} // ignxore whitespace -> only outside strings?
 {COMMENT}     {} // ignore comments of type "//"
 
 "+"         {return T_PLUS;}   // operators 
@@ -50,11 +50,11 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 "$"         {return T_DOLLAR;}
 
 
+{UNIT}      {printf("unit"); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
+
 {NUM}{UNIT} {printf("scalar"); /*yylval.lexeme = strdup(yytext); */ return SCALAR;}
 
 {NUM}       {printf("num"); /*yylval.value = atof(yytext); */ return NUM;}
-
-{UNIT}      {printf("unit"); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
 
 {ATOM}      {printf("atom"); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
 
