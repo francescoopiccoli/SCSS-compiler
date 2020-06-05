@@ -70,6 +70,7 @@ int yyerror (char const *message);
 %token            T_GT
 %token            EXIT //sarebbe da mettere in ogni production, per ora solo su S
 %token            CSS_DATA_TYPE 
+%token            HTML_DATA_TYPE 
 
 
 
@@ -133,7 +134,7 @@ CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
   ;
 
-SELECTOR: CSS_DATA_TYPE {printf("This is selector\n");}
+SELECTOR: HTML_DATA_TYPE {printf("This is selector\n");}
   | T_HASH ID {printf("This is selector\n");}
   | T_DOT ID {printf("This is selector\n");}
   ;
@@ -151,7 +152,7 @@ DECLS: DECL DECLS
   | EPS
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
+DECL: CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
   | CSSRULE
   | VARDECL
 

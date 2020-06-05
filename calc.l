@@ -26,7 +26,10 @@ COMMENT     \/\/.*\n
 UNIT        (px|em|\%)
 ATOM        black|red|white|blue|green
 PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
-CSS_DATA_TYPE (li|a|ul|ol|div|span|body|i|h1|h2|h3|h4|h5|h6|b|p|header|footer|td|th|tr|table|section|small)
+HTML_DATA_TYPE (li|a|ul|ol|div|span|body|i|h1|h2|h3|h4|h5|h6|b|p|header|footer|td|th|tr|table|section|small)
+CSS_DATA_TYPE (color|margin|padding|background-color|left|right|float|clear|bottom|top|position|display|font-size|font-family|height|width|text-align|z-index)
+
+
 %%
 
 \/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ ECHO; // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
@@ -59,7 +62,7 @@ CSS_DATA_TYPE (li|a|ul|ol|div|span|body|i|h1|h2|h3|h4|h5|h6|b|p|header|footer|td
 
 {ATOM}      {printf("|||atom = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
 
-{CSS_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
+{HTML_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
 
 {ID}        {printf("||| id = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ID;}
 
