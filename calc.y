@@ -15,6 +15,11 @@
  *  @bug No known bugs?
  */
 
+
+//BUGS
+// - prod di relationship
+// - numeri con - passati come identifier invece che come espressioni -> precedenza 
+
 #define YYERROR_VERBOSE 1
 
 #include <stdlib.h>
@@ -45,6 +50,7 @@ int yyerror (char const *message);
 %token            ID
 %token            NUM
 %token            UNIT
+%token            SCALAR
 %token            ATOM
 %token            PSEUDO
 
@@ -77,7 +83,10 @@ int yyerror (char const *message);
 
 // line and statement rules
 
-S :
+EPS :
+  ;
+
+S : EPS
   | ST S
   ;
     
@@ -93,7 +102,7 @@ VAR: T_DOLLAR ID
 
 EXPR
   : VAR
-  | NUM UNIT
+  | SCALAR
   | ATOM
   | FNCALL
   | T_PL EXPR T_PR
@@ -107,12 +116,12 @@ FNCALL
   : ID T_PL P T_PR
   ;
 
-P :
+P : EPS
   | EXPR PARAMS
   ;
 
 PARAMS
-  :
+  : EPS
   | T_COMMA EXPR
   ;
 
@@ -121,7 +130,7 @@ CSSRULE
   ;
 
 SELECTORS
-  :
+  : EPS
   | SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS
   ;
 
@@ -132,18 +141,18 @@ SELECTOR
   ;
 
 PSEUDOCLASS
-  :
+  : EPS
   | PSEUDO
   ;
 
   RELATIONSHIP
-  : 
+  : EPS
   | T_GT
   | T_COMMA
   ;
   
 DECLS
-  :
+  : EPS
   | DECL DECLS
   ;
   
@@ -162,7 +171,6 @@ int main(int argc, char *argv[])
  // interactive mode or file mode
       if(argc < 2) 
       {
-            printf("Welcome to ScssTocss compiler, a simple preprocessor which converts scss to css!\n");
             return yyparse();
       } 
       else 

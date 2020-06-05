@@ -12,22 +12,26 @@ int token_cnt = 0;
 int col_cnt = 0;
 int lineno = 0;
 
+//BUGS
+// - unit expr breaks stuff
+// - comments
+
 %}
 
 DIGIT       [0-9]
 NUM         {DIGIT}+(\.{DIGIT}+)?
 LETTER      [a-zA-Z]
-ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-_)* 
+ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-|_)*
 COMMENT     \/\/.*\n
-UNIT        %|px
+UNIT        px|em|\%
 ATOM        black|red|white|blue|green
 PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
 
 %%
 
+\/\*.*\*\/  ECHO; // report identically in output
 [ \t\n]       {} // ignore whitespace
 {COMMENT}     {} // ignore comments of type "//"
-"/\*.*\*/"    {}  ECHO; // report identically in new file
 
 "+"         {return T_PLUS;}   // operators 
 "-"         {return T_MINUS;}
@@ -45,16 +49,18 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 "#"         {return T_HASH;}
 "$"         {return T_DOLLAR;}
 
-{NUM}       {printf("num"); /*yylval.value = atof(yytext); return NUM; */}
 
+{NUM}{UNIT} {printf("scalar"); /*yylval.lexeme = strdup(yytext); */ return SCALAR;}
 
-{ATOM}      {printf("atom"); /*yylval.lexeme = strdup(yytext); return ATOM; */}
+{NUM}       {printf("num"); /*yylval.value = atof(yytext); */ return NUM;}
 
-{ID}        {printf("id"); /*yylval.lexeme = strdup(yytext); return ID; */}
+{UNIT}      {printf("unit"); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
 
-{PSEUDOCLASS} {printf("PSEUDOCLASS"); /*yylval.lexeme = strdup(yytext); return PSEUDO; */}
+{ATOM}      {printf("atom"); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
 
-{UNIT}      {printf("unit"); /*yylval.lexeme = strdup(yytext); return UNIT; */}
+{ID}        {printf("id"); /*yylval.lexeme = strdup(yytext); */ return ID;}
+
+{PSEUDOCLASS} {printf("PSEUDOCLASS"); /*yylval.lexeme = strdup(yytext); */ return PSEUDO; }
 
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 
