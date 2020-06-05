@@ -81,24 +81,26 @@ int yyerror (char const *message);
 
 // line and statement rules
 
+
+
+S: ST S {printf("I understood everything\n");}
+  | EPS {printf("I understood everything\n");}
+  ;
+
 EPS:
   ;
 
-S: ST S
-  | EPS
-  ;
-    
 ST: VARDECL
   | CSSRULE
   ;
 
-VARDECL: VAR T_COLON EXPR T_SEMICOLON
+VARDECL: VAR T_COLON EXPR T_SEMICOLON {printf("This is a variable declaration\n");}
   ;
 
-VAR: T_DOLLAR ID
+VAR: T_DOLLAR ID {printf("This is a variable name\n");}
   ;
 
-EXPR: VAR
+EXPR: VAR {printf("This is an expression\n");}
   | SCALAR
   | NUM
   | ATOM
@@ -110,25 +112,25 @@ EXPR: VAR
   | EXPR T_DIV EXPR
   ;
 
-FNCALL: ID T_PL P T_PR
+FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}
   ;
 
-P: EXPR PARAMS
+P: EXPR PARAMS 
   | EPS
   ;
 
-PARAMS: T_COMMA EXPR PARAMS
+PARAMS: T_COMMA EXPR PARAMS {printf("This is a paramater\n");}
   | EPS
   ;
 
-CSSRULE: SELECTORS T_BL DECLS T_BR
+CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
   ;
 
-SELECTORS: SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS
+SELECTORS: SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS 
   | EPS
   ;
 
-SELECTOR: ID
+SELECTOR: ID {printf("This is selector\n");}
   | T_HASH ID
   | T_DOT ID
   ;
@@ -146,7 +148,7 @@ DECLS: DECL DECLS
   | EPS
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON
+DECL: ID T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
   | CSSRULE
   | VARDECL
 
