@@ -103,6 +103,7 @@ VAR: T_DOLLAR ID
 EXPR
   : VAR
   | SCALAR
+  | NUM
   | ATOM
   | FNCALL
   | T_PL EXPR T_PR
@@ -122,7 +123,7 @@ P : EPS
 
 PARAMS
   : EPS
-  | T_COMMA EXPR
+  | T_COMMA EXPR PARAMS
   ;
 
 CSSRULE
