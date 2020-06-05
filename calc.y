@@ -31,31 +31,18 @@
 %union {
        char* lexeme;
        double value;
+       symtable sym;
        }
 
 
 
 // here we define the tokens with its respective precedences
 
-%token            LP
-%token            RP
-%token            NUM
-%token            SEMI
-%token            OP_ASSIGN
-%token            OP_EXP
 %token            ID
-%token            EXIT
-%token            RETURN
-%token            QUIT
-%token            OP_COMP
-
-%token            IDENTIFIER
-%token            NUMBER
+%token            NUM
 %token            UNIT
 %token            ATOM
-%token            INHERIT
 %token            PSEUDO
-
 
 %token            T_DOLLAR
 %token            T_SEMICOLON
@@ -63,24 +50,25 @@
 %token            T_DOT
 %token            T_COMMA
 %token            T_HASH
-%token            T_PERCENT
-%token            T_PX
 %token            T_PL
 %token            T_PR
-%token            T_CBL
-%token            T_CBR
-%token            T_OP
-%token            T_OM
-%token            T_OS
-%token            T_OD
+%token            T_BL
+%token            T_BR
+%token            T_PLUS
+%token            T_MINUS
+%token            T_STAR
+%token            T_DIV
+%token            T_GT
+
+
 
 
 %type <lexeme>   S //sbagliati da correggere
 %type <value>    ST
 
-%left OP_MINUS OP_PLUS 
-%left OP_MULT OP_DIV 
-%right UMINUS OP_I
+%left T_MINUS T_PLUS
+%left T_STAR T_DIV 
+%right UMINUS OP_I // da togliere penso
 
 %start S
 
@@ -98,28 +86,26 @@ ST: VARDECL
   | CSSRULE
   ;
 
-VARDECL
-  : VAR EXPR
+VARDECL: VAR T_COLON EXPR T_SEMICOLON
   ;
 
-VAR:
-  | T_DOLLAR IDENTIFIER
+VAR: T_DOLLAR ID
   ;
 
 EXPR
   : VAR
-  | NUMBER UNIT
+  | NUM UNIT
   | ATOM
   | FNCALL
   | T_PL EXPR T_PR
-  | EXPR T_OP EXPR
-  | EXPR T_OM EXPR
-  | EXPR T_OS EXPR
-  | EXPR T_OD EXPR
+  | EXPR T_PLUS EXPR
+  | EXPR T_MINUS EXPR
+  | EXPR T_STAR EXPR
+  | EXPR T_DIV EXPR
   ;
 
 FNCALL
-  : IDENTIFIER T_PL P T_PR
+  : ID T_PL P T_PR
   ;
 
 P :
@@ -133,23 +119,29 @@ PARAMS
   ;
 
 CSSRULE
-  : SELECTORS T_CBL DECLS T_CBR
+  : SELECTORS T_BL DECLS T_BR
   ;
 
 SELECTORS
   :
-  | SELECTORS INHERIT SELECTOR PSEUDOCLASS
+  | SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS
   ;
 
 SELECTOR
-  : IDENTIFIER
-  | T_HASH IDENTIFIER
-  | T_DOT IDENTIFIER
+  : ID
+  | T_HASH ID
+  | T_DOT ID
   ;
 
 PSEUDOCLASS
   :
   | PSEUDO
+  ;
+
+  RELATIONSHIP
+  : 
+  | T_GT
+  | T_COMMA
   ;
   
 DECLS
@@ -158,7 +150,7 @@ DECLS
   ;
   
 DECL
-  : IDENTIFIER T_COLON EXPR T_SEMICOLON
+  : ID T_COLON EXPR T_SEMICOLON
   | CSSRULE
   | VARDECL
 

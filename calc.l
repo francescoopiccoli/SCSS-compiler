@@ -21,8 +21,7 @@ ID          ({LETTER}|\-|_)({LETTER}|{DIGIT}|\-_)*
 COMMENT     \/\/.*\n
 UNIT        %|px
 ATOM        black|red|white|blue|green
-PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited)
-
+PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
 
 %%
 
@@ -30,33 +29,32 @@ PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-t
 {COMMENT}     {} // ignore comments of type "//"
 "/\*.*\*/"    {}  ECHO; // report identically in new file
 
-"px"        {return T_PX;}
-"+"         {return T_OP;}   // operators 
-"-"         {return T_OM;}
-"*"         {return T_OS;}
-"/"         {return T_OD;}     
+"+"         {return T_PLUS;}   // operators 
+"-"         {return T_MINUS;}
+"*"         {return T_STAR;}
+"/"         {return T_DIV;}     
 "("         {return T_PL;}
 ")"         {return T_PR;}     
-"{"         {return T_CBL;}
-"}"         {return T_CBR;}
-"="         {return OP_ASSIGN;}
-"^"         {return OP_EXP;}      
+"{"         {return T_BL;}
+"}"         {return T_BR;}
 ":"         {return T_COLON;}
-"=="        {return OP_COMP;}
 ";"         {return T_SEMICOLON;} 
 ","         {return T_COMMA;}
+">"         {return T_GT;}
 "."         {return T_DOT;}
 "#"         {return T_HASH;}
-"%"         {return T_PERCENT;}
+"$"         {return T_DOLLAR;}
 
 {NUM}       {/*yylval.value = atof(yytext); return NUM; */}
 
 
-{ATOM}       {/*yylval.lexeme = strdup(yytext); return ATOM; */}
+{ATOM}      {/*yylval.lexeme = strdup(yytext); return ATOM; */}
 
 {ID}        {/*yylval.lexeme = strdup(yytext); return ID; */}
 
 {PSEUDOCLASS} {/*yylval.lexeme = strdup(yytext); return PSEUDO; */}
+
+{UNIT}      {/*yylval.lexeme = strdup(yytext); return UNIT; */}
 
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 
