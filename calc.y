@@ -68,6 +68,9 @@ int yyerror (char const *message);
 %token            T_STAR
 %token            T_DIV
 %token            T_GT
+%token            EXIT //sarebbe da mettere in ogni production, per ora solo su S
+%token            CSS_DATA_TYPE 
+
 
 
 %left T_MINUS T_PLUS
@@ -84,14 +87,15 @@ int yyerror (char const *message);
 
 
 S: ST S {printf("I understood everything\n");}
+  | EXIT {exit(0);}
   | EPS {printf("I understood everything\n");}
   ;
 
 EPS:
   ;
 
-ST: VARDECL
-  | CSSRULE
+ST: VARDECL {printf("This is a variable declaration statement\n"); }
+  | CSSRULE {printf("This is a css rule statement\n");}
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {printf("This is a variable declaration\n");}
@@ -130,9 +134,9 @@ SELECTORS: SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS
   | EPS
   ;
 
-SELECTOR: ID {printf("This is selector\n");}
-  | T_HASH ID
-  | T_DOT ID
+SELECTOR: CSS_DATA_TYPE {printf("This is selector\n");}
+  | T_HASH ID {printf("This is selector\n");}
+  | T_DOT ID {printf("This is selector\n");}
   ;
 
 PSEUDOCLASS: PSEUDO
@@ -162,6 +166,7 @@ int main(int argc, char *argv[])
  // interactive mode or file mode
       if(argc < 2) 
       {
+            printf("To exit at any time, type \"exit;\".\n");
             return yyparse();
       } 
       else 

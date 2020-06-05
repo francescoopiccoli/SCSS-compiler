@@ -26,7 +26,7 @@ COMMENT     \/\/.*\n
 UNIT        (px|em|\%)
 ATOM        black|red|white|blue|green
 PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
-
+CSS_DATA_TYPE (li|a|ul|ol|div|span|body|i|h1|h2|h3|h4|h5|h6|b|p|header|footer|td|th|tr|table|section|small)
 %%
 
 \/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ ECHO; // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
@@ -35,7 +35,7 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 
 "+"         {return T_PLUS;}   // operators 
 "-"         {return T_MINUS;}
-"*"         {return T_STAR;}
+"*"         {return T_STAR;} 
 "/"         {return T_DIV;}     
 "("         {return T_PL;}
 ")"         {return T_PR;}     
@@ -48,6 +48,7 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 "."         {return T_DOT;}
 "#"         {return T_HASH;}
 "$"         {return T_DOLLAR;}
+"exit"      {return EXIT;}
 
 
 {UNIT}      {printf("|||unit = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
@@ -57,6 +58,8 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 {NUM}       {printf("|||num = %s |||\n", yytext); /*yylval.value = atof(yytext); */ return NUM;}
 
 {ATOM}      {printf("|||atom = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
+
+{CSS_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
 
 {ID}        {printf("||| id = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ID;}
 
