@@ -30,7 +30,7 @@ CSS_DATA_TYPE (li|a|ul|ol|div|span|body|i|h1|h2|h3|h4|h5|h6|b|p|header|footer|td
 %%
 
 \/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ ECHO; // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
-[ \t\n]       {} // ignxore whitespace -> only outside strings?
+[ \t\n]       {} // ignore whitespace -> only outside strings?
 {COMMENT}     {} // ignore comments of type "//"
 
 "+"         {return T_PLUS;}   // operators 

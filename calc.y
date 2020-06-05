@@ -86,9 +86,9 @@ int yyerror (char const *message);
 
 
 
-S: ST S {printf("I understood everything\n");}
+S: ST S {printf("Starting point reached\n");}
   | EXIT {exit(0);}
-  | EPS {printf("I understood everything\n");}
+  | EPS {printf("Starting point reached\n");}
   ;
 
 EPS:
@@ -104,11 +104,11 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON {printf("This is a variable declaration\n"
 VAR: T_DOLLAR ID {printf("This is a variable name\n");}
   ;
 
-EXPR: VAR {printf("This is an expression\n");}
-  | SCALAR
-  | NUM
-  | ATOM
-  | FNCALL
+EXPR: VAR {printf("This is a var expression\n");}
+  | SCALAR {printf("This is a scalar expression\n");}
+  | NUM {printf("This is num expression\n");}
+  | ATOM {printf("This is atom expression\n");}
+  | FNCALL {printf("This is fncall expression\n");}
   | T_PL EXPR T_PR
   | EXPR T_PLUS EXPR
   | EXPR T_MINUS EXPR
@@ -130,8 +130,7 @@ PARAMS: T_COMMA EXPR PARAMS {printf("This is a paramater\n");}
 CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
   ;
 
-SELECTORS: SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS 
-  | EPS
+SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
   ;
 
 SELECTOR: CSS_DATA_TYPE {printf("This is selector\n");}
@@ -143,8 +142,8 @@ PSEUDOCLASS: PSEUDO
   | EPS
   ;
 
-  RELATIONSHIP: T_COMMA
-  | T_GT
+  RELATIONSHIP: T_COMMA SELECTORS {printf("This is a comma relationship\n");}
+  | T_GT SELECTORS {printf("This is a hierarchy relationship\n");}
   | EPS
   ;
   
