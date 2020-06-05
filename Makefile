@@ -12,8 +12,8 @@ run:
 
 .flex:
 	@echo "Running flex..."
-    	# -l, --lex-compat maximal compatibility with original lex cd into build directory, note the semicolon and rule in one line
-	flex -d -l *.l
+    	# -l, --lex-compat maximal compatibility with original lex cd into build directory, note the semicolon and rule in one line     -d to add debug mode
+	flex -l *.l
 
 .yacc:
 	@echo "Running yacc..."

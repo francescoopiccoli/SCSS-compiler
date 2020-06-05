@@ -28,6 +28,8 @@ ATOM        black|red|white|blue|green
 PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
 HTML_DATA_TYPE (li|a|ul|ol|div|span|body|i|h1|h2|h3|h4|h5|h6|b|p|header|footer|td|th|tr|table|section|small)
 CSS_DATA_TYPE (color|margin|padding|background-color|left|right|float|clear|bottom|top|position|display|font-size|font-family|height|width|text-align|z-index)
+FNNAME (url|rgb|linear-gradient)
+
 
 
 %%
@@ -66,6 +68,7 @@ CSS_DATA_TYPE (color|margin|padding|background-color|left|right|float|clear|bott
 
 {CSS_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
 
+{FNNAME} {printf("|||fnname = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return FNNAME; }
 
 {ID}        {printf("||| id = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ID;}
 

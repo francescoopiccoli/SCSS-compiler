@@ -71,6 +71,7 @@ int yyerror (char const *message);
 %token            EXIT //sarebbe da mettere in ogni production, per ora solo su S
 %token            CSS_DATA_TYPE 
 %token            HTML_DATA_TYPE 
+%token            FNNAME 
 
 
 
@@ -117,7 +118,7 @@ EXPR: VAR {printf("This is a var expression\n");}
   | EXPR T_DIV EXPR {printf("This a division between expressions\n");}
   ;
 
-FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}
+FNCALL: FNNAME T_PL P T_PR {printf("This is a function call\n");}
   ;
 
 P: EXPR PARAMS 
