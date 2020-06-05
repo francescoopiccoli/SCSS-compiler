@@ -21,7 +21,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-
+#include "header/scssFunctions.h"
+#include "header/symtable.h"
+#include "header/error.h"
 %}
 
 // here we define all return values that lex can return
@@ -72,6 +74,9 @@
 %token            T_OS
 %token            T_OD
 
+
+%type <lexeme>   S //sbagliati da correggere
+%type <value>    ST
 
 %left OP_MINUS OP_PLUS 
 %left OP_MULT OP_DIV 
