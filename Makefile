@@ -12,12 +12,12 @@ run:
 
 .flex:
 	@echo "Running flex..."
-    	# -l, --lex-compat maximal compatibility with original lex cd into build directory, note the semicolon and rule in one line \
+    	# -l, --lex-compat maximal compatibility with original lex cd into build directory, note the semicolon and rule in one line
 	flex -l *.l
 
 .yacc:
 	@echo "Running yacc..."
-	#-v: generates the DFA -d: generate the y.tab.h file \
+	#-v: generates the DFA -d: generate the y.tab.h file
 	yacc -vd *.y    
 
 

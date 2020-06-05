@@ -21,9 +21,13 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "header/scssFunctions.h"
-#include "header/symtable.h"
-#include "header/error.h"
+//#include "header/scssFunctions.h"
+//#include "header/symtable.h"
+//#include "header/error.h"
+
+int yylex();
+int yyerror (char const *message);
+
 %}
 
 // here we define all return values that lex can return
@@ -31,7 +35,7 @@
 %union {
        char* lexeme;
        double value;
-       symtable sym;
+       //symtable sym;
        }
 
 
@@ -62,13 +66,8 @@
 
 
 
-
-%type <lexeme>   S //sbagliati da correggere
-%type <value>    ST
-
 %left T_MINUS T_PLUS
-%left T_STAR T_DIV 
-%right UMINUS OP_I // da togliere penso
+%left T_STAR T_DIV
 
 %start S
 
@@ -109,7 +108,6 @@ FNCALL
   ;
 
 P :
-  | EXPR
   | EXPR PARAMS
   ;
 

@@ -3,8 +3,8 @@
 %{
 #include <stdlib.h>
 #include <string.h>
-#include "header/scssFunctions.h"
-#include "header/symtable.h"
+//#include "header/scssFunctions.h"
+//#include "header/symtable.h"
 
 //variabili usate spesso che potrebbero tornare utili
 int badtoken_cnt = 0;
@@ -45,16 +45,16 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 "#"         {return T_HASH;}
 "$"         {return T_DOLLAR;}
 
-{NUM}       {/*yylval.value = atof(yytext); return NUM; */}
+{NUM}       {printf("num"); /*yylval.value = atof(yytext); return NUM; */}
 
 
-{ATOM}      {/*yylval.lexeme = strdup(yytext); return ATOM; */}
+{ATOM}      {printf("atom"); /*yylval.lexeme = strdup(yytext); return ATOM; */}
 
-{ID}        {/*yylval.lexeme = strdup(yytext); return ID; */}
+{ID}        {printf("id"); /*yylval.lexeme = strdup(yytext); return ID; */}
 
-{PSEUDOCLASS} {/*yylval.lexeme = strdup(yytext); return PSEUDO; */}
+{PSEUDOCLASS} {printf("PSEUDOCLASS"); /*yylval.lexeme = strdup(yytext); return PSEUDO; */}
 
-{UNIT}      {/*yylval.lexeme = strdup(yytext); return UNIT; */}
+{UNIT}      {printf("unit"); /*yylval.lexeme = strdup(yytext); return UNIT; */}
 
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 
