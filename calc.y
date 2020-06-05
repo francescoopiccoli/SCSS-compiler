@@ -110,11 +110,11 @@ EXPR: VAR {printf("This is a var expression\n");}
   | NUM {printf("This is num expression\n");}
   | ATOM {printf("This is atom expression\n");}
   | FNCALL {printf("This is fncall expression\n");}
-  | T_PL EXPR T_PR
-  | EXPR T_PLUS EXPR
-  | EXPR T_MINUS EXPR
-  | EXPR T_STAR EXPR
-  | EXPR T_DIV EXPR
+  | T_PL EXPR T_PR {printf("This an expression within parenthisi\n");}
+  | EXPR T_PLUS EXPR {printf("This a sum between expressions\n");}
+  | EXPR T_MINUS EXPR {printf("This a subtraction between expressions\n");}
+  | EXPR T_STAR EXPR {printf("This a multiplication between expressions\n");}
+  | EXPR T_DIV EXPR {printf("This a division between expressions\n");}
   ;
 
 FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}
@@ -145,6 +145,7 @@ PSEUDOCLASS: PSEUDO
 
   RELATIONSHIP: T_COMMA SELECTORS {printf("This is a comma relationship\n");}
   | T_GT SELECTORS {printf("This is a hierarchy relationship\n");}
+  | SELECTORS {printf("This is another hierarchy relationship\n");}
   | EPS
   ;
   
@@ -153,8 +154,8 @@ DECLS: DECL DECLS
   ;
   
 DECL: CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
-  | CSSRULE
-  | VARDECL
+  | CSSRULE {printf("This is a nested css rule\n");}
+  | VARDECL {printf("This is a local variable declaration\n");}
 
 %%
 
