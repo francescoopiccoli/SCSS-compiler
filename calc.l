@@ -50,17 +50,17 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
 "$"         {return T_DOLLAR;}
 
 
-{UNIT}      {printf("unit"); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
+{UNIT}      {printf("|||unit = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
 
-{NUM}{UNIT} {printf("scalar"); /*yylval.lexeme = strdup(yytext); */ return SCALAR;}
+{NUM}{UNIT} {printf("|||scalar = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return SCALAR;}
 
-{NUM}       {printf("num"); /*yylval.value = atof(yytext); */ return NUM;}
+{NUM}       {printf("|||num = %s |||\n", yytext); /*yylval.value = atof(yytext); */ return NUM;}
 
-{ATOM}      {printf("atom"); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
+{ATOM}      {printf("|||atom = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
 
-{ID}        {printf("id"); /*yylval.lexeme = strdup(yytext); */ return ID;}
+{ID}        {printf("||| id = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ID;}
 
-{PSEUDOCLASS} {printf("PSEUDOCLASS"); /*yylval.lexeme = strdup(yytext); */ return PSEUDO; }
+{PSEUDOCLASS} {printf("|||PSEUDOCLASS = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return PSEUDO; }
 
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 
