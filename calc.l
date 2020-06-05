@@ -49,7 +49,7 @@ PSEUDOCLASS (:active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-t
 "#"         {return T_HASH;}
 "%"         {return T_PERCENT;}
 
-{NUM}       {/*yylval.lexeme = atof(yytext); return NUM; */}
+{NUM}       {/*yylval.value = atof(yytext); return NUM; */}
 
 
 {ATOM}       {/*yylval.lexeme = strdup(yytext); return ATOM; */}

@@ -27,7 +27,8 @@
 // here we define all return values that lex can return
 
 %union {
-       
+       char* lexeme;
+       double value;
        }
 
 
