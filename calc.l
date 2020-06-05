@@ -62,7 +62,10 @@ CSS_DATA_TYPE (color|margin|padding|background-color|left|right|float|clear|bott
 
 {ATOM}      {printf("|||atom = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
 
-{HTML_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
+{HTML_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return HTML_DATA_TYPE; }
+
+{CSS_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
+
 
 {ID}        {printf("||| id = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ID;}
 
