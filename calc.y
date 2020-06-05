@@ -53,7 +53,6 @@ int yyerror (char const *message);
 %token            SCALAR
 %token            ATOM
 %token            PSEUDO
-
 %token            T_DOLLAR
 %token            T_SEMICOLON
 %token            T_COLON
@@ -71,7 +70,6 @@ int yyerror (char const *message);
 %token            T_GT
 
 
-
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
 
@@ -83,11 +81,11 @@ int yyerror (char const *message);
 
 // line and statement rules
 
-EPS :
+EPS:
   ;
 
-S : EPS
-  | ST S
+S: ST S
+  | EPS
   ;
     
 ST: VARDECL
@@ -100,8 +98,7 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON
 VAR: T_DOLLAR ID
   ;
 
-EXPR
-  : VAR
+EXPR: VAR
   | SCALAR
   | NUM
   | ATOM
@@ -113,52 +110,43 @@ EXPR
   | EXPR T_DIV EXPR
   ;
 
-FNCALL
-  : ID T_PL P T_PR
+FNCALL: ID T_PL P T_PR
   ;
 
-P : EPS
-  | EXPR PARAMS
+P: EXPR PARAMS
+  | EPS
   ;
 
-PARAMS
-  : EPS
-  | T_COMMA EXPR PARAMS
+PARAMS: T_COMMA EXPR PARAMS
+  | EPS
   ;
 
-CSSRULE
-  : SELECTORS T_BL DECLS T_BR
+CSSRULE: SELECTORS T_BL DECLS T_BR
   ;
 
-SELECTORS
-  : EPS
-  | SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS
+SELECTORS: SELECTORS RELATIONSHIP SELECTOR PSEUDOCLASS
+  | EPS
   ;
 
-SELECTOR
-  : ID
+SELECTOR: ID
   | T_HASH ID
   | T_DOT ID
   ;
 
-PSEUDOCLASS
-  : EPS
-  | PSEUDO
+PSEUDOCLASS: PSEUDO
+  | EPS
   ;
 
-  RELATIONSHIP
-  : EPS
+  RELATIONSHIP: T_COMMA
   | T_GT
-  | T_COMMA
+  | EPS
   ;
   
-DECLS
-  : EPS
-  | DECL DECLS
+DECLS: DECL DECLS
+  | EPS
   ;
   
-DECL
-  : ID T_COLON EXPR T_SEMICOLON
+DECL: ID T_COLON EXPR T_SEMICOLON
   | CSSRULE
   | VARDECL
 
