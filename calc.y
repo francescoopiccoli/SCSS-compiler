@@ -136,6 +136,7 @@ EXPR: VAR
     var_contents v;
     v.type = VAR_ATOM;
     v.string = $1;
+    v.number = 0;
     $$ = v; 
     }
   | FNCALL {
@@ -145,10 +146,44 @@ EXPR: VAR
     $$ = v; 
     }
   | T_PL EXPR T_PR {$$ = $2;}
-  /*| EXPR T_PLUS EXPR {$$ = VAR_SCALAR; /* todo : type check /}
-  | EXPR T_MINUS EXPR {$$ = VAR_SCALAR; /* todo : type check /}
-  | EXPR T_STAR EXPR {$$ = VAR_SCALAR; /* todo : type check /}
-  | EXPR T_DIV EXPR {$$ = VAR_SCALAR; /* todo : type check /}*/
+  | EXPR T_PLUS EXPR {
+                      var_contents v; var_contents x; 
+                      v = $1; x = $3; 
+                      if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
+                        printf("%f\n", (v.number + x.number));
+                        //symrec* symbol = getSymbol($1->name); "$1" sbagliato, in qualche modo bisogna accedere al symrec e cambiare il valore e metterlo uguale alla somma
+                        //symbol->value.number = (v.number + x.number);
+                      } else{ 
+                        printf("sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        }
+                      }
+  | EXPR T_MINUS EXPR {
+                      var_contents v; var_contents x; 
+                      v = $1; x = $3; 
+                      if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
+                        printf("%f\n", (v.number - x.number));
+                      } else{ 
+                        printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        }
+                      }
+  | EXPR T_STAR EXPR {
+                      var_contents v; var_contents x; 
+                      v = $1; x = $3; 
+                      if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
+                        printf("%f\n", (v.number * x.number));
+                      } else{ 
+                        printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        }
+                      }
+  | EXPR T_DIV EXPR {
+                      var_contents v; var_contents x; 
+                      v = $1; x = $3; 
+                      if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
+                        printf("%f\n", (v.number / x.number));
+                      } else{ 
+                        printf("division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                      }
+                      }
   ;
 
 SCALAR: NUM UNIT {
@@ -180,7 +215,7 @@ PARAMS: T_COMMA EXPR PARAMS
   ;
 
 CSSRULE: SELECTORS T_BL DECLS T_BR {
-    printf("%s { %s }", $1);
+  // printf("%s { %s }", $1);
   }
   ;
 

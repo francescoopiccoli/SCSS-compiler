@@ -117,9 +117,9 @@ void showSymTable ()
   symrec* ptr;
   int i = 1;
   
-  printf("------- ------------ ------ ------------\n");
-  printf("Number  Name         Type   Value       \n");
-  printf("------- ------------ ------ ------------\n");
+  printf("---------- ---------- ---------- ----------\n");
+  printf("%-10s %-10s %-10s %-10s", "Number", "Name", "Type", "Value");
+  printf("\n---------- ---------- ---------- ----------\n");
   
   for (ptr = sym_table; ptr != (symrec *) 0; ptr = (symrec *)ptr->next) 
   {
@@ -127,16 +127,16 @@ void showSymTable ()
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
           printf("%-10s","scalar");
-          printf("%s %f", ptr->value.string, ptr->value.number);
+          printf("%.0f%s", ptr->value.number, ptr->value.string);
         }
       if (ptr->type == VAR_ATOM) {
         printf("%-10s","atom");
-        printf("%s %f", ptr->value.string, ptr->value.number);
+        printf("%s", ptr->value.string);
      
       }
       if (ptr->type == VAR_FUNCTION) {
         printf("%-10s","function");
-        printf("%s %f", ptr->value.string, ptr->value.number);
+        printf("%s", ptr->value.string);
       }
     i++;
     printf("\n");
@@ -168,11 +168,12 @@ int size ()
 * @return  True if empty, false otherwise
 */
 
+
+/*
 bool isEmpty() {
   return (size(sym_table) == 0);
 }
 
-/*
 Complex createComplexFromSymbol(symrec* s)
 {
   if (s->type == DBL)
