@@ -125,22 +125,30 @@ void showSymTable ()
   {
     printf("%-7i ", i);
     printf("%-12.12s ", ptr->name);
-    /*if (ptr->type == DBL) {
-          printf("%-7s","dbl");
+    if (ptr->type == VAR_SCALAR) {
+          printf("%-7s","scalar");
           if(ptr->init != 0) {
-            printf("%f", ptr->value.var);
+            printf("%f", ptr->value);
           } else {
             printf("not init.");
           }
         }
-      if (ptr->type == CMP) {
-        printf("%-7s","cmp");
+      if (ptr->type == VAR_ATOM) {
+        printf("%-7s","atom");
         if(ptr->init != 0) {
           //printComplex(ptr->value.cmp);
         } else {
           printf("not init.");
         }
-      }*/
+      }
+      if (ptr->type == VAR_FUNCTION) {
+        printf("%-7s","function");
+        if(ptr->init != 0) {
+          //printComplex(ptr->value.cmp);
+        } else {
+          printf("not init.");
+        }
+      }
     i++;
     printf("\n");
   }
