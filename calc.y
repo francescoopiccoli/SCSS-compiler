@@ -69,9 +69,9 @@ int yyerror (char const *message);
 %token            T_STAR
 %token            T_DIV
 %token            T_GT
-%token            CSS_DATA_TYPE 
+/* %token            CSS_DATA_TYPE  
 %token            HTML_DATA_TYPE 
-%token            FNNAME 
+%token            FNNAME */
 
 
 
@@ -118,7 +118,7 @@ EXPR: VAR {printf("This is a var expression\n");}
   ;
 
 FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}
-  | FNNAME T_PL P T_PR
+  /*| FNNAME T_PL P T_PR*/
   ;
 
 P: EXPR PARAMS 
@@ -135,11 +135,16 @@ CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
   ;
 
-SELECTOR: HTML_DATA_TYPE
+SELECTOR: /* HTML_DATA_TYPE  */
   | ID {printf("This is selector\n");}
-  | HTML_DATA_TYPE
   | T_HASH ID {printf("This is selector\n");}
   | T_DOT ID {printf("This is selector\n");}
+  /*
+  | T_HASH HTML_DATA_TYPE {printf("This is selector\n");}
+  */
+   /*
+  | T_DOT HTML_DATA_TYPE {printf("This is selector\n");}
+   */
   ;
 
 PSEUDOCLASS: PSEUDO
@@ -158,7 +163,7 @@ DECLS: DECL DECLS
   ;
   
 DECL: ID T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
-  | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON
+  /* | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON */
   | CSSRULE {printf("This is a nested css rule\n");}
   | VARDECL {printf("This is a local variable declaration\n");}
 
