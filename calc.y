@@ -118,7 +118,8 @@ EXPR: VAR {printf("This is a var expression\n");}
   | EXPR T_DIV EXPR {printf("This a division between expressions\n");}
   ;
 
-FNCALL: FNNAME T_PL P T_PR {printf("This is a function call\n");}
+FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}
+  | FNNAME T_PL P T_PR
   ;
 
 P: EXPR PARAMS 
@@ -135,12 +136,14 @@ CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
   ;
 
-SELECTOR: HTML_DATA_TYPE {printf("This is selector\n");}
+SELECTOR: ID {printf("This is selector\n");}
+  | HTML_DATA_TYPE
   | T_HASH ID {printf("This is selector\n");}
   | T_DOT ID {printf("This is selector\n");}
   ;
 
 PSEUDOCLASS: PSEUDO
+  | ID
   | EPS
   ;
 
@@ -154,7 +157,8 @@ DECLS: DECL DECLS
   | EPS
   ;
   
-DECL: CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
+DECL: ID T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
+  | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON
   | CSSRULE {printf("This is a nested css rule\n");}
   | VARDECL {printf("This is a local variable declaration\n");}
 
