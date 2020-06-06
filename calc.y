@@ -41,6 +41,7 @@ int yyerror (char const *message);
        char* string;
        double number;
        symrec *sym;
+       enum var_type varType;
        // typedef scalar ...
        }
 
@@ -71,7 +72,7 @@ int yyerror (char const *message);
 %token            HTML_DATA_TYPE 
 %token            FNNAME */
 
-
+%type <varType>   EXPR
 
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
