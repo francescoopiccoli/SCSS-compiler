@@ -80,6 +80,7 @@ typedef struct {
 %type <expression>   EXPR
 %type <expression>   SCALAR
 %type <string>       FNCALL
+%type <string>       SELECTORS SELECTOR PSEUDOCLASS RELATIONSHIP
 
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
@@ -161,6 +162,7 @@ SCALAR: NUM UNIT {
     var_contents v;
     v.type = VAR_SCALAR;
     v.number = $1;
+    v.string = "";
     $$ = v; 
     }
   ;
@@ -177,10 +179,12 @@ PARAMS: T_COMMA EXPR PARAMS
   | EPS
   ;
 
-CSSRULE: SELECTORS T_BL DECLS T_BR
+CSSRULE: SELECTORS T_BL DECLS T_BR {
+    printf("%s { %s }", $1);
+  }
   ;
 
-SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
+SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { }
   ;
 
 SELECTOR: /* HTML_DATA_TYPE  */
