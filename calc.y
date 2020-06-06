@@ -40,7 +40,7 @@ int yyerror (char const *message);
 %union {
        char* string;
        double number;
-       //symtable sym;
+       symrec *sym;
        // typedef scalar ...
        }
 
@@ -52,7 +52,7 @@ int yyerror (char const *message);
 %token<number>    NUM
 %token<string>    UNIT
 %token<string>    ATOM
-%token<string>    VAR
+%token<sym>       VAR
 %token            T_SEMICOLON
 %token            T_COLON
 %token            T_DOT
@@ -76,6 +76,8 @@ int yyerror (char const *message);
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
 
+
+
 %start S
 
 // here we define the grammar
@@ -97,18 +99,20 @@ ST: VARDECL {printf("This is a variable declaration statement\n"); }
   | CSSRULE {printf("This is a css rule statement\n");}
   ;
 
-VARDECL: VAR T_COLON EXPR T_SEMICOLON {printf("This is a variable declaration\n");}
+VARDECL: VAR T_COLON EXPR T_SEMICOLON {
+  insertSymbol($1,$3);
+}
   ;
 
-EXPR: VAR {printf("This is a var expression\n");}
-  | SCALAR {printf("This is a scalar expression\n");}
-  | ATOM {printf("This is atom expression\n");}
-  | FNCALL {printf("This is fncall expression\n");}
-  | T_PL EXPR T_PR {printf("This an expression within parenthisi\n");}
-  | EXPR T_PLUS EXPR {printf("This a sum between expressions\n");}
-  | EXPR T_MINUS EXPR {printf("This a subtraction between expressions\n");}
-  | EXPR T_STAR EXPR {printf("This a multiplication between expressions\n");}
-  | EXPR T_DIV EXPR {printf("This a division between expressions\n");}
+EXPR: VAR {$$ = VAR_SCALAR; /* todo : det. type */}
+  | SCALAR {$$ = VAR_SCALAR ; }
+  | ATOM {$$ = VAR_ATOM; }
+  | FNCALL {$$ = VAR_FUNCTION;}
+  | T_PL EXPR T_PR {$$ = $2}
+  | EXPR T_PLUS EXPR {$$ = VAR_SCALAR; /* todo : type check */}
+  | EXPR T_MINUS EXPR {$$ = VAR_SCALAR; /* todo : type check */}
+  | EXPR T_STAR EXPR {$$ = VAR_SCALAR; /* todo : type check */}
+  | EXPR T_DIV EXPR {$$ = VAR_SCALAR; /* todo : type check */}
   ;
 
 SCALAR: NUM UNIT

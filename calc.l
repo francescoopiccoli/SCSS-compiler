@@ -33,7 +33,7 @@ FNNAME (url|rgb|linear-gradient)
 
 %%
 
-symtab {showSymTable();} // DEBUG
+ST {showSymTable();} // DEBUG
 \/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ ECHO; // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
 [ \t\n]       {} // ignore whitespace -> only outside strings?
 {COMMENT}     {} // ignore comments of type "//"
@@ -64,9 +64,10 @@ symtab {showSymTable();} // DEBUG
             char* name = strdup(yytext); 
             symrec* s = getSymbol(name);
             if(s == 0) {
+                  printf("creating symbol");
                   s = createSymbol(name);
             }
-            /*yylval.sym = s;*/
+            yylval.sym = s;
             return VAR;}
 
 {ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
