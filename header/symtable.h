@@ -93,15 +93,17 @@ symrec* getSymbol(char const *sym_name)
 */
 symrec* insertSymbol(symrec* s, enum var_type t)
 {
-  if(getSymbol(s->name) == 0) {
-      s->init = 0;
+  symrec *symbol = getSymbol(s->name);
+  if(symbol == 0) {
+    s->init = 0;
     s->type = t;
     s->next = (struct symrec*)sym_table;
     sym_table = s;
     return s;
   } else {
-    printf("Redeclaration of variable %s.\n", s->name);
-    return 0;
+    symbol->init = 0;
+    symbol->type = t;
+    return s;
   }
 
 }
