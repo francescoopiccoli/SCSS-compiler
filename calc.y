@@ -52,7 +52,7 @@ int yyerror (char const *message);
 %token<number>    NUM
 %token<string>    UNIT
 %token<string>    ATOM
-%token            T_DOLLAR
+%token<string>    VAR
 %token            T_SEMICOLON
 %token            T_COLON
 %token            T_DOT
@@ -98,9 +98,6 @@ ST: VARDECL {printf("This is a variable declaration statement\n"); }
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {printf("This is a variable declaration\n");}
-  ;
-
-VAR: T_DOLLAR ID {printf("This is a variable name\n");}
   ;
 
 EXPR: VAR {printf("This is a var expression\n");}
@@ -168,6 +165,8 @@ DECL: ID T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
   | VARDECL {printf("This is a local variable declaration\n");}
 
 %%
+
+symrec *sym_table = 0;
 
 #include "lex.yy.c"
 

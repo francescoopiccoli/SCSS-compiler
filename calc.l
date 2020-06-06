@@ -13,8 +13,7 @@ int col_cnt = 0;
 int lineno = 0;
 
 //BUGS
-// - unit expr breaks stuff
-// - comments
+
 
 %}
 
@@ -52,7 +51,6 @@ FNNAME (url|rgb|linear-gradient)
 ">"         {return T_GT;}
 "."         {return T_DOT;}
 "#"         {return T_HASH;}
-"$"         {return T_DOLLAR;}
 
 
 {UNIT}      {printf("|||unit = %s |||\n", yytext); yylval.string = strdup(yytext);  return UNIT;}
@@ -60,6 +58,8 @@ FNNAME (url|rgb|linear-gradient)
 {ATOM}      {printf("|||atom = %s |||\n", yytext); yylval.string = strdup(yytext); return ATOM;}
 
 {NUM}       {printf("|||num = %s |||\n", yytext); yylval.number = atof(yytext); return NUM;}
+
+\${ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return VAR;}
 
 {ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
 
