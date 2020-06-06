@@ -13,14 +13,16 @@ enum var_type{
   VAR_FUNCTION = 3
 };
 
+typedef struct
+{
+  char* string;
+  double number;         // value of a simple variable
+} hybrid_value; 
+
 // structure of a symbol record 
 typedef struct {
   char *name;           // name of symbol
-  union
-  {
-    char* string;
-    double number;         // value of a simple variable
-  } value; 
+  hybrid_value value;
   struct symrec *next;  // ptr to next symbol record
   enum var_type type;   // type of symbol: either DBL or CMP
 } symrec;
@@ -125,16 +127,16 @@ void showSymTable ()
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
           printf("%-7s","scalar");
-          printf("%s", ptr->value);
+          printf("%s", ptr->value.string);
         }
       if (ptr->type == VAR_ATOM) {
         printf("%-7s","atom");
-        printf("%s", ptr->value);
+        printf("%s", ptr->value.string);
      
       }
       if (ptr->type == VAR_FUNCTION) {
         printf("%-7s","function");
-        printf("%s", ptr->value);
+        printf("%s", ptr->value.string);
       }
     i++;
     printf("\n");
