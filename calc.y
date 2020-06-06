@@ -104,7 +104,15 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON {
 }
   ;
 
-EXPR: VAR {$$ = VAR_SCALAR; /* todo : det. type */}
+EXPR: VAR {
+  if(getSymbol($1->name) > 0) {
+    $$ = getSymbol($1->name)->type;
+  } else {
+    // crash?
+    printf("Variable %s not declared!",$1->name);
+  }
+  
+  }
   | SCALAR {$$ = VAR_SCALAR ; }
   | ID {$$ = VAR_ATOM; }
   | FNCALL {$$ = VAR_FUNCTION;}
