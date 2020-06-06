@@ -55,23 +55,15 @@ FNNAME (url|rgb|linear-gradient)
 "$"         {return T_DOLLAR;}
 
 
-{UNIT}      {printf("|||unit = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
+{UNIT}      {printf("|||unit = %s |||\n", yytext); yylval.string = strdup(yytext);  return UNIT;}
 
-{NUM}{UNIT} {printf("|||scalar = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return SCALAR;}
+{NUM}{UNIT} {printf("|||scalar = %s |||\n", yytext); yylval.string = strdup(yytext); yylval.number = 123; return SCALAR;}
 
-{NUM}       {printf("|||num = %s |||\n", yytext); /*yylval.value = atof(yytext); */ return NUM;}
+{NUM}       {printf("|||num = %s |||\n", yytext); yylval.number = atof(yytext); return NUM;}
 
-{ATOM}      {printf("|||atom = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ATOM;}
+{ATOM}      {printf("|||atom = %s |||\n", yytext); yylval.string = strdup(yytext); return ATOM;}
 
-{HTML_DATA_TYPE} {printf("|||html data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return HTML_DATA_TYPE; }
-
-{CSS_DATA_TYPE} {printf("|||css data type = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return CSS_DATA_TYPE; }
-
-{FNNAME} {printf("|||fnname = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return FNNAME; }
-
-{ID}        {printf("||| id = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return ID;}
-
-{PSEUDOCLASS} {printf("|||PSEUDOCLASS = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return PSEUDO; }
+{ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
 
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 

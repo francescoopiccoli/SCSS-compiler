@@ -53,7 +53,6 @@ int yyerror (char const *message);
 %token<string>    UNIT
 %token<string>    SCALAR
 %token<string>    ATOM
-%token<string>    PSEUDO
 %token            T_DOLLAR
 %token            T_SEMICOLON
 %token            T_COLON
@@ -147,8 +146,7 @@ SELECTOR: /* HTML_DATA_TYPE  */
    */
   ;
 
-PSEUDOCLASS: PSEUDO
-  | ID
+PSEUDOCLASS: T_COLON ID
   | EPS
   ;
 
