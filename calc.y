@@ -26,9 +26,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-//#include "header/scssFunctions.h"
-//#include "header/symtable.h"
-//#include "header/error.h"
+#include "header/scssFunctions.h"
+#include "header/symtable.h"
+#include "header/error.h"
 
 int yylex();
 int yyerror (char const *message);

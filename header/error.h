@@ -3,7 +3,7 @@
 #include "scssFunctions.h"
 #include "symtable.h"
 
-
+/*
 bool areSymbolsInitialized(char* a, char* b)
 {
     symrec* s1 = getSymbol(a);
@@ -28,4 +28,5 @@ bool areSymbolsCompatibleType(char* a, char* b)
     symrec* s1 = getSymbol(a);
     symrec* s2 = getSymbol(b);
 }
+*/
 #endif
