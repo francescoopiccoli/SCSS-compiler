@@ -38,21 +38,22 @@ int yyerror (char const *message);
 // here we define all return values that lex can return
 
 %union {
-       char* lexeme;
-       double value;
+       char* string;
+       double number;
        //symtable sym;
+       // typedef scalar ...
        }
 
 
 
 // here we define the tokens with its respective precedences
 
-%token            ID
-%token            NUM
-%token            UNIT
-%token            SCALAR
-%token            ATOM
-%token            PSEUDO
+%token<string>    ID
+%token<number>    NUM
+%token<string>    UNIT
+%token<string>    SCALAR
+%token<string>    ATOM
+%token<string>    PSEUDO
 %token            T_DOLLAR
 %token            T_SEMICOLON
 %token            T_COLON
@@ -68,7 +69,6 @@ int yyerror (char const *message);
 %token            T_STAR
 %token            T_DIV
 %token            T_GT
-%token            EXIT //sarebbe da mettere in ogni production, per ora solo su S
 %token            CSS_DATA_TYPE 
 %token            HTML_DATA_TYPE 
 %token            FNNAME 
@@ -89,7 +89,6 @@ int yyerror (char const *message);
 
 
 S: ST S {printf("Starting point reached\n");}
-  | EXIT {exit(0);}
   | EPS {printf("Starting point reached\n");}
   ;
 
@@ -136,7 +135,8 @@ CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
   ;
 
-SELECTOR: ID {printf("This is selector\n");}
+SELECTOR: HTML_DATA_TYPE
+  | ID {printf("This is selector\n");}
   | HTML_DATA_TYPE
   | T_HASH ID {printf("This is selector\n");}
   | T_DOT ID {printf("This is selector\n");}
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
  // interactive mode or file mode
       if(argc < 2) 
       {
-            printf("To exit at any time, type \"exit;\".\n");
+            printf("To exit at any time, press Ctrl+D (EOF).\n");
             return yyparse();
       } 
       else 

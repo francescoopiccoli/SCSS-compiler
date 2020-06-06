@@ -53,7 +53,6 @@ FNNAME (url|rgb|linear-gradient)
 "."         {return T_DOT;}
 "#"         {return T_HASH;}
 "$"         {return T_DOLLAR;}
-"exit"      {return EXIT;}
 
 
 {UNIT}      {printf("|||unit = %s |||\n", yytext); /*yylval.lexeme = strdup(yytext); */ return UNIT;}
