@@ -52,7 +52,6 @@ int yyerror (char const *message);
 %token<string>    ID
 %token<number>    NUM
 %token<string>    UNIT
-%token<string>    ATOM
 %token<sym>       VAR
 %token            T_SEMICOLON
 %token            T_COLON
@@ -89,15 +88,15 @@ int yyerror (char const *message);
 
 
 
-S: ST S {printf("Starting point reached\n");}
-  | EPS {printf("Starting point reached\n");}
+S: ST S
+  | EPS
   ;
 
 EPS:
   ;
 
-ST: VARDECL {printf("This is a variable declaration statement\n"); }
-  | CSSRULE {printf("This is a css rule statement\n");}
+ST: VARDECL
+  | CSSRULE
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {
@@ -107,7 +106,7 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON {
 
 EXPR: VAR {$$ = VAR_SCALAR; /* todo : det. type */}
   | SCALAR {$$ = VAR_SCALAR ; }
-  | ATOM {$$ = VAR_ATOM; }
+  | ID {$$ = VAR_ATOM; }
   | FNCALL {$$ = VAR_FUNCTION;}
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR {$$ = VAR_SCALAR; /* todo : type check */}
@@ -120,7 +119,7 @@ SCALAR: NUM UNIT
   | NUM
   ;
 
-FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}
+FNCALL: ID T_PL P T_PR
   /*| FNNAME T_PL P T_PR*/
   ;
 
@@ -128,25 +127,25 @@ P: EXPR PARAMS
   | EPS
   ;
 
-PARAMS: T_COMMA EXPR PARAMS {printf("This is a paramater\n");}
+PARAMS: T_COMMA EXPR PARAMS
   | EPS
   ;
 
-CSSRULE: SELECTORS T_BL DECLS T_BR {printf("This is a css rule\n");}
+CSSRULE: SELECTORS T_BL DECLS T_BR
   ;
 
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP
   ;
 
 SELECTOR: /* HTML_DATA_TYPE  */
-  | ID {printf("This is selector\n");}
-  | T_HASH ID {printf("This is selector\n");}
-  | T_DOT ID {printf("This is selector\n");}
+  | ID
+  | T_HASH ID
+  | T_DOT ID
   /*
-  | T_HASH HTML_DATA_TYPE {printf("This is selector\n");}
+  | T_HASH HTML_DATA_TYPE
   */
    /*
-  | T_DOT HTML_DATA_TYPE {printf("This is selector\n");}
+  | T_DOT HTML_DATA_TYPE
    */
   ;
 
@@ -154,9 +153,9 @@ PSEUDOCLASS: T_COLON ID
   | EPS
   ;
 
-  RELATIONSHIP: T_COMMA SELECTORS {printf("This is a comma relationship\n");}
-  | T_GT SELECTORS {printf("This is a hierarchy relationship\n");}
-  | SELECTORS {printf("This is another hierarchy relationship\n");}
+  RELATIONSHIP: T_COMMA SELECTORS
+  | T_GT SELECTORS
+  | SELECTORS
   | EPS
   ;
   
@@ -164,10 +163,10 @@ DECLS: DECL DECLS
   | EPS
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON {printf("This is a declaration\n");}
+DECL: ID T_COLON EXPR T_SEMICOLON
   /* | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON */
-  | CSSRULE {printf("This is a nested css rule\n");}
-  | VARDECL {printf("This is a local variable declaration\n");}
+  | CSSRULE
+  | VARDECL
 
 %%
 
