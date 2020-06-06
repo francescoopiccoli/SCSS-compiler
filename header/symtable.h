@@ -4,6 +4,7 @@
 #include <stdlib.h>       // needed for malloc. 
 #include <string.h>       // needed for strlen.
 #include <stdbool.h>
+#include <stdio.h>
 
 // variable type enumeration
 enum var_type{

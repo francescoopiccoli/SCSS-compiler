@@ -52,16 +52,24 @@ FNNAME (url|rgb|linear-gradient)
 "."         {return T_DOT;}
 "#"         {return T_HASH;}
 
-
 {UNIT}      {printf("|||unit = %s |||\n", yytext); yylval.string = strdup(yytext);  return UNIT;}
 
 {ATOM}      {printf("|||atom = %s |||\n", yytext); yylval.string = strdup(yytext); return ATOM;}
 
 {NUM}       {printf("|||num = %s |||\n", yytext); yylval.number = atof(yytext); return NUM;}
 
-\${ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return VAR;}
+
+\${ID}        {
+            char* name = strdup(yytext); 
+            symrec* s = getSymbol(name);
+            if(s == 0) {
+                  s = createSymbol(name);
+            }
+            yylval.symbol = s;
+            return ID;}
 
 {ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
+
 
 .           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 
