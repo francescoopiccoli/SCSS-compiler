@@ -66,7 +66,7 @@ FNNAME (url|rgb|linear-gradient)
                   s = createSymbol(name);
             }
             yylval.symbol = s;
-            return ID;}
+            return VAR;}
 
 {ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
 
