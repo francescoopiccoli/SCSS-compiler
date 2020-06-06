@@ -33,16 +33,22 @@
 int yylex();
 int yyerror (char const *message);
 
+typedef struct {
+    char *string;
+    double number;
+    enum var_type type;
+} var_contents;
+
 %}
 
 // here we define all return values that lex can return
 
 %union {
-       char* string;
-       double number;
-       symrec *sym;
-       enum var_type varType;
-       // typedef scalar ...
+        char* string;
+        double number;
+        symrec *sym;
+        enum var_type varType;
+        var_contents expression;
        }
 
 
@@ -71,7 +77,9 @@ int yyerror (char const *message);
 %token            HTML_DATA_TYPE 
 %token            FNNAME */
 
-%type <varType>   EXPR
+%type <expression>   EXPR
+%type <expression>   SCALAR
+%type <string>       FNCALL
 
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
@@ -100,34 +108,64 @@ ST: VARDECL
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {
-  insertSymbol($1,$3);
+  var_contents v = $3;
+  
+  symrec* symbol = insertSymbol($1,v.type);
+  symbol->value.number = v.number;
+  symbol->value.string = v.string;
+
 }
   ;
 
-EXPR: VAR {
-  if(getSymbol($1->name) > 0) {
-    $$ = getSymbol($1->name)->type;
-  } else {
-    // crash?
-    printf("Variable %s not declared!",$1->name);
+EXPR: VAR 
+  {
+    if(getSymbol($1->name) > 0) {
+      var_contents v;
+      v.type = getSymbol($1->name)->type;
+      v.string = getSymbol($1->name)->value.string;
+      v.number = getSymbol($1->name)->value.number;
+      $$ = v;
+    } else {
+      // crash?
+      printf("Variable %s not declared!",$1->name);
+    }
   }
-  
-  }
-  | SCALAR {$$ = VAR_SCALAR ; }
-  | ID {$$ = VAR_ATOM; }
-  | FNCALL {$$ = VAR_FUNCTION;}
+  | SCALAR { $$ = $1; }
+  | ID {
+    var_contents v;
+    v.type = VAR_ATOM;
+    v.string = $1;
+    $$ = v; 
+    }
+  | FNCALL {
+    var_contents v;
+    v.type = VAR_FUNCTION;
+    v.string = $1;
+    $$ = v; 
+    }
   | T_PL EXPR T_PR {$$ = $2;}
-  | EXPR T_PLUS EXPR {$$ = VAR_SCALAR; /* todo : type check */}
-  | EXPR T_MINUS EXPR {$$ = VAR_SCALAR; /* todo : type check */}
-  | EXPR T_STAR EXPR {$$ = VAR_SCALAR; /* todo : type check */}
-  | EXPR T_DIV EXPR {$$ = VAR_SCALAR; /* todo : type check */}
+  /*| EXPR T_PLUS EXPR {$$ = VAR_SCALAR; /* todo : type check /}
+  | EXPR T_MINUS EXPR {$$ = VAR_SCALAR; /* todo : type check /}
+  | EXPR T_STAR EXPR {$$ = VAR_SCALAR; /* todo : type check /}
+  | EXPR T_DIV EXPR {$$ = VAR_SCALAR; /* todo : type check /}*/
   ;
 
-SCALAR: NUM UNIT
-  | NUM
+SCALAR: NUM UNIT {
+    var_contents v;
+    v.type = VAR_SCALAR;
+    v.number = $1;
+    v.string = $2;
+    $$ = v; 
+    }
+  | NUM {
+    var_contents v;
+    v.type = VAR_SCALAR;
+    v.number = $1;
+    $$ = v; 
+    }
   ;
 
-FNCALL: ID T_PL P T_PR
+FNCALL: ID T_PL P T_PR { $$ = $1; }
   /*| FNNAME T_PL P T_PR*/
   ;
 
