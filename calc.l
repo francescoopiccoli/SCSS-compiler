@@ -66,7 +66,7 @@ symtab {showSymTable();} // DEBUG
             if(s == 0) {
                   s = createSymbol(name);
             }
-            yylval.symbol = s;
+            /*yylval.sym = s;*/
             return VAR;}
 
 {ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
