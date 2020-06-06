@@ -123,20 +123,20 @@ void showSymTable ()
   
   for (ptr = sym_table; ptr != (symrec *) 0; ptr = (symrec *)ptr->next) 
   {
-    printf("%-7i ", i);
+    printf("%-10i ", i);
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
-          printf("%-7s","scalar");
-          printf("%s", ptr->value.string);
+          printf("%-10s","scalar");
+          printf("%s", ptr->value.string, ptr->value.number);
         }
       if (ptr->type == VAR_ATOM) {
-        printf("%-7s","atom");
-        printf("%s", ptr->value.string);
+        printf("%-10s","atom");
+        printf("%s %d", ptr->value.string, ptr->value.number);
      
       }
       if (ptr->type == VAR_FUNCTION) {
-        printf("%-7s","function");
-        printf("%s", ptr->value.string);
+        printf("%-10s","function");
+        printf("%s %d", ptr->value.string, ptr->value.number);
       }
     i++;
     printf("\n");
