@@ -51,7 +51,6 @@ int yyerror (char const *message);
 %token<string>    ID
 %token<number>    NUM
 %token<string>    UNIT
-%token<string>    SCALAR
 %token<string>    ATOM
 %token            T_DOLLAR
 %token            T_SEMICOLON
@@ -106,7 +105,6 @@ VAR: T_DOLLAR ID {printf("This is a variable name\n");}
 
 EXPR: VAR {printf("This is a var expression\n");}
   | SCALAR {printf("This is a scalar expression\n");}
-  | NUM {printf("This is num expression\n");}
   | ATOM {printf("This is atom expression\n");}
   | FNCALL {printf("This is fncall expression\n");}
   | T_PL EXPR T_PR {printf("This an expression within parenthisi\n");}
@@ -114,6 +112,10 @@ EXPR: VAR {printf("This is a var expression\n");}
   | EXPR T_MINUS EXPR {printf("This a subtraction between expressions\n");}
   | EXPR T_STAR EXPR {printf("This a multiplication between expressions\n");}
   | EXPR T_DIV EXPR {printf("This a division between expressions\n");}
+  ;
+
+SCALAR: NUM UNIT
+  | NUM
   ;
 
 FNCALL: ID T_PL P T_PR {printf("This is a function call\n");}

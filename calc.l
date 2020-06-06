@@ -57,11 +57,9 @@ FNNAME (url|rgb|linear-gradient)
 
 {UNIT}      {printf("|||unit = %s |||\n", yytext); yylval.string = strdup(yytext);  return UNIT;}
 
-{NUM}{UNIT} {printf("|||scalar = %s |||\n", yytext); yylval.string = strdup(yytext); yylval.number = 123; return SCALAR;}
+{ATOM}      {printf("|||atom = %s |||\n", yytext); yylval.string = strdup(yytext); return ATOM;}
 
 {NUM}       {printf("|||num = %s |||\n", yytext); yylval.number = atof(yytext); return NUM;}
-
-{ATOM}      {printf("|||atom = %s |||\n", yytext); yylval.string = strdup(yytext); return ATOM;}
 
 {ID}        {printf("||| id = %s |||\n", yytext); yylval.string = strdup(yytext); return ID;}
 
