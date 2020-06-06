@@ -61,6 +61,8 @@ ST {showSymTable();} // DEBUG
 
 
 \${ID}        {
+            if(getSymbol(yytext) > 0)
+                  printf("SYMBOL: %d %s\n", getSymbol(yytext)->value.number, getSymbol(yytext)->value.string);
             char* name = strdup(yytext); 
             symrec* s = getSymbol(name);
             if(s == 0) {
