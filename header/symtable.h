@@ -23,7 +23,6 @@ typedef struct {
   } value; 
   struct symrec *next;  // ptr to next symbol record
   enum var_type type;   // type of symbol: either DBL or CMP
-  bool init;     
 } symrec;
 
 /* The symbol table: a chain of 'struct symrec'.  */
@@ -60,7 +59,6 @@ symrec* createSymbol(char const *sym_name)
 {
   symrec* ptr = (symrec*) malloc (sizeof (symrec));
   ptr->name = (char*) malloc (strlen (sym_name) + 1);
-  ptr->init = 0;
   strcpy (ptr->name, sym_name);
   return ptr;
 }
@@ -95,13 +93,11 @@ symrec* insertSymbol(symrec* s, enum var_type t)
 {
   symrec *symbol = getSymbol(s->name);
   if(symbol == 0) {
-    s->init = 0;
     s->type = t;
     s->next = (struct symrec*)sym_table;
     sym_table = s;
     return s;
   } else {
-    symbol->init = 0;
     symbol->type = t;
     return s;
   }
@@ -129,27 +125,16 @@ void showSymTable ()
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
           printf("%-7s","scalar");
-          if(ptr->init != 0) {
-            printf("%f", ptr->value);
-          } else {
-            printf("not init.");
-          }
+          printf("%s", ptr->value);
         }
       if (ptr->type == VAR_ATOM) {
         printf("%-7s","atom");
-        if(ptr->init != 0) {
-          //printComplex(ptr->value.cmp);
-        } else {
-          printf("not init.");
-        }
+        printf("%s", ptr->value);
+     
       }
       if (ptr->type == VAR_FUNCTION) {
         printf("%-7s","function");
-        if(ptr->init != 0) {
-          //printComplex(ptr->value.cmp);
-        } else {
-          printf("not init.");
-        }
+        printf("%s", ptr->value);
       }
     i++;
     printf("\n");
