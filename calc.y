@@ -178,6 +178,8 @@ EXPR: VAR
                         $$ = z;
                       } else{ 
                         printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+                        $$ = q;
                         }
                       }
   | EXPR T_STAR EXPR {
@@ -191,6 +193,8 @@ EXPR: VAR
                         $$ = z;
                       } else{ 
                         printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+                        $$ = q;
                         }
                       }
   | EXPR T_DIV EXPR {
@@ -204,6 +208,8 @@ EXPR: VAR
                         $$ = z;
                       } else{ 
                         printf("division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+                        $$ = q;
                       }
                       }
   ;
