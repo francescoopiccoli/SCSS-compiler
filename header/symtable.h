@@ -175,21 +175,6 @@ int size ()
   return i;
 }
 
-/*
-typedef struct
-{
-  char *name;
-  char *value;
-  decl *next;
-} decl;
-
-typedef struct
-{
-  char *name;
-  declarations *parent;
-  decl *head;
-} declarations;*/
-
 declarations *create_decl_table(char *name, declarations *parent) {
   declarations *d = (declarations*) malloc(sizeof(declarations));
   d->name = name;

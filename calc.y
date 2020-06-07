@@ -113,7 +113,7 @@ S: ST S
   | EPS
   ;
 
-EPS: {printf(""); /*inutile pero almeno non genera il warning*/}
+EPS: { $$ = ""; }
   ;
 
 ST: VARDECL
@@ -194,7 +194,8 @@ PARAMS: T_COMMA EXPR PARAMS
 
 CSSRULE: SELECTORS 
     {
-      printf(".col-md-2 { \n"); // print parent selectors as well!
+
+      printf("%s { \n", $1); // print parent selectors as well!
       parent = create_decl_table(".col-md-2",parent);
       // todo: iteratively insert all of cur layer's contents
       insert_decl(parent,"color","red");
@@ -208,21 +209,30 @@ CSSRULE: SELECTORS
     }
   ;
 
-SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { }
+SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP {
+  char *s1 = malloc(sizeof(char) * (strlen($1) + 1));
+  strcpy(s1, $1);
+  char *s2 = malloc(sizeof(char) * (strlen($2) + 1));
+  strcpy(s2, $2);
+  char *s3 = malloc(sizeof(char) * (strlen($3) + 1));
+  strcpy(s3, $3);
+
+  snprintf($$,1024,"%s %s %s", s1, s2, s3);
+}
   ;
 
-SELECTOR: ID
-  | T_HASH ID
-  | T_DOT ID
+SELECTOR: ID { $$ = $1; }
+  | T_HASH ID { /*snprintf($$, 128, "#%s", $2); */}
+  | T_DOT ID { /*snprintf($$, 128, ".%s", $2);*/ }
   ;
 
-PSEUDOCLASS: T_COLON ID
+PSEUDOCLASS: T_COLON ID {/* snprintf($$, 128, ":%s", $2); */}
   | EPS
   ;
 
-  RELATIONSHIP: T_COMMA SELECTORS
-  | T_GT SELECTORS
-  | SELECTORS
+  RELATIONSHIP: T_COMMA SELECTORS { /*snprintf($$, 128, ", %s", $2);*/ }
+  | T_GT SELECTORS { /*snprintf($$, 128, " > %s", $2);*/ }
+  | SELECTORS { /*$$ = $1;*/ }
   | EPS
   ;
   
