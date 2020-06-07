@@ -192,17 +192,20 @@ PARAMS: T_COMMA EXPR PARAMS
   | EPS
   ;
 
-CSSRULE: SELECTORS T_BL DECLS T_BR {
-    printf(".col-md-2 { \n"); // print parent selectors as well!
-    parent = create_decl_table(".col-md-2",parent);
-    // todo: iteratively insert all of cur layer's contents
-    insert_decl(parent,"color","red");
-    insert_decl(parent,"background-color","green");
-    print_decls(parent);
-
-    printf("}\n");
-    //TODO: parent = (declarations*) parent->parent;
-  }
+CSSRULE: SELECTORS 
+    {
+      printf(".col-md-2 { \n"); // print parent selectors as well!
+      parent = create_decl_table(".col-md-2",parent);
+      // todo: iteratively insert all of cur layer's contents
+      insert_decl(parent,"color","red");
+      insert_decl(parent,"background-color","green");
+      print_decls(parent);
+      printf("}\n");
+    } 
+    T_BL DECLS T_BR 
+    {
+      parent = (declarations*) parent->parent;
+    }
   ;
 
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { }
