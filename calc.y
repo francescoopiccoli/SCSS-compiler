@@ -48,6 +48,7 @@ typedef struct {
         char* string;
         double number;
         symrec *sym;
+        declarations *decls;
         enum var_type varType;
         var_contents expression;
        }
@@ -80,6 +81,8 @@ typedef struct {
 
 %type <expression>   EXPR
 %type <expression>   SCALAR
+%type <decls>        CSSRULE
+%type <string>       DECL
 %type <string>       FNCALL
 %type <string>       SELECTORS 
 %type <string>       SELECTOR 
@@ -163,6 +166,7 @@ EXPR: VAR
                         $$ = z;
                       } else{ 
                         printf("sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        // crash afterwards?
                         var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
                         $$ = q;
                         }
@@ -253,7 +257,12 @@ PARAMS: T_COMMA EXPR PARAMS
   ;
 
 CSSRULE: SELECTORS T_BL DECLS T_BR {
-  // printf("%s { %s }", $1);
+    parent = create_decl_table($1,parent);
+    // todo: insert cur layer's contents
+    insert_decl(parent,"color","red");
+    insert_decl(parent,"background-color","green");
+    print_decls(parent);
+    parent = (declarations*) parent->parent;
   }
   ;
 
@@ -279,14 +288,15 @@ DECLS: DECL DECLS
   | EPS
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON
+DECL: ID T_COLON EXPR T_SEMICOLON {$$ = $1;}
   /* | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON */
-  | CSSRULE
-  | VARDECL
+  | CSSRULE {}
+  | VARDECL {}
 
 %%
 
 symrec *sym_table = 0;
+declarations *parent = 0;
 
 #include "lex.yy.c"
 
