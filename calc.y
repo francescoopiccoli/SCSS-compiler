@@ -257,12 +257,15 @@ PARAMS: T_COMMA EXPR PARAMS
   ;
 
 CSSRULE: SELECTORS T_BL DECLS T_BR {
-    parent = create_decl_table($1,parent);
-    // todo: insert cur layer's contents
+    printf(".col-md-2 { \n"); // print parent selectors as well!
+    parent = create_decl_table(".col-md-2",parent);
+    // todo: iteratively insert all of cur layer's contents
     insert_decl(parent,"color","red");
     insert_decl(parent,"background-color","green");
     print_decls(parent);
-    parent = (declarations*) parent->parent;
+
+    printf("}\n");
+    //TODO: parent = (declarations*) parent->parent;
   }
   ;
 

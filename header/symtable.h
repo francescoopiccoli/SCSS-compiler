@@ -215,13 +215,14 @@ void *insert_decl(declarations *decls, char *name, char *value) {
 }
 
 void print_decls(declarations *decls) {
-  while(decls != 0) {
+  if(decls != 0) {
+    // traversal w/ parent rules listed first
+    print_decls((declarations*) decls->parent);
     decl *c = decls->head;
     while(c != 0) {
       printf("%s: %s;\n", c->name, c->value);
       c = (decl*) c->next;
     }
-    decls = (declarations*) decls->parent;
   }
 }
 
