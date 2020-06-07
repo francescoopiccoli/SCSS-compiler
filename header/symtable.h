@@ -24,7 +24,7 @@ typedef struct {
   char *name;           // name of symbol
   hybrid_value value;
   struct symrec *next;  // ptr to next symbol record
-  enum var_type type;   // type of symbol: either DBL or CMP
+  enum var_type type;
 } symrec;
 
 typedef struct
