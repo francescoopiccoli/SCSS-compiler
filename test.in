@@ -1,5 +1,5 @@
 $var1 : 20px;
-$var2 : (20%)-2px;
+$var2 : (20%)-2%;
 $var3 : red + rgb(10,10,10);
 
 //hi
@@ -15,7 +15,7 @@ $var3 : red + rgb(10,10,10);
         b {
             height: 3%;
             color : red;
-            $var4 : $var1;
+            $var4 : $var1 * 2;
         }
     }
 }
@@ -24,3 +24,4 @@ a li {}
 a > li {}
 a .name li {}
 a:hover > li {}
+ST

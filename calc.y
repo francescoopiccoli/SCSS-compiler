@@ -31,14 +31,17 @@
 #include "header/symtable.h"
 #include "header/error.h"
 
-int yylex();
-int yyerror (char const *message);
-
 typedef struct {
     char *string;
     double number;
     enum var_type type;
 } var_contents;
+
+int yylex();
+int yyerror (char const *message);
+var_contents operations(var_contents v, var_contents x, char *operation);
+
+
 
 %}
 
@@ -155,77 +158,10 @@ EXPR: VAR
     $$ = v; 
     }
   | T_PL EXPR T_PR {$$ = $2;}
-  | EXPR T_PLUS EXPR {
-                      var_contents v; var_contents x; 
-                      v = $1; x = $3; 
-                      if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
-                        var_contents z;
-                        z.type = 2;
-                        z.string = v.string;
-                        z.number = v.number + x.number;
-                        $$ = z;
-                      } else{ 
-                        printf("sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-                        // crash afterwards?
-                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
-                        $$ = q;
-                        }
-                      }
-  | EXPR T_MINUS EXPR {
-                       var_contents v; var_contents x; 
-                      v = $1; x = $3; 
-                      if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
-                        var_contents z;
-                        z.type = 2;
-                        z.string = v.string;
-                        z.number = fabs(v.number - x.number);
-                        $$ = z;
-                      } else{ 
-                        printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
-                        $$ = q;
-                        }
-                      }
-  | EXPR T_STAR EXPR {
-                      var_contents v; var_contents x; 
-                      v = $1; x = $3; 
-                      if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
-                        var_contents z;
-                        z.type = 2;
-                        if(strcmp(v.string, "") == 0){
-                          z.string = x.string;
-                        }
-                        else{
-                          z.string = v.string;
-                        }
-                        z.number = v.number * x.number;
-                        $$ = z;
-                      } else{ 
-                        printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
-                        $$ = q;
-                        }
-                      }
-  | EXPR T_DIV EXPR {
-                      var_contents v; var_contents x; 
-                      v = $1; x = $3; 
-                      if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
-                        var_contents z;
-                        z.type = 2;
-                        if(strcmp(v.string, "") == 0){
-                          z.string = x.string;
-                        }
-                        else{
-                          z.string = v.string;
-                        }
-                        z.number = v.number / x.number;
-                        $$ = z;
-                      } else{ 
-                        printf("division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
-                        $$ = q;
-                      }
-                      }
+  | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
+  | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
+  | EXPR T_STAR EXPR {$$ = operations($1, $3, "*");}
+  | EXPR T_DIV EXPR  {$$ = operations($1, $3, "/");}
   ;
 
 SCALAR: NUM UNIT {
@@ -334,4 +270,53 @@ int yyerror (char const *message)
   fputs (message, stderr);
   fputc ('\n', stderr);
   return 0;
+}
+
+var_contents operations(var_contents v, var_contents x, char* operation){
+
+    var_contents z;
+    var_contents q; 
+
+    if(strcmp(operation, "+") == 0 || strcmp(operation, "-") == 0){
+        if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
+            z.type = 2;
+            z.string = v.string;
+            if(strcmp(operation, "+") == 0){
+                z.number = v.number + x.number;
+            }
+            else{
+                z.number = fabs(v.number - x.number);
+            }
+        } 
+        else{ 
+            printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+            //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+            return q;
+        }
+    }
+
+    if(strcmp(operation, "*") == 0 || strcmp(operation, "/") == 0){
+        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
+            z.type = 2;
+            if(strcmp(v.string, "") == 0){
+                z.string = x.string;
+            }
+            else{
+                z.string = v.string;
+            }
+            
+            if(strcmp(operation, "*") == 0){               
+                z.number = v.number * x.number;
+            }
+            else{
+                z.number = v.number / x.number;
+            }
+        } 
+        else{ 
+            printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+            //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+            return q;
+        }
+    }
+    return z;
 }
