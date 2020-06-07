@@ -188,7 +188,12 @@ EXPR: VAR
                       if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
                         var_contents z;
                         z.type = 2;
-                        z.string = v.string;
+                        if(strcmp(v.string, "") == 0){
+                          z.string = x.string;
+                        }
+                        else{
+                          z.string = v.string;
+                        }
                         z.number = v.number * x.number;
                         $$ = z;
                       } else{ 
@@ -203,7 +208,12 @@ EXPR: VAR
                       if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
                         var_contents z;
                         z.type = 2;
-                        z.string = v.string;
+                        if(strcmp(v.string, "") == 0){
+                          z.string = x.string;
+                        }
+                        else{
+                          z.string = v.string;
+                        }
                         z.number = v.number / x.number;
                         $$ = z;
                       } else{ 

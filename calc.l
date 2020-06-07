@@ -58,7 +58,7 @@ ST {showSymTable();} // DEBUG
 {NUM}       {yylval.number = atof(yytext); return NUM;}
 
 
-\${ID}        {
+\${ID}      {
             if(getSymbol(strdup(yytext)) > 0)
                   printf("SYMBOL: %f %s\n", getSymbol(yytext)->value.number, getSymbol(yytext)->value.string);
             char* name = strdup(yytext); 
