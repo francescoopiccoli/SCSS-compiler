@@ -26,6 +26,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <math.h>
 #include "header/scssFunctions.h"
 #include "header/symtable.h"
 #include "header/error.h"
@@ -60,10 +61,10 @@ typedef struct {
 %token<string>    UNIT
 %token<sym>       VAR
 %token            T_SEMICOLON
-%token            T_COLON
-%token            T_DOT
-%token            T_COMMA
-%token            T_HASH
+%token<string>    T_COLON
+%token<string>    T_DOT
+%token<string>    T_COMMA
+%token<string>    T_HASH
 %token            T_PL
 %token            T_PR
 %token            T_BL
@@ -72,7 +73,7 @@ typedef struct {
 %token            T_MINUS
 %token            T_STAR
 %token            T_DIV
-%token            T_GT
+%token<string>    T_GT
 /* %token            CSS_DATA_TYPE  
 %token            HTML_DATA_TYPE 
 %token            FNNAME */
@@ -80,7 +81,12 @@ typedef struct {
 %type <expression>   EXPR
 %type <expression>   SCALAR
 %type <string>       FNCALL
-%type <string>       SELECTORS SELECTOR PSEUDOCLASS RELATIONSHIP
+%type <string>       SELECTORS 
+%type <string>       SELECTOR 
+%type <string>       PSEUDOCLASS 
+%type <string>       RELATIONSHIP 
+%type <string>       EPS 
+
 
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
@@ -101,7 +107,7 @@ S: ST S
   | EPS
   ;
 
-EPS:
+EPS: {printf(""); /*inutile pero almeno non genera il warning*/}
   ;
 
 ST: VARDECL
@@ -150,18 +156,26 @@ EXPR: VAR
                       var_contents v; var_contents x; 
                       v = $1; x = $3; 
                       if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
-                        printf("%f\n", (v.number + x.number));
-                        //symrec* symbol = getSymbol($1->name); "$1" sbagliato, in qualche modo bisogna accedere al symrec e cambiare il valore e metterlo uguale alla somma
-                        //symbol->value.number = (v.number + x.number);
+                        var_contents z;
+                        z.type = 2;
+                        z.string = v.string;
+                        z.number = v.number + x.number;
+                        $$ = z;
                       } else{ 
                         printf("sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+                        var_contents q; //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+                        $$ = q;
                         }
                       }
   | EXPR T_MINUS EXPR {
-                      var_contents v; var_contents x; 
+                       var_contents v; var_contents x; 
                       v = $1; x = $3; 
                       if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
-                        printf("%f\n", (v.number - x.number));
+                        var_contents z;
+                        z.type = 2;
+                        z.string = v.string;
+                        z.number = fabs(v.number - x.number);
+                        $$ = z;
                       } else{ 
                         printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
                         }
@@ -170,7 +184,11 @@ EXPR: VAR
                       var_contents v; var_contents x; 
                       v = $1; x = $3; 
                       if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
-                        printf("%f\n", (v.number * x.number));
+                        var_contents z;
+                        z.type = 2;
+                        z.string = v.string;
+                        z.number = v.number * x.number;
+                        $$ = z;
                       } else{ 
                         printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
                         }
@@ -179,7 +197,11 @@ EXPR: VAR
                       var_contents v; var_contents x; 
                       v = $1; x = $3; 
                       if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
-                        printf("%f\n", (v.number / x.number));
+                        var_contents z;
+                        z.type = 2;
+                        z.string = v.string;
+                        z.number = v.number / x.number;
+                        $$ = z;
                       } else{ 
                         printf("division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
                       }
@@ -222,16 +244,9 @@ CSSRULE: SELECTORS T_BL DECLS T_BR {
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { }
   ;
 
-SELECTOR: /* HTML_DATA_TYPE  */
-  | ID
+SELECTOR: ID
   | T_HASH ID
   | T_DOT ID
-  /*
-  | T_HASH HTML_DATA_TYPE
-  */
-   /*
-  | T_DOT HTML_DATA_TYPE
-   */
   ;
 
 PSEUDOCLASS: T_COLON ID
