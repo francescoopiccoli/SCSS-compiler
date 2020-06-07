@@ -298,17 +298,21 @@ var_contents operations(var_contents v, var_contents x, char* operation){
                 z.number = v.number + x.number;
             }
             else{
-                z.number = fabs(v.number - x.number);
+                z.number = v.number - x.number;
             }
         } 
         else{ 
-            printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-            //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
+            if(strcmp(operation, "+") == 0){
+              printf("sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+            }
+            else{
+              printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+            }
             return q;
         }
     }
 
-    if(strcmp(operation, "*") == 0 || strcmp(operation, "/") == 0){
+    if(strcmp(operation, "*") == 0){
         if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
             z.type = 2;
             if(strcmp(v.string, "") == 0){
@@ -317,18 +321,33 @@ var_contents operations(var_contents v, var_contents x, char* operation){
             else{
                 z.string = v.string;
             }
-            
-            if(strcmp(operation, "*") == 0){               
                 z.number = v.number * x.number;
-            }
-            else{
-                z.number = v.number / x.number;
-            }
         } 
         else{ 
-            printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-            //questo evita che nella symbol table se l'operazione non è consentita, non venga salvato il primo elemento ($1), in ogni caso la variabile viene erroneamente salvata
-            return q;
+             printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+             return q;
+        }
+    }
+
+      if(strcmp(operation, "/") == 0){
+        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
+            z.type = 2;
+            if(strcmp(v.string, "") == 0){
+                z.string = x.string;
+            }
+            else{
+                z.string = v.string;
+            }
+                z.number = v.number / x.number;
+        }
+        else if((strcmp(x.string, v.string) == 0)){
+          z.type = 2;
+          z.string = "";
+          z.number = v.number / x.number;
+        }
+        else{ 
+             printf("division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+             return q;
         }
     }
     return z;

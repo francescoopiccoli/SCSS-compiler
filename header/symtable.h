@@ -142,7 +142,7 @@ void showSymTable ()
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
           printf("%-10s","scalar");
-          printf("%.0f%s", ptr->value.number, ptr->value.string);
+          printf("%.1f%s", ptr->value.number, ptr->value.string);
         }
       if (ptr->type == VAR_ATOM) {
         printf("%-10s","atom");
