@@ -27,9 +27,24 @@ typedef struct {
   enum var_type type;   // type of symbol: either DBL or CMP
 } symrec;
 
+typedef struct
+{
+  char *name;
+  char *value;
+  struct decl *next;
+} decl;
+
+typedef struct
+{
+  char *name;
+  decl *head;
+  struct declarations *parent;
+} declarations;
+
+
 /* The symbol table: a chain of 'struct symrec'.  */
 extern symrec* sym_table;
-
+extern declarations* parent;
 
 /**
 * Put a symbol in the specified symbol table
@@ -160,69 +175,55 @@ int size ()
   return i;
 }
 
-
-
-/**
-* Check if symbol table is empty
-*
-* @return  True if empty, false otherwise
-*/
-
-
 /*
-bool isEmpty() {
-  return (size(sym_table) == 0);
-}
-
-Complex createComplexFromSymbol(symrec* s)
+typedef struct
 {
-  if (s->type == DBL)
-      return createComplex(s->value.var, 0);
-  else return s->value.cmp;
+  char *name;
+  char *value;
+  decl *next;
+} decl;
+
+typedef struct
+{
+  char *name;
+  declarations *parent;
+  decl *head;
+} declarations;*/
+
+declarations *create_decl_table(char *name, declarations *parent) {
+  declarations *d = (declarations*) malloc(sizeof(declarations));
+  d->name = name;
+  d->parent = (struct declarations*) parent;
+  d->head = 0;
+  return d;
 }
 
-symrec* mixedOperation(symrec* a,symrec* b, char op){
-  symrec* temp=createSymbol("temp");
-  temp->init=1;
-  
-  if(a->type==DBL && b->type==DBL){
-    double doubleResult;
-    if(op=='+'){doubleResult=a->value.var+b->value.var;}
-    if(op=='-'){doubleResult=a->value.var-b->value.var;}
-    if(op=='*'){doubleResult=a->value.var*b->value.var;}
-    if(op=='/'){doubleResult=a->value.var/b->value.var;}
-    temp->type=DBL;
-    temp->value.var=doubleResult;
+void *insert_decl(declarations *decls, char *name, char *value) {
+  decl *d = (decl*) malloc(sizeof(decl));
+  d->name = strdup(name);
+  d->value = strdup(value);
+  d->next = 0;
+
+  if(decls->head > 0) {
+    decl *last = decls->head;
+    while(last->next != 0)
+      last = (decl*) last->next;
+    last->next = (struct decl*) d;
+  } else {
+    decls->head = d; 
   }
-  else if(a->type==DBL && b->type==CMP || a->type==CMP && b->type==DBL || a->type==CMP && b->type==CMP){
-    Complex compResult;
-    Complex compA=createComplexFromSymbol(a);
-    Complex compB=createComplexFromSymbol(b);
-    if(op=='+'){compResult=addComplex(compA,compB);}
-    if(op=='-'){compResult=subtractComplex(compA,compB);}
-    if(op=='*'){compResult=multiplyComplex(compA,compB);}
-    if(op=='/'){int error=0; compResult=divideComplex(compA,compB,&error);}
-    temp->type=CMP;
-    temp->value.cmp=compResult;
-  }
-return temp;
 }
 
-symrec* doubleToSymbol(double a){
-  symrec* temp1=createSymbol("temp1");
-  temp1->init=1;
-  temp1->type=DBL;
-  temp1->value.var=a;
-return temp1;
+void print_decls(declarations *decls) {
+  while(decls != 0) {
+    decl *c = decls->head;
+    while(c != 0) {
+      printf("%s: %s;\n", c->name, c->value);
+      c = (decl*) c->next;
+    }
+    decls = (declarations*) decls->parent;
+  }
 }
-symrec* complexToSymbol(Complex a){
-  symrec* temp2=createSymbol("temp2");
-  temp2->init=1;
-  temp2->type=CMP;
-  temp2->value.cmp=a;
-return temp2;
-}
-*/
 
 
 #endif
