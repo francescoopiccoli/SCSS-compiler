@@ -1,0 +1,24 @@
+$var1 : 20px;
+$var2 : (20%)-2%;
+
+//hi
+/* hi */
+
+.code {
+
+    a {
+        width: 0px;
+        
+        b {
+            height: 3%;
+            color : red;
+            $var4 : $var1 * 2;
+        }
+    }
+}
+
+a li {}
+b > li {}
+#idname .name li {}
+.colorDiv:hover > li {}
+ST

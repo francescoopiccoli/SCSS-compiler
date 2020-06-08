@@ -5,3 +5,6 @@
 $a : 10px;
 $b : rgb(1024,20%) + $a;
 sum between "rgb(1024.00,20.00%)" and "px" not allowed
+
+
+$x : $y; se y non è dichiarato precedentemente dovrebbe crashare

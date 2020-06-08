@@ -1,9 +1,9 @@
 $var1 : 20px;
 $var2 : (20%)-2%;
-$var3 : red + rgb(10,10,10);
+$var3 : green;
 
-//hi
-/* hi */
+//this comment will be ignored
+/* this comment will be kept */
 
 .code {
 
@@ -14,9 +14,9 @@ $var3 : red + rgb(10,10,10);
         
         b {
             height: 3%;
-            color : red;
+            color : red /*missing semicolon on purpose*/
             $var4 : $var1 * 2;
-        }
+        /*missing right brace on purpose*/
     }
 }
 
