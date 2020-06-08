@@ -1,4 +1,5 @@
 %option noyywrap
+%option yylineno
 
 %{
 #include <stdlib.h>
@@ -6,11 +7,6 @@
 //#include "header/scssFunctions.h"
 //#include "header/symtable.h"
 
-//variabili usate spesso che potrebbero tornare utili
-int badtoken_cnt = 0;
-int token_cnt = 0;
-int col_cnt = 0;
-int lineno = 0;
 
 //BUGS
 
@@ -70,6 +66,6 @@ ST {showSymTable();} // DEBUG
 {ID}        {yylval.string = strdup(yytext); return ID;}
 
 
-.           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
+.           { printf("Unexpected character: %c\n at line %d\t", yytext[0], yylineno); return yytext[0]; } //return error if all else fails
 
 %%

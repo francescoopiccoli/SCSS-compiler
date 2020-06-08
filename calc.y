@@ -32,7 +32,7 @@
 #include "header/error.h"
 
 int yylex();
-int yyerror (char const *message);
+void yyerror (char const *message);
 var_contents operations(var_contents v, var_contents x, char *operation);
 
 
@@ -303,12 +303,12 @@ int main(int argc, char *argv[])
       }
 }
 
-int yyerror (char const *message)
+void yyerror (char const *message)
 {
-  return fprintf (stderr, "%s\n", message);
+  extern int yylineno;
+  fprintf (stderr, "%s\n At line %d ", message, yylineno);
   fputs (message, stderr);
   fputc ('\n', stderr);
-  return 0;
 }
 
 var_contents operations(var_contents v, var_contents x, char* operation){
