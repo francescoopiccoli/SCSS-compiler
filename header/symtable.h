@@ -190,12 +190,7 @@ declarations *create_decl_table(char *name, declarations *parent) {
   return d;
 }
 
-void *insert_decl(declarations *decls, char *name, char *value) {
-  decl *d = (decl*) malloc(sizeof(decl));
-  d->name = strdup(name);
-  d->value = strdup(value);
-  d->next = 0;
-
+void *insert_decl(declarations *decls, decl *d) {
   if(decls->head > 0) {
     decl *last = decls->head;
     while(last->next != 0)

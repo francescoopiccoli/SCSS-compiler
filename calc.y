@@ -47,7 +47,6 @@ var_contents operations(var_contents v, var_contents x, char *operation);
         symrec *sym;
         declarations *decls;
         decl *decl;
-        enum var_type varType;
         var_contents expression;
        }
 
@@ -72,7 +71,7 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 %token            T_MINUS
 %token            T_STAR
 %token            T_DIV
-%token<string>    T_GT
+%token            T_GT
 /* %token            CSS_DATA_TYPE  
 %token            HTML_DATA_TYPE 
 %token            FNNAME */
@@ -80,6 +79,7 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 %type <expression>   EXPR
 %type <expression>   SCALAR
 %type <decls>        CSSRULE
+%type <decl>         DECLS
 %type <decl>         DECL
 %type <string>       FNCALL
 %type <string>       SELECTORS 
@@ -199,14 +199,18 @@ CSSRULE: SELECTORS
 
       printf("%s { \n", selectors); // print parent selectors as well!
       parent = create_decl_table($1,parent);
-      // todo: iteratively insert all of cur layers contents
-      insert_decl(parent,"color","red");
-      insert_decl(parent,"background-color","green");
-      print_decls(parent);
+      
       printf("}\n");
     } 
     T_BL DECLS T_BR 
     {
+      // todo: serious logical bugs -> iteratively insert all of cur layers contents
+      decl *c = $4;
+      while(c != 0) {
+        insert_decl(parent,c);
+        printf("NAME:%s VAL:%s",c->name, c->value); // "
+        c = (decl*) c->next;
+      }
       parent = (declarations*) parent->parent;
     }
   ;
@@ -239,18 +243,28 @@ PSEUDOCLASS: T_COLON ID { $$ = $2; snprintf($$, 128, ":%s", strdup($2)); }
   | EPS
   ;
   
-DECLS: DECL DECLS
-  | EPS
+DECLS: DECL DECLS { 
+  $$ = $1;
+  //$$->next = $2; //-> why segfaults?
+}
+  | EPS { $$ = 0; }
   ;
   
 DECL: ID T_COLON EXPR T_SEMICOLON {
   decl *d = malloc(sizeof(decl));
   d->name = $1;
-  //d->value = $3->string; -> not so easy
+  switch($3.type) {
+    case VAR_ATOM:
+    case VAR_FUNCTION:
+      d->value = $3.string;
+      break;
+    case VAR_SCALAR:
+      d->value = malloc(128);
+      snprintf(d->value, 128, "%f%s", $3.string, $3.number);
+  }
   d->next = 0;
   $$ = d;
 }
-  /* | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON */
   | CSSRULE {$$ = 0; /* handled at lower level */}
   | VARDECL {$$ = 0; /*nothing to do */}
 
