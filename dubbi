@@ -1,3 +1,7 @@
 [ ] conflitto shift-reduce rimasto: problema 1 token lookahead forte?
 [ ] linux vs mac unexpected ? unexpected $end
 [ ] conflitto - oppure negativi
+
+$a : 10px;
+$b : rgb(1024,20%) + $a;
+sum between "rgb(1024.00,20.00%)" and "px" not allowed
