@@ -66,6 +66,6 @@ ST {showSymTable();} // DEBUG
 {ID}        {yylval.string = strdup(yytext); return ID;}
 
 
-.           { printf("Unexpected character: %c\n at line %d\t", yytext[0], yylineno); return yytext[0]; } //return error if all else fails
+.           { printf("Unexpected character: %c\n", yytext[0]); return yytext[0]; } //return error if all else fails
 
 %%

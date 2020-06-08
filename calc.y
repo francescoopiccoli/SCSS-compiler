@@ -38,7 +38,7 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 
 
 %}
-
+%error-verbose
 // here we define all return values that lex can return
 
 %union {
@@ -306,8 +306,7 @@ int main(int argc, char *argv[])
 void yyerror (char const *message)
 {
   extern int yylineno;
-  fprintf (stderr, "%s\n At line %d ", message, yylineno);
-  fputs (message, stderr);
+  fprintf (stderr, "At line %d %s\n  ", yylineno, message);
   fputc ('\n', stderr);
 }
 
@@ -329,10 +328,10 @@ var_contents operations(var_contents v, var_contents x, char* operation){
         } 
         else{ 
             if(strcmp(operation, "+") == 0){
-              printf("sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+              printf("ERROR: sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
             }
             else{
-              printf("subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+              printf("ERROR: subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
             }
             return q;
         }
@@ -350,7 +349,7 @@ var_contents operations(var_contents v, var_contents x, char* operation){
                 z.number = v.number * x.number;
         } 
         else{ 
-             printf("multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+             printf("ERROR: multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
              return q;
         }
     }
@@ -372,7 +371,7 @@ var_contents operations(var_contents v, var_contents x, char* operation){
           z.number = v.number / x.number;
         }
         else{ 
-             printf("division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+             printf("ERROR: division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
              return q;
         }
     }
