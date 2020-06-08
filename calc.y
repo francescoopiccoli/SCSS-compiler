@@ -87,6 +87,8 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 %type <string>       PSEUDOCLASS 
 %type <string>       RELATIONSHIP 
 %type <string>       EPS 
+%type <string>       P 
+%type <string>       PARAMS
 
 
 %left T_MINUS T_PLUS
@@ -175,15 +177,24 @@ SCALAR: NUM UNIT {
     }
   ;
 
-FNCALL: ID T_PL P T_PR { $$ = $1; }
+FNCALL: ID T_PL P T_PR { 
+  $$ = malloc(128);
+  snprintf($$, 128, "%s(%s)", strdup($1), strdup($3));
+  }
   /*| FNNAME T_PL P T_PR*/
   ;
 
-P: EXPR PARAMS 
+P: EXPR PARAMS { 
+  $$ = malloc(128);
+  snprintf($$, 128, "%s%s", strdup(var_to_string(&$1)), strdup($2));
+  }
   | EPS
   ;
 
-PARAMS: T_COMMA EXPR PARAMS
+PARAMS: T_COMMA EXPR PARAMS { 
+  $$ = malloc(128);
+  snprintf($$, 128, ",%s%s", strdup(var_to_string(&$2)), strdup($3));
+  }
   | EPS
   ;
 
@@ -208,7 +219,7 @@ CSSRULE: SELECTORS
       decl *c = $4;
       while(c != 0) {
         insert_decl(parent,c);
-        printf("NAME:%s VAL:%s",c->name, c->value); // "
+        //printf("NAME:%s VAL:%s",c->name, c->value); // "
         c = (decl*) c->next;
       }
       parent = (declarations*) parent->parent;
@@ -253,15 +264,7 @@ DECLS: DECL DECLS {
 DECL: ID T_COLON EXPR T_SEMICOLON {
   decl *d = malloc(sizeof(decl));
   d->name = $1;
-  switch($3.type) {
-    case VAR_ATOM:
-    case VAR_FUNCTION:
-      d->value = $3.string;
-      break;
-    case VAR_SCALAR:
-      d->value = malloc(128);
-      snprintf(d->value, 128, "%f%s", $3.string, $3.number);
-  }
+  d->value = var_to_string(&$3);
   d->next = 0;
   $$ = d;
 }

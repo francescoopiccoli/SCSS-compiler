@@ -213,5 +213,18 @@ void print_decls(declarations *decls) {
   }
 }
 
+char* var_to_string(var_contents *v) {
+  char *ret;
+  switch(v->type) {
+    case VAR_ATOM:
+    case VAR_FUNCTION:
+      ret = v->string;
+      break;
+    case VAR_SCALAR:
+      ret = malloc(128);
+      snprintf(ret, 128, "%.2f%s", v->number, strdup(v->string));
+  }
+  return ret;
+}
 
 #endif
