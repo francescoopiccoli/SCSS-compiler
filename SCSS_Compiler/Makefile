@@ -5,10 +5,6 @@ build_dir=build
 
 
 all: clean .flex .yacc .gcc .cleanwd
-	
-
-run: 
-	$(build_dir)/$(proj_name)
 
 .flex:
 	@echo "Running flex..."
