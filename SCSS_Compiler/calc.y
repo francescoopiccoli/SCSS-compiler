@@ -39,7 +39,7 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 
 %}
 // in this way, the expected token will be printed whenever possible
-%define parse.error verbose
+%error-verbose
 
 // here we define all return values that lex can return
 
@@ -216,14 +216,14 @@ CSSRULE: SELECTORS
       printf("}\n");
     } 
     T_BL DECLS T_BR 
-    {
+    { 
       // todo: serious logical bugs -> iteratively insert all of cur layers contents
       decl *c = $4;
       while(c != 0) {
         insert_decl(parent,c);
-        //printf("NAME:%s VAL:%s",c->name, c->value); // "
         c = (decl*) c->next;
       }
+      print_decls(parent);
       parent = (declarations*) parent->parent;
     }
   ;
