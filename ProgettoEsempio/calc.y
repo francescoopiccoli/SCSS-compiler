@@ -83,23 +83,23 @@ LINE
 // statement rules: expression or declaration or assignment or complex expression
 
 STMT  
-      :DECL           {printf("Declaration\n"); showSymTable();}
-      | ASSIGN         {printf("Assignment\n"); showSymTable();}
+      :DECL           {printf("Declaration\n"); print_variables();}
+      | ASSIGN         {printf("Assignment\n"); print_variables();}
       | MEXPR          {if($1->type==CMP){printComplex($1->value.cmp);}else{printf("%f\n",$1->value.var);}}
       ;
 
 // declaration rules
 
 DECL  
-      : DECL_TYPE ID           {insertSymbol($2, $1);}
+      : DECL_TYPE ID           {insert_variable($2, $1);}
       | DECL_TYPE ID OP_ASSIGN MEXPR {
-                                   if (getSymbol($2->name) != 0)
+                                   if (get_variable($2->name) != 0)
                                    {
                                          printf("Redeclaration of variable %s\n", $2->name);
                                     YYERROR;
                                    }
                                     if($1==CMP){
-                                           symrec* s1 = insertSymbol($2,$1 );
+                                           symrec* s1 = insert_variable($2,$1 );
                                           if($4->type==CMP){
                                                 s1->value.cmp=$4->value.cmp;
                                                 s1->init=1;
@@ -116,7 +116,7 @@ DECL
                                                 YYERROR;
                                           }
                                           else{
-                                                  symrec* s1 = insertSymbol($2,$1 );
+                                                  symrec* s1 = insert_variable($2,$1 );
                                                 s1->value.var=$4->value.var;
                                                 s1->init=1;  
                                           }
@@ -153,7 +153,7 @@ MEXPR : MEXPR OP_PLUS MEXPR  {$$ = mixedOperation($1,$3,'+');}
                                     YYERROR;
                                 }
                               else{
-                                  symrec* s1 = getSymbol($1->name);
+                                  symrec* s1 = get_variable($1->name);
                                   $$=s1;                     
                              }
                              }
@@ -166,7 +166,7 @@ ASSIGN  : ID OP_ASSIGN MEXPR   {if(!isSymbolDefined($1->name)){
                                     YYERROR;
                                 }
                                 else{
-                                    symrec* s1 = getSymbol($1->name);
+                                    symrec* s1 = get_variable($1->name);
                                     if(s1->type==CMP){
                                           if($3->type==CMP){
                                                 s1->value.cmp=$3->value.cmp;

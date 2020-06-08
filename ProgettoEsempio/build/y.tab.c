@@ -1245,13 +1245,13 @@ yyreduce:
 
   case 6:
 #line 86 "calc.y"
-                      {printf("Declaration\n"); showSymTable();}
+                      {printf("Declaration\n"); print_variables();}
 #line 1250 "y.tab.c"
     break;
 
   case 7:
 #line 87 "calc.y"
-                       {printf("Assignment\n"); showSymTable();}
+                       {printf("Assignment\n"); print_variables();}
 #line 1256 "y.tab.c"
     break;
 
@@ -1263,20 +1263,20 @@ yyreduce:
 
   case 9:
 #line 94 "calc.y"
-                               {insertSymbol((yyvsp[0].symbol), (yyvsp[-1].varType));}
+                               {insert_variable((yyvsp[0].symbol), (yyvsp[-1].varType));}
 #line 1268 "y.tab.c"
     break;
 
   case 10:
 #line 95 "calc.y"
                                      {
-                                   if (getSymbol((yyvsp[-2].symbol)->name) != 0)
+                                   if (get_variable((yyvsp[-2].symbol)->name) != 0)
                                    {
                                          printf("Redeclaration of variable %s\n", (yyvsp[-2].symbol)->name);
                                     YYERROR;
                                    }
                                     if((yyvsp[-3].varType)==CMP){
-                                           symrec* s1 = insertSymbol((yyvsp[-2].symbol),(yyvsp[-3].varType) );
+                                           symrec* s1 = insert_variable((yyvsp[-2].symbol),(yyvsp[-3].varType) );
                                           if((yyvsp[0].symbol)->type==CMP){
                                                 s1->value.cmp=(yyvsp[0].symbol)->value.cmp;
                                                 s1->init=1;
@@ -1293,7 +1293,7 @@ yyreduce:
                                                 YYERROR;
                                           }
                                           else{
-                                                  symrec* s1 = insertSymbol((yyvsp[-2].symbol),(yyvsp[-3].varType) );
+                                                  symrec* s1 = insert_variable((yyvsp[-2].symbol),(yyvsp[-3].varType) );
                                                 s1->value.var=(yyvsp[0].symbol)->value.var;
                                                 s1->init=1;  
                                           }
@@ -1370,7 +1370,7 @@ yyreduce:
                                     YYERROR;
                                 }
                               else{
-                                  symrec* s1 = getSymbol((yyvsp[0].symbol)->name);
+                                  symrec* s1 = get_variable((yyvsp[0].symbol)->name);
                                   (yyval.symbol)=s1;                     
                              }
                              }
@@ -1389,7 +1389,7 @@ yyreduce:
                                     YYERROR;
                                 }
                                 else{
-                                    symrec* s1 = getSymbol((yyvsp[-2].symbol)->name);
+                                    symrec* s1 = get_variable((yyvsp[-2].symbol)->name);
                                     if(s1->type==CMP){
                                           if((yyvsp[0].symbol)->type==CMP){
                                                 s1->value.cmp=(yyvsp[0].symbol)->value.cmp;

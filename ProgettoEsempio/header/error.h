@@ -5,8 +5,8 @@
 
 bool areSymbolsValidComplex(char* a, char* b)
 {
-    symrec* s1 = getSymbol(a);
-    symrec* s2 = getSymbol(b);
+    symrec* s1 = get_variable(a);
+    symrec* s2 = get_variable(b);
     if(s1 == 0 || s2 == 0) {
         printf("One component of the complex is not defined.\n");
         return false;
@@ -22,8 +22,8 @@ bool areSymbolsValidComplex(char* a, char* b)
 
 bool areSymbolsInitialized(char* a, char* b)
 {
-    symrec* s1 = getSymbol(a);
-    symrec* s2 = getSymbol(b);
+    symrec* s1 = get_variable(a);
+    symrec* s2 = get_variable(b);
     if(s1 == 0 || s2 == 0) {
         printf("One component of the operation is not defined.\n");
         return false;
@@ -38,7 +38,7 @@ bool areSymbolsInitialized(char* a, char* b)
 
 bool isSymbolInitialized(char* a)
 {
-    symrec* s1 = getSymbol(a);
+    symrec* s1 = get_variable(a);
     if(s1 == 0) {
         printf("The component of the operation is not defined.\n");
         return false;
@@ -49,7 +49,7 @@ bool isSymbolInitialized(char* a)
     return true;
 }
 bool isSymbolDefined(char* a){
-    symrec* s1 = getSymbol(a);
+    symrec* s1 = get_variable(a);
     if(s1 == 0) {
         printf("The component of the operation is not defined.\n");
         return false;
@@ -60,8 +60,8 @@ bool isSymbolDefined(char* a){
 
 bool areSymbolsCompatibleType(char* a, char* b)
 {
-    symrec* s1 = getSymbol(a);
-    symrec* s2 = getSymbol(b);
+    symrec* s1 = get_variable(a);
+    symrec* s2 = get_variable(b);
     if(s1 == 0 || s2 == 0) {
         printf("One component of the assignment is not defined.\n");
         return false;

@@ -38,7 +38,9 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 
 
 %}
-%error-verbose
+// in this way, the expected token will be printed whenever possible
+%define parse.error verbose
+
 // here we define all return values that lex can return
 
 %union {
@@ -120,7 +122,7 @@ ST: VARDECL
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {
   var_contents v = $3;
   
-  symrec* symbol = insertSymbol($1,v.type);
+  symrec* symbol = insert_variable($1,v.type);
   symbol->value.number = v.number;
   symbol->value.string = v.string;
 
@@ -129,11 +131,11 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON {
 
 EXPR: VAR 
   {
-    if(getSymbol($1->name) > 0) {
+    if(get_variable($1->name) > 0) {
       var_contents v;
-      v.type = getSymbol($1->name)->type;
-      v.string = getSymbol($1->name)->value.string;
-      v.number = getSymbol($1->name)->value.number;
+      v.type = get_variable($1->name)->type;
+      v.string = get_variable($1->name)->value.string;
+      v.number = get_variable($1->name)->value.number;
       $$ = v;
     } else {
       // crash?
@@ -227,29 +229,28 @@ CSSRULE: SELECTORS
   ;
 
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP {
-  char *s1 = malloc(sizeof(char) * (strlen($1) + 1));
+  char *s1 = malloc(128);
   strcpy(s1, $1);
-  char *s2 = malloc(sizeof(char) * (strlen($2) + 1));
+  char *s2 = malloc(128);
   strcpy(s2, $2);
-  char *s3 = malloc(sizeof(char) * (strlen($3) + 1));
+  char *s3 = malloc(128);
   strcpy(s3, $3);
 
-  snprintf($$,1024,"%s%s %s", s1, s2, s3);
+  snprintf($$,128,"%s%s %s", s1, s2, s3);
 }
   ;
 
 SELECTOR: ID { $$ = $1; }
-  /* $$ = $2 required, otherwise segfault -> wtf? */
-  | T_HASH ID { $$ = $2;  snprintf($$, 128, "#%s", strdup($2)); }
-  | T_DOT ID { $$ = $2; snprintf($$, 128, ".%s", strdup($2)); }
+  | T_HASH ID { $$ = malloc(128);  snprintf($$, 128, "#%s", strdup($2)); }
+  | T_DOT ID { $$ = malloc(128); snprintf($$, 128, ".%s", strdup($2)); }
   ;
 
-PSEUDOCLASS: T_COLON ID { $$ = $2; snprintf($$, 128, ":%s", strdup($2)); }
+PSEUDOCLASS: T_COLON ID { $$ = malloc(128); snprintf($$, 128, ":%s", strdup($2)); }
   | EPS
   ;
 
-  RELATIONSHIP: T_COMMA SELECTORS { $$ = $2;  snprintf($$, 128, ",%s", strdup($2)); }
-  | T_GT SELECTORS { $$ = $2;  snprintf($$, 128, "> %s", strdup($2)); }
+  RELATIONSHIP: T_COMMA SELECTORS { $$ = malloc(128); snprintf($$, 128, ",%s", strdup($2)); }
+  | T_GT SELECTORS { $$ = malloc(128); snprintf($$, 128, "> %s", strdup($2)); }
   | SELECTORS { $$ = $1; }
   | EPS
   ;
@@ -306,7 +307,7 @@ int main(int argc, char *argv[])
 void yyerror (char const *message)
 {
   extern int yylineno;
-  fprintf (stderr, "At line %d %s\n  ", yylineno, message);
+  fprintf (stderr, "\n!!! ERROR at line %d: %s !!!\n  ", yylineno, message);
   fputc ('\n', stderr);
 }
 

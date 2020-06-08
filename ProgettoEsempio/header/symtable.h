@@ -54,7 +54,7 @@ symrec* putSymbol(char const *sym_name)
 *
 * @return  A pointer to the created symbol
 */
-symrec* createSymbol(char const *sym_name)
+symrec* create_variable_table(char const *sym_name)
 {
   symrec* ptr = (symrec*) malloc (sizeof (symrec));
   ptr->name = (char*) malloc (strlen (sym_name) + 1);
@@ -70,7 +70,7 @@ symrec* createSymbol(char const *sym_name)
 *
 * @return  A pointer to next symbol table record or 0 if not found
 */
-symrec* getSymbol(char const *sym_name)
+symrec* get_variable(char const *sym_name)
 {
   symrec* ptr;
   for (ptr = sym_table; ptr != 0; ptr = (symrec*)ptr->next)
@@ -89,9 +89,9 @@ symrec* getSymbol(char const *sym_name)
 *
 * @return  A pointer to next symbol table record
 */
-symrec* insertSymbol(symrec* s, enum var_type t)
+symrec* insert_variable(symrec* s, enum var_type t)
 {
-  if(getSymbol(s->name) == 0) {
+  if(get_variable(s->name) == 0) {
       s->init = 0;
     s->type = t;
     s->next = (struct symrec*)sym_table;
@@ -110,7 +110,7 @@ symrec* insertSymbol(symrec* s, enum var_type t)
 * Print the entire symbol table in human readable form
 *
 */
-void showSymTable ()
+void print_variables ()
 {
   symrec* ptr;
   int i = 1;
@@ -181,7 +181,7 @@ Complex createComplexFromSymbol(symrec* s)
 }
 
 symrec* mixedOperation(symrec* a,symrec* b, char op){
-  symrec* temp=createSymbol("temp");
+  symrec* temp=create_variable_table("temp");
   temp->init=1;
   
   if(a->type==DBL && b->type==DBL){
@@ -208,14 +208,14 @@ return temp;
 }
 
 symrec* doubleToSymbol(double a){
-  symrec* temp1=createSymbol("temp1");
+  symrec* temp1=create_variable_table("temp1");
   temp1->init=1;
   temp1->type=DBL;
   temp1->value.var=a;
 return temp1;
 }
 symrec* complexToSymbol(Complex a){
-  symrec* temp2=createSymbol("temp2");
+  symrec* temp2=create_variable_table("temp2");
   temp2->init=1;
   temp2->type=CMP;
   temp2->value.cmp=a;

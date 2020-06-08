@@ -861,9 +861,9 @@ YY_RULE_SETUP
 #line 39 "calc.l"
 {
             char* name = strdup(yytext); 
-            symrec* s = getSymbol(name);
+            symrec* s = get_variable(name);
             if(s == 0) {
-                  s = createSymbol(name);
+                  s = create_variable_table(name);
             }
             yylval.symbol = s;
             return ID;

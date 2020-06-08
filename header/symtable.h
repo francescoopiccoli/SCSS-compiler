@@ -79,7 +79,7 @@ symrec* symbol_put(char const *sym_name)
 *
 * @return  A pointer to the created symbol
 */
-symrec* createSymbol(char const *sym_name)
+symrec* create_variable_table(char const *sym_name)
 {
   symrec* ptr = (symrec*) malloc (sizeof (symrec));
   ptr->name = (char*) malloc (strlen (sym_name) + 1);
@@ -94,7 +94,7 @@ symrec* createSymbol(char const *sym_name)
 *
 * @return  A pointer to next symbol table record or 0 if not found
 */
-symrec* getSymbol(char const *sym_name)
+symrec* get_variable(char const *sym_name)
 {
   symrec* ptr;
   for (ptr = sym_table; ptr != 0; ptr = (symrec*)ptr->next)
@@ -113,9 +113,9 @@ symrec* getSymbol(char const *sym_name)
 *
 * @return  A pointer to next symbol table record
 */
-symrec* insertSymbol(symrec* s, enum var_type t)
+symrec* insert_variable(symrec* s, enum var_type t)
 {
-  symrec *symbol = getSymbol(s->name);
+  symrec *symbol = get_variable(s->name);
   if(symbol == 0) {
     s->type = t;
     s->next = (struct symrec*)sym_table;
@@ -134,7 +134,7 @@ symrec* insertSymbol(symrec* s, enum var_type t)
 * Print the entire symbol table in human readable form
 *
 */
-void showSymTable ()
+void print_variables ()
 {
   symrec* ptr;
   int i = 1;
