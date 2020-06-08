@@ -199,7 +199,7 @@ CSSRULE: SELECTORS
 
       printf("%s { \n", selectors); // print parent selectors as well!
       parent = create_decl_table($1,parent);
-      // todo: iteratively insert all of cur layer's contents
+      // todo: iteratively insert all of cur layers contents
       insert_decl(parent,"color","red");
       insert_decl(parent,"background-color","green");
       print_decls(parent);
@@ -219,22 +219,23 @@ SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP {
   char *s3 = malloc(sizeof(char) * (strlen($3) + 1));
   strcpy(s3, $3);
 
-  snprintf($$,1024,"%s %s %s", s1, s2, s3);
+  snprintf($$,1024,"%s%s %s", s1, s2, s3);
 }
   ;
 
 SELECTOR: ID { $$ = $1; }
-  | T_HASH ID { $$ = $2;  /*snprintf($$, 128, "#%s", $2); */}
-  | T_DOT ID { $$ = $2; /*snprintf($$, 128, ".%s", $2);*/ }
+  /* $$ = $2 required, otherwise segfault -> wtf? */
+  | T_HASH ID { $$ = $2;  snprintf($$, 128, "#%s", strdup($2)); }
+  | T_DOT ID { $$ = $2; snprintf($$, 128, ".%s", strdup($2)); }
   ;
 
-PSEUDOCLASS: T_COLON ID {/* snprintf($$, 128, ":%s", $2); */}
+PSEUDOCLASS: T_COLON ID { $$ = $2; snprintf($$, 128, ":%s", strdup($2)); }
   | EPS
   ;
 
-  RELATIONSHIP: T_COMMA SELECTORS { /*snprintf($$, 128, ", %s", $2);*/ }
-  | T_GT SELECTORS { /*snprintf($$, 128, " > %s", $2);*/ }
-  | SELECTORS { /*$$ = $1;*/ }
+  RELATIONSHIP: T_COMMA SELECTORS { $$ = $2;  snprintf($$, 128, ",%s", strdup($2)); }
+  | T_GT SELECTORS { $$ = $2;  snprintf($$, 128, "> %s", strdup($2)); }
+  | SELECTORS { $$ = $1; }
   | EPS
   ;
   
@@ -245,7 +246,7 @@ DECLS: DECL DECLS
 DECL: ID T_COLON EXPR T_SEMICOLON {
   decl *d = malloc(sizeof(decl));
   d->name = $1;
-  //d->value = $3->string;
+  //d->value = $3->string; -> not so easy
   d->next = 0;
   $$ = d;
 }
