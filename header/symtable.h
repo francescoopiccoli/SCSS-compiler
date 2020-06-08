@@ -41,6 +41,13 @@ typedef struct
   struct declarations *parent;
 } declarations;
 
+typedef struct {
+    char *string;
+    double number;
+    enum var_type type;
+} var_contents;
+
+
 
 /* The symbol table: a chain of 'struct symrec'.  */
 extern symrec* sym_table;

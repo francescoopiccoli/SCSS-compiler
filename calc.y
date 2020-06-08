@@ -31,12 +31,6 @@
 #include "header/symtable.h"
 #include "header/error.h"
 
-typedef struct {
-    char *string;
-    double number;
-    enum var_type type;
-} var_contents;
-
 int yylex();
 int yyerror (char const *message);
 var_contents operations(var_contents v, var_contents x, char *operation);
@@ -52,6 +46,7 @@ var_contents operations(var_contents v, var_contents x, char *operation);
         double number;
         symrec *sym;
         declarations *decls;
+        decl *decl;
         enum var_type varType;
         var_contents expression;
        }
@@ -85,7 +80,7 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 %type <expression>   EXPR
 %type <expression>   SCALAR
 %type <decls>        CSSRULE
-%type <string>       DECL
+%type <decl>         DECL
 %type <string>       FNCALL
 %type <string>       SELECTORS 
 %type <string>       SELECTOR 
@@ -194,9 +189,16 @@ PARAMS: T_COMMA EXPR PARAMS
 
 CSSRULE: SELECTORS 
     {
+      declarations *d = parent;
+      char *selectors = strdup($1);
+      while(d != 0) {
+        char *s2 = strdup(selectors);
+        snprintf(selectors, 128, "%s %s", d->name, s2);
+        d = (declarations*) d->parent;
+      }
 
-      printf("%s { \n", $1); // print parent selectors as well!
-      parent = create_decl_table(".col-md-2",parent);
+      printf("%s { \n", selectors); // print parent selectors as well!
+      parent = create_decl_table($1,parent);
       // todo: iteratively insert all of cur layer's contents
       insert_decl(parent,"color","red");
       insert_decl(parent,"background-color","green");
@@ -222,8 +224,8 @@ SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP {
   ;
 
 SELECTOR: ID { $$ = $1; }
-  | T_HASH ID { /*snprintf($$, 128, "#%s", $2); */}
-  | T_DOT ID { /*snprintf($$, 128, ".%s", $2);*/ }
+  | T_HASH ID { $$ = $2;  /*snprintf($$, 128, "#%s", $2); */}
+  | T_DOT ID { $$ = $2; /*snprintf($$, 128, ".%s", $2);*/ }
   ;
 
 PSEUDOCLASS: T_COLON ID {/* snprintf($$, 128, ":%s", $2); */}
@@ -240,10 +242,16 @@ DECLS: DECL DECLS
   | EPS
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON {$$ = $1;}
+DECL: ID T_COLON EXPR T_SEMICOLON {
+  decl *d = malloc(sizeof(decl));
+  d->name = $1;
+  //d->value = $3->string;
+  d->next = 0;
+  $$ = d;
+}
   /* | CSS_DATA_TYPE T_COLON EXPR T_SEMICOLON */
-  | CSSRULE {}
-  | VARDECL {}
+  | CSSRULE {$$ = 0; /* handled at lower level */}
+  | VARDECL {$$ = 0; /*nothing to do */}
 
 %%
 
