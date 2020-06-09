@@ -21,6 +21,8 @@
 // - numeri con - passati come identifier invece che come espressioni -> precedenza 
 
 #define YYERROR_VERBOSE 1
+#define BUFFER_SIZE_SMALL 128
+#define BUFFER_SIZE_LARGE 1024
 
 #include <stdlib.h>
 #include <string.h>
@@ -180,33 +182,34 @@ SCALAR: NUM UNIT {
   ;
 
 FNCALL: ID T_PL P T_PR { 
-  $$ = malloc(128);
-  snprintf($$, 128, "%s(%s)", strdup($1), strdup($3));
+  $$ = malloc(BUFFER_SIZE_SMALL);
+  snprintf($$, BUFFER_SIZE_SMALL, "%s(%s)", strdup($1), strdup($3));
   }
   /*| FNNAME T_PL P T_PR*/
   ;
 
 P: EXPR PARAMS { 
-  $$ = malloc(128);
-  snprintf($$, 128, "%s%s", strdup(var_to_string(&$1)), strdup($2));
+  $$ = malloc(BUFFER_SIZE_SMALL);
+  snprintf($$, BUFFER_SIZE_SMALL, "%s%s", strdup(var_to_string(&$1)), strdup($2));
   }
   | EPS
   ;
 
 PARAMS: T_COMMA EXPR PARAMS { 
-  $$ = malloc(128);
-  snprintf($$, 128, ",%s%s", strdup(var_to_string(&$2)), strdup($3));
+  $$ = malloc(BUFFER_SIZE_SMALL);
+  snprintf($$, BUFFER_SIZE_SMALL, ",%s%s", strdup(var_to_string(&$2)), strdup($3));
   }
   | EPS
   ;
 
+/* bugs bugs bugs */
 CSSRULE: SELECTORS 
     {
       declarations *d = parent;
       char *selectors = strdup($1);
       while(d != 0) {
         char *s2 = strdup(selectors);
-        snprintf(selectors, 128, "%s %s", d->name, s2);
+        snprintf(selectors, BUFFER_SIZE_SMALL, "%s %s", d->name, s2);
         d = (declarations*) d->parent;
       }
 
@@ -229,28 +232,28 @@ CSSRULE: SELECTORS
   ;
 
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP {
-  char *s1 = malloc(128);
+  char *s1 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s1, $1);
-  char *s2 = malloc(128);
+  char *s2 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s2, $2);
-  char *s3 = malloc(128);
+  char *s3 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s3, $3);
 
-  snprintf($$,128,"%s%s %s", s1, s2, s3);
+  snprintf($$,BUFFER_SIZE_SMALL,"%s%s %s", s1, s2, s3);
 }
   ;
 
 SELECTOR: ID { $$ = $1; }
-  | T_HASH ID { $$ = malloc(128);  snprintf($$, 128, "#%s", strdup($2)); }
-  | T_DOT ID { $$ = malloc(128); snprintf($$, 128, ".%s", strdup($2)); }
+  | T_HASH ID { $$ = malloc(BUFFER_SIZE_SMALL);  snprintf($$, BUFFER_SIZE_SMALL, "#%s", strdup($2)); }
+  | T_DOT ID { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ".%s", strdup($2)); }
   ;
 
-PSEUDOCLASS: T_COLON ID { $$ = malloc(128); snprintf($$, 128, ":%s", strdup($2)); }
+PSEUDOCLASS: T_COLON ID { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ":%s", strdup($2)); }
   | EPS
   ;
 
-  RELATIONSHIP: T_COMMA SELECTORS { $$ = malloc(128); snprintf($$, 128, ",%s", strdup($2)); }
-  | T_GT SELECTORS { $$ = malloc(128); snprintf($$, 128, "> %s", strdup($2)); }
+  RELATIONSHIP: T_COMMA SELECTORS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ",%s", strdup($2)); }
+  | T_GT SELECTORS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "> %s", strdup($2)); }
   | SELECTORS { $$ = $1; }
   | EPS
   ;
