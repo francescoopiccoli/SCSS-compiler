@@ -12,7 +12,6 @@
  *  @author Francesco Piccoli <fpiccoli@unibz.it> 
  *
  *
- *  @bug No known bugs?
  */
 
 
@@ -35,7 +34,7 @@
 
 int yylex();
 void yyerror (char const *message);
-var_contents operations(var_contents v, var_contents x, char *operation);
+VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 
 
 
@@ -48,10 +47,10 @@ var_contents operations(var_contents v, var_contents x, char *operation);
 %union {
         char* string;
         double number;
-        symrec *sym;
-        declarations *decls;
-        decl *decl;
-        var_contents expression;
+        SYMREC *sym;
+        DECLARATIONS *decls;
+        DECL *decl;
+        VAR_CONTENTS expression;
        }
 
 
@@ -122,9 +121,9 @@ ST: VARDECL
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {
-  var_contents v = $3;
+  VAR_CONTENTS v = $3;
   
-  symrec* symbol = insert_variable($1,v.type);
+  SYMREC* symbol = insert_variable($1,v.type);
   symbol->value.number = v.number;
   symbol->value.string = v.string;
 
@@ -134,7 +133,7 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON {
 EXPR: VAR 
   {
     if(get_variable($1->name) > 0) {
-      var_contents v;
+      VAR_CONTENTS v;
       v.type = get_variable($1->name)->type;
       v.string = get_variable($1->name)->value.string;
       v.number = get_variable($1->name)->value.number;
@@ -146,14 +145,14 @@ EXPR: VAR
   }
   | SCALAR { $$ = $1; }
   | ID {
-    var_contents v;
+    VAR_CONTENTS v;
     v.type = VAR_ATOM;
     v.string = $1;
     v.number = 0;
     $$ = v; 
     }
   | FNCALL {
-    var_contents v;
+    VAR_CONTENTS v;
     v.type = VAR_FUNCTION;
     v.string = $1;
     $$ = v; 
@@ -166,14 +165,14 @@ EXPR: VAR
   ;
 
 SCALAR: NUM UNIT {
-    var_contents v;
+    VAR_CONTENTS v;
     v.type = VAR_SCALAR;
     v.number = $1;
     v.string = $2;
     $$ = v; 
     }
   | NUM {
-    var_contents v;
+    VAR_CONTENTS v;
     v.type = VAR_SCALAR;
     v.number = $1;
     v.string = "";
@@ -205,12 +204,12 @@ PARAMS: T_COMMA EXPR PARAMS {
 /* bugs bugs bugs */
 CSSRULE: SELECTORS 
     {
-      declarations *d = parent;
+      DECLARATIONS *d = parent;
       char *selectors = strdup($1);
       while(d != 0) {
         char *s2 = strdup(selectors);
         snprintf(selectors, BUFFER_SIZE_SMALL, "%s %s", d->name, s2);
-        d = (declarations*) d->parent;
+        d = (DECLARATIONS*) d->parent;
       }
 
       printf("%s { \n", selectors); // print parent selectors as well!
@@ -221,13 +220,13 @@ CSSRULE: SELECTORS
     T_BL DECLS T_BR 
     { 
       // todo: serious logical bugs -> iteratively insert all of cur layers contents
-      decl *c = $4;
+      DECL *c = $4;
       while(c != 0) {
-        insert_decl(parent,c);
-        c = (decl*) c->next;
+        insert_decl(parent,c->name,c->value);
+        c = (DECL*) c->next;
       }
       print_decls(parent);
-      parent = (declarations*) parent->parent;
+      parent = (DECLARATIONS*) parent->parent;
     }
   ;
 
@@ -259,14 +258,17 @@ PSEUDOCLASS: T_COLON ID { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SI
   ;
   
 DECLS: DECL DECLS { 
-  $$ = $1;
-  //$$->next = $2; //-> why segfaults?
+  //$$->next = 0;
+
+  if($2 > 0) {
+    //$$->next = $2;
+  }
 }
   | EPS { $$ = 0; }
   ;
   
 DECL: ID T_COLON EXPR T_SEMICOLON {
-  decl *d = malloc(sizeof(decl));
+  DECL *d = malloc(sizeof(DECL));
   d->name = $1;
   d->value = var_to_string(&$3);
   d->next = 0;
@@ -277,8 +279,8 @@ DECL: ID T_COLON EXPR T_SEMICOLON {
 
 %%
 
-symrec *sym_table = 0;
-declarations *parent = 0;
+SYMREC *sym_table = 0;
+DECLARATIONS *parent = 0;
 
 #include "lex.yy.c"
 
@@ -314,10 +316,10 @@ void yyerror (char const *message)
   fputc ('\n', stderr);
 }
 
-var_contents operations(var_contents v, var_contents x, char* operation){
+VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
 
-    var_contents z;
-    var_contents q; 
+    VAR_CONTENTS z;
+    VAR_CONTENTS q; 
 
     if(strcmp(operation, "+") == 0 || strcmp(operation, "-") == 0){
         if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){

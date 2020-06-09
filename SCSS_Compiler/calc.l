@@ -56,7 +56,7 @@ FNNAME (url|rgb|linear-gradient)
 
 \${ID}      {
             char* name = strdup(yytext); 
-            symrec* s = get_variable(name);
+            SYMREC* s = get_variable(name);
             if(s == 0) {
                   s = create_variable_table(name);
             }

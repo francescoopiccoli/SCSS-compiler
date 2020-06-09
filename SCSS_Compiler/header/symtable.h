@@ -23,35 +23,35 @@ typedef struct
 typedef struct {
   char *name;           // name of symbol
   hybrid_value value;
-  struct symrec *next;  // ptr to next symbol record
+  struct SYMREC *next;  // ptr to next symbol record
   enum var_type type;
-} symrec;
+} SYMREC;
 
 typedef struct
 {
   char *name;
   char *value;
-  struct decl *next;
-} decl;
+  struct DECL *next;
+} DECL;
 
 typedef struct
 {
   char *name;
-  decl *head;
-  struct declarations *parent;
-} declarations;
+  DECL *head;
+  struct DECLARATIONS *parent;
+} DECLARATIONS;
 
 typedef struct {
     char *string;
     double number;
     enum var_type type;
-} var_contents;
+} VAR_CONTENTS;
 
 
 
-/* The symbol table: a chain of 'struct symrec'.  */
-extern symrec* sym_table;
-extern declarations* parent;
+/* The symbol table: a chain of 'struct SYMREC'.  */
+extern SYMREC* sym_table;
+extern DECLARATIONS* parent;
 
 /**
 * Put a symbol in the specified symbol table
@@ -61,12 +61,12 @@ extern declarations* parent;
 *
 * @return  A pointer to next symbol table record
 */
-symrec* symbol_put(char const *sym_name)
+SYMREC* symbol_put(char const *sym_name)
 {
-  symrec* ptr = (symrec*) malloc (sizeof (symrec));
+  SYMREC* ptr = (SYMREC*) malloc (sizeof (SYMREC));
   ptr->name = (char*) malloc (strlen (sym_name) + 1);
   strcpy (ptr->name, sym_name);
-  ptr->next = (struct symrec*)sym_table;
+  ptr->next = (struct SYMREC*)sym_table;
   sym_table = ptr;
   return ptr;
 }
@@ -79,9 +79,9 @@ symrec* symbol_put(char const *sym_name)
 *
 * @return  A pointer to the created symbol
 */
-symrec* create_variable_table(char const *sym_name)
+SYMREC* create_variable_table(char const *sym_name)
 {
-  symrec* ptr = (symrec*) malloc (sizeof (symrec));
+  SYMREC* ptr = (SYMREC*) malloc (sizeof (SYMREC));
   ptr->name = (char*) malloc (strlen (sym_name) + 1);
   strcpy (ptr->name, sym_name);
   return ptr;
@@ -94,10 +94,10 @@ symrec* create_variable_table(char const *sym_name)
 *
 * @return  A pointer to next symbol table record or 0 if not found
 */
-symrec* get_variable(char const *sym_name)
+SYMREC* get_variable(char const *sym_name)
 {
-  symrec* ptr;
-  for (ptr = sym_table; ptr != 0; ptr = (symrec*)ptr->next)
+  SYMREC* ptr;
+  for (ptr = sym_table; ptr != 0; ptr = (SYMREC*)ptr->next)
    { if (strcmp (ptr->name, sym_name) == 0)
       return ptr;
    }
@@ -113,12 +113,12 @@ symrec* get_variable(char const *sym_name)
 *
 * @return  A pointer to next symbol table record
 */
-symrec* insert_variable(symrec* s, enum var_type t)
+SYMREC* insert_variable(SYMREC* s, enum var_type t)
 {
-  symrec *symbol = get_variable(s->name);
+  SYMREC *symbol = get_variable(s->name);
   if(symbol == 0) {
     s->type = t;
-    s->next = (struct symrec*)sym_table;
+    s->next = (struct SYMREC*)sym_table;
     sym_table = s;
     return s;
   } else {
@@ -136,14 +136,14 @@ symrec* insert_variable(symrec* s, enum var_type t)
 */
 void print_variables ()
 {
-  symrec* ptr;
+  SYMREC* ptr;
   int i = 1;
   
   printf("---------- ---------- ---------- ----------\n");
   printf("%-10s %-10s %-10s %-10s", "Number", "Name", "Type", "Value");
   printf("\n---------- ---------- ---------- ----------\n");
   
-  for (ptr = sym_table; ptr != (symrec *) 0; ptr = (symrec *)ptr->next) 
+  for (ptr = sym_table; ptr != (SYMREC *) 0; ptr = (SYMREC *)ptr->next) 
   {
     printf("%-10i ", i);
     printf("%-12.12s ", ptr->name);
@@ -173,47 +173,51 @@ void print_variables ()
 */
 int size ()
 {
-  symrec* ptr;
+  SYMREC* ptr;
   int i = 0;
-  for (ptr = sym_table; ptr != (symrec *) 0; ptr = (symrec *)ptr->next) 
+  for (ptr = sym_table; ptr != (SYMREC *) 0; ptr = (SYMREC *)ptr->next) 
   {
     i++;
   }
   return i;
 }
 
-declarations *create_decl_table(char *name, declarations *parent) {
-  declarations *d = (declarations*) malloc(sizeof(declarations));
+DECLARATIONS *create_decl_table(char *name, DECLARATIONS *parent) {
+  DECLARATIONS *d = (DECLARATIONS*) malloc(sizeof(DECLARATIONS));
   d->name = name;
-  d->parent = (struct declarations*) parent;
+  d->parent = (struct DECLARATIONS*) parent;
   d->head = 0;
   return d;
 }
 
-void *insert_decl(declarations *decls, decl *d) {
+void *insert_decl(DECLARATIONS *decls, char *name, char *value) {
+  DECL *d = malloc(sizeof(DECL));
+  d->name = name;
+  d->value = value;
+
   if(decls->head > 0) {
-    decl *last = decls->head;
+    DECL *last = decls->head;
     while(last->next != 0)
-      last = (decl*) last->next;
-    last->next = (struct decl*) d;
+      last = (DECL*) last->next;
+    last->next = (struct DECL*) d;
   } else {
     decls->head = d; 
   }
 }
 
-void print_decls(declarations *decls) {
+void print_decls(DECLARATIONS *decls) {
   if(decls != 0) {
     // traversal w/ parent rules listed first
-    print_decls((declarations*) decls->parent);
-    decl *c = decls->head;
+    print_decls((DECLARATIONS*) decls->parent);
+    DECL *c = decls->head;
     while(c != 0) {
       printf("%s: %s;\n", c->name, c->value);
-      c = (decl*) c->next;
+      c = (DECL*) c->next;
     }
   }
 }
 
-char* var_to_string(var_contents *v) {
+char* var_to_string(VAR_CONTENTS *v) {
   char *ret;
   switch(v->type) {
     case VAR_ATOM:
