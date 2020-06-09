@@ -4,3 +4,4 @@
 [ ] scope var: globale vs locali?
 [ ] come crashare su err. semantici
 [ ] $x : $y; se y non è dichiarato precedentemente dovrebbe crashare
+[ ] error: verbose: come??

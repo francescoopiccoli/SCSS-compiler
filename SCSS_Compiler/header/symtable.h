@@ -190,7 +190,7 @@ DECLARATIONS *create_decl_table(char *name, DECLARATIONS *parent) {
   return d;
 }
 
-void *insert_decl(DECLARATIONS *decls, char *name, char *value) {
+void insert_decl(DECLARATIONS *decls, char *name, char *value) {
   DECL *d = malloc(sizeof(DECL));
   d->name = name;
   d->value = value;

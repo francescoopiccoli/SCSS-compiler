@@ -214,8 +214,6 @@ CSSRULE: SELECTORS
 
       printf("%s { \n", selectors); // print parent selectors as well!
       parent = create_decl_table($1,parent);
-      
-      printf("}\n");
     } 
     T_BL DECLS T_BR 
     { 
@@ -226,6 +224,8 @@ CSSRULE: SELECTORS
         c = (DECL*) c->next;
       }
       print_decls(parent);
+      
+      printf("}\n");
       parent = (DECLARATIONS*) parent->parent;
     }
   ;
