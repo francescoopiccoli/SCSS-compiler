@@ -40,7 +40,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 
 %}
 // in this way, the expected token will be printed whenever possible
-%error-verbose
+%define parse.error verbose
 
 // here we define all return values that lex can return
 
@@ -60,6 +60,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %token<string>    ID
 %token<number>    NUM
 %token<string>    UNIT
+%token<string>    PSEUDO
 %token<sym>       VAR
 %token            T_SEMICOLON
 %token<string>    T_COLON
@@ -75,6 +76,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %token            T_STAR
 %token            T_DIV
 %token            T_GT
+
 /* %token            CSS_DATA_TYPE  
 %token            HTML_DATA_TYPE 
 %token            FNNAME */
@@ -139,8 +141,9 @@ EXPR: VAR
       v.number = get_variable($1->name)->value.number;
       $$ = v;
     } else {
-      // crash?
-      printf("Variable %s not declared!",$1->name);
+      extern int yylineno;
+      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, $1->name);
+      exit(1);
     }
   }
   | SCALAR { $$ = $1; }
@@ -247,7 +250,7 @@ SELECTOR: ID { $$ = $1; }
   | T_DOT ID { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ".%s", strdup($2)); }
   ;
 
-PSEUDOCLASS: T_COLON ID { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ":%s", strdup($2)); }
+PSEUDOCLASS: PSEUDO { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s", strdup($1)); }
   | EPS
   ;
 
@@ -325,7 +328,6 @@ void yyerror (char const *message)
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
 
     VAR_CONTENTS z;
-    VAR_CONTENTS q; 
 
     if(strcmp(operation, "+") == 0 || strcmp(operation, "-") == 0){
         if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
@@ -340,12 +342,15 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
         } 
         else{ 
             if(strcmp(operation, "+") == 0){
-              printf("ERROR: sum between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+              extern int yylineno;
+              printf("!!! ERROR at line %d: sum between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+              exit(1);
             }
             else{
-              printf("ERROR: subtraction between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
+              extern int yylineno;
+              printf("!!! ERROR at line %d: subtraction between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+              exit(1);
             }
-            return q;
         }
     }
 
@@ -361,8 +366,9 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
                 z.number = v.number * x.number;
         } 
         else{ 
-             printf("ERROR: multiplication between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-             return q;
+             extern int yylineno;
+             printf("!!! ERROR at line %d: multiplication between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+             exit(1);
         }
     }
 
@@ -382,9 +388,10 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
           z.string = "";
           z.number = v.number / x.number;
         }
-        else{ 
-             printf("ERROR: division between \"%s\" and \"%s\" not allowed\n", v.string, x.string);
-             return q;
+        else{
+             extern int yylineno;
+             printf("!!! ERROR at line %d: division between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+             exit(1);
         }
     }
     return z;

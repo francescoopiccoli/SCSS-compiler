@@ -19,7 +19,7 @@ LETTER      [a-zA-Z]
 ID          ({LETTER}|_)({LETTER}|{DIGIT}|\-|_)*
 COMMENT     \/\/.*\n
 UNIT        (px|em|\%)
-PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-type|:focus|:hover|:in-range|:invalid|:last-child|:last-of-type|:link|:only-of-type|:only-child|:optional|:out-of-range|:read-only|:read-write|:required|:root|:target|:valid|:visited
+PSEUDO      :(active|checked|disabled|empty|enabled|first-child|first-of-type|focus|hover|in-range|invalid|last-child|last-of-type|link|only-of-type|only-child|optional|out-of-range|read-only|read-write|required|root|target|valid|visited)
 
 
 %%
@@ -57,6 +57,8 @@ PSEUDOCLASS :active|:checked|:disabled|:empty|:enabled|:first-child|:first-of-ty
             }
             yylval.sym = s;
             return VAR;}
+
+{PSEUDO}    {yylval.string = strdup(yytext); return PSEUDO;}
 
 {ID}        {yylval.string = strdup(yytext); return ID;}
 

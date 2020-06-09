@@ -224,6 +224,7 @@ char* var_to_string(VAR_CONTENTS *v) {
   char *ret;
   switch(v->type) {
     case VAR_ATOM:
+    case VAR_DECLARATION: // avoiding warning 
     case VAR_FUNCTION:
       ret = v->string;
       break;
