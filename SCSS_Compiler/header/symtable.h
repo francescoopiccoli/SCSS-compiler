@@ -191,7 +191,7 @@ TABLE *create_decl_table(char *name, TABLE *parent) {
 }
 
 void insert_decl(TABLE *decls, char *name, char *value) {
-  SYMREC *d = malloc(sizeof(DECL));
+  SYMREC *d = malloc(sizeof(SYMREC));
   d->name = strdup(name);
   d->value.string = strdup(value);
   d->type = VAR_DECLARATION;
@@ -226,7 +226,7 @@ char* var_to_string(VAR_CONTENTS *v) {
     case VAR_ATOM:
     case VAR_DECLARATION: // avoiding warning 
     case VAR_FUNCTION:
-      ret = v->string;
+      ret = strdup(v->string);
       break;
     case VAR_SCALAR:
       ret = malloc(128);

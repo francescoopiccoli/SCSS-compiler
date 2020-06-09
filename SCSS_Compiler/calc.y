@@ -139,14 +139,14 @@ EXPR: VAR
   | ID {
     VAR_CONTENTS v;
     v.type = VAR_ATOM;
-    v.string = $1;
+    v.string = strdup($1);
     v.number = 0;
     $$ = v; 
     }
   | FNCALL {
     VAR_CONTENTS v;
     v.type = VAR_FUNCTION;
-    v.string = $1;
+    v.string = strdup($1);
     $$ = v; 
     }
   | T_PL EXPR T_PR {$$ = $2;}
@@ -160,7 +160,7 @@ SCALAR: NUM UNIT {
     VAR_CONTENTS v;
     v.type = VAR_SCALAR;
     v.number = $1;
-    v.string = $2;
+    v.string = strdup($2);
     $$ = v; 
     }
   | NUM {
@@ -183,14 +183,14 @@ P: EXPR PARAMS {
   $$ = malloc(BUFFER_SIZE_SMALL);
   snprintf($$, BUFFER_SIZE_SMALL, "%s%s", strdup(var_to_string(&$1)), strdup($2));
   }
-  | {}
+  | {$$="";}
   ;
 
 PARAMS: T_COMMA EXPR PARAMS { 
   $$ = malloc(BUFFER_SIZE_SMALL);
   snprintf($$, BUFFER_SIZE_SMALL, ",%s%s", strdup(var_to_string(&$2)), strdup($3));
   }
-  | {}
+  | {$$="";}
   ;
 
 /* bugs bugs bugs */
@@ -240,13 +240,13 @@ SELECTOR: ID { $$ = $1; }
   ;
 
 PSEUDOCLASS: PSEUDO { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s", strdup($1)); }
-  | {}
+  | {$$="";}
   ;
 
   RELATIONSHIP: T_COMMA SELECTORS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ",%s", strdup($2)); }
   | T_GT SELECTORS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "> %s", strdup($2)); }
   | SELECTORS { $$ = $1; }
-  | {}
+  | {$$="";}
   ;
   
 DECLS: DECL DECLS {
@@ -261,12 +261,12 @@ DECLS: DECL DECLS {
     $$ = $2;
   }
 }
-  | {}
+  | {$$ = 0;}
   ;
   
 DECL: ID T_COLON EXPR T_SEMICOLON {
-  SYMREC *d = malloc(sizeof(DECL));
-  d->name = $1;
+  SYMREC *d = malloc(sizeof(SYMREC));
+  d->name = strdup($1);
   d->value.string = var_to_string(&$3);
   d->next = 0;
   d->type = VAR_DECLARATION;
