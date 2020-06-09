@@ -52,6 +52,7 @@ typedef struct
 
 extern SYMREC* sym_table;
 extern TABLE* parent;
+extern TABLES* root_nodes;
 
 /**
 * Put a symbol in the specified symbol table
@@ -187,6 +188,9 @@ TABLE *create_decl_table(char *name, TABLE *parent) {
   d->name = name;
   d->parent = (struct TABLE*) parent;
   d->head = 0;
+
+  struct TABLES *children = malloc(sizeof(TABLES));
+  d->children = children;
   return d;
 }
 
@@ -211,6 +215,28 @@ void print_decls(TABLE *decls) {
   if(decls != 0) {
     // traversal w/ parent rules listed first
     print_decls((TABLE*) decls->parent);
+    SYMREC *c = decls->head;
+    while(c != 0) {
+      if(c > 0 && c->name[0] != '$')
+        printf("%s: %s;\n", c->name, c->value.string);
+      c = (SYMREC*) c->next;
+    }
+  }
+}
+
+void add_root_table(TABLE *node) {
+  if(root_nodes != 0) {
+    TABLES *c = root_nodes;
+    while(c->next != 0)
+      c = (TABLES*) c->next;
+    c->next = node;
+  }
+}
+
+void print_decls_top_down(TABLE *decls) {
+  if(decls != 0) {
+    // traversal w/ parent rules listed first
+    //print_decls((TABLE*) decls->parent);
     SYMREC *c = decls->head;
     while(c != 0) {
       if(c > 0 && c->name[0] != '$')

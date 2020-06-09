@@ -108,7 +108,14 @@ S: ST S
   ;
 
 ST: VARDECL
-  | CSSRULE
+  | CSSRULE {
+    /*printf("%d",parent);
+    TABLES *root_node = root_nodes;
+    while(root_node->next != 0) {
+      //print_decls_top_down(root_node->cur);
+      root_node = root_node->next;
+    }*/
+  }
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON {
@@ -204,8 +211,11 @@ CSSRULE: SELECTORS
         d = (TABLE*) d->parent;
       }
 
-      printf("%s { \n", selectors); // print parent selectors as well!
+      //printf("%s { \n", selectors); // print parent selectors as well!
       parent = create_decl_table($1,parent);
+      if(parent->parent == 0) {
+        add_root_table(parent);
+      }
     } 
     T_BL DECLS T_BR 
     { 
@@ -215,9 +225,9 @@ CSSRULE: SELECTORS
         insert_decl(parent,c->name,c->value.string);
         c = (SYMREC*) c->next;
       }
-      print_decls(parent);
+      //print_decls(parent);
       
-      printf("}\n");
+      //printf("}\n");
       parent = (TABLE*) parent->parent;
     }
   ;
@@ -279,11 +289,13 @@ DECL: ID T_COLON EXPR T_SEMICOLON {
 
 SYMREC *sym_table = 0;
 TABLE *parent = 0;
+TABLES *root_nodes = 0;
 
 #include "lex.yy.c"
 
 int main(int argc, char *argv[]) 
 {      
+      root_nodes = malloc(sizeof(TABLES));
 
  // interactive mode or file mode
       if(argc < 2) 
