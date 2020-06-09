@@ -48,8 +48,8 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
         char* string;
         double number;
         SYMREC *sym;
-        DECLARATIONS *decls;
-        DECL *decl;
+        TABLE *decls;
+        SYMREC *decl;
         VAR_CONTENTS expression;
        }
 
@@ -204,12 +204,12 @@ PARAMS: T_COMMA EXPR PARAMS {
 /* bugs bugs bugs */
 CSSRULE: SELECTORS 
     {
-      DECLARATIONS *d = parent;
+      TABLE *d = parent;
       char *selectors = strdup($1);
       while(d != 0) {
         char *s2 = strdup(selectors);
         snprintf(selectors, BUFFER_SIZE_SMALL, "%s %s", d->name, s2);
-        d = (DECLARATIONS*) d->parent;
+        d = (TABLE*) d->parent;
       }
 
       printf("%s { \n", selectors); // print parent selectors as well!
@@ -218,15 +218,15 @@ CSSRULE: SELECTORS
     T_BL DECLS T_BR 
     { 
       // todo: serious logical bugs -> iteratively insert all of cur layers contents
-      DECL *c = $4;
+      SYMREC *c = $4;
       while(c != 0) {
-        insert_decl(parent,c->name,c->value);
-        c = (DECL*) c->next;
+        insert_decl(parent,c->name,c->value.string);
+        c = (SYMREC*) c->next;
       }
       print_decls(parent);
       
       printf("}\n");
-      parent = (DECLARATIONS*) parent->parent;
+      parent = (TABLE*) parent->parent;
     }
   ;
 
@@ -263,7 +263,7 @@ DECLS: DECL DECLS {
     $$->next = 0;
 
     if($2 > 0) {
-      $$->next = $2;
+      $$->next = (struct SYMREC *) $2;
     }
   } else {
     $$ = $2;
@@ -273,10 +273,11 @@ DECLS: DECL DECLS {
   ;
   
 DECL: ID T_COLON EXPR T_SEMICOLON {
-  DECL *d = malloc(sizeof(DECL));
+  SYMREC *d = malloc(sizeof(DECL));
   d->name = $1;
-  d->value = var_to_string(&$3);
+  d->value.string = var_to_string(&$3);
   d->next = 0;
+  d->type = VAR_DECLARATION;
   $$ = d;
 }
   | CSSRULE {$$ = 0; /* handled at lower level */}
@@ -285,7 +286,7 @@ DECL: ID T_COLON EXPR T_SEMICOLON {
 %%
 
 SYMREC *sym_table = 0;
-DECLARATIONS *parent = 0;
+TABLE *parent = 0;
 
 #include "lex.yy.c"
 

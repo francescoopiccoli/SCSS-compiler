@@ -7,24 +7,26 @@
 #include <stdio.h>
 
 // variable type enumeration
-enum var_type{
+enum VAR_TYPE {
   VAR_ATOM = 1,
   VAR_SCALAR = 2,
-  VAR_FUNCTION = 3
+  VAR_FUNCTION = 3,
+  VAR_DECLARATION = 4
 };
 
-typedef struct
-{
-  char* string;
-  double number;         // value of a simple variable
-} hybrid_value; 
+
+typedef struct {
+    char *string;
+    double number;
+    enum VAR_TYPE type;
+} VAR_CONTENTS;
 
 // structure of a symbol record 
 typedef struct {
   char *name;           // name of symbol
-  hybrid_value value;
+  VAR_CONTENTS value;
   struct SYMREC *next;  // ptr to next symbol record
-  enum var_type type;
+  enum VAR_TYPE type;
 } SYMREC;
 
 typedef struct
@@ -36,22 +38,20 @@ typedef struct
 
 typedef struct
 {
+  struct TABLE *cur;
+  struct TABLES *next;
+} TABLES;
+
+typedef struct
+{
   char *name;
-  DECL *head;
-  struct DECLARATIONS *parent;
-} DECLARATIONS;
+  SYMREC *head;
+  struct TABLES *children;
+  struct TABLE *parent;
+} TABLE;
 
-typedef struct {
-    char *string;
-    double number;
-    enum var_type type;
-} VAR_CONTENTS;
-
-
-
-/* The symbol table: a chain of 'struct SYMREC'.  */
 extern SYMREC* sym_table;
-extern DECLARATIONS* parent;
+extern TABLE* parent;
 
 /**
 * Put a symbol in the specified symbol table
@@ -113,7 +113,7 @@ SYMREC* get_variable(char const *sym_name)
 *
 * @return  A pointer to next symbol table record
 */
-SYMREC* insert_variable(SYMREC* s, enum var_type t)
+SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t)
 {
   SYMREC *symbol = get_variable(s->name);
   if(symbol == 0) {
@@ -182,37 +182,40 @@ int size ()
   return i;
 }
 
-DECLARATIONS *create_decl_table(char *name, DECLARATIONS *parent) {
-  DECLARATIONS *d = (DECLARATIONS*) malloc(sizeof(DECLARATIONS));
+TABLE *create_decl_table(char *name, TABLE *parent) {
+  TABLE *d = (TABLE*) malloc(sizeof(TABLE));
   d->name = name;
-  d->parent = (struct DECLARATIONS*) parent;
+  d->parent = (struct TABLE*) parent;
   d->head = 0;
   return d;
 }
 
-void insert_decl(DECLARATIONS *decls, char *name, char *value) {
-  DECL *d = malloc(sizeof(DECL));
-  d->name = name;
-  d->value = value;
+void insert_decl(TABLE *decls, char *name, char *value) {
+  SYMREC *d = malloc(sizeof(DECL));
+  d->name = strdup(name);
+  d->value.string = strdup(value);
+  d->type = VAR_DECLARATION;
+  d->next = 0;
 
   if(decls->head > 0) {
-    DECL *last = decls->head;
+    SYMREC *last = decls->head;
     while(last->next != 0)
-      last = (DECL*) last->next;
-    last->next = (struct DECL*) d;
+      last = (SYMREC*) last->next;
+    last->next = (struct SYMREC*) d;
   } else {
     decls->head = d; 
   }
 }
 
-void print_decls(DECLARATIONS *decls) {
+void print_decls(TABLE *decls) {
   if(decls != 0) {
     // traversal w/ parent rules listed first
-    print_decls((DECLARATIONS*) decls->parent);
-    DECL *c = decls->head;
+    print_decls((TABLE*) decls->parent);
+    SYMREC *c = decls->head;
     while(c != 0) {
-      printf("%s: %s;\n", c->name, c->value);
-      c = (DECL*) c->next;
+      if(c > 0 && c->name[0] != '$')
+        printf("%s: %s;\n", c->name, c->value.string);
+      c = (SYMREC*) c->next;
     }
   }
 }
