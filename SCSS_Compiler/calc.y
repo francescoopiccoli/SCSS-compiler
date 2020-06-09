@@ -257,11 +257,16 @@ PSEUDOCLASS: T_COLON ID { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SI
   | EPS
   ;
   
-DECLS: DECL DECLS { 
-  //$$->next = 0;
+DECLS: DECL DECLS {
+  if($1 != 0) { 
+    $$ = $1;
+    $$->next = 0;
 
-  if($2 > 0) {
-    //$$->next = $2;
+    if($2 > 0) {
+      $$->next = $2;
+    }
+  } else {
+    $$ = $2;
   }
 }
   | EPS { $$ = 0; }
