@@ -77,10 +77,6 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %token            T_DIV
 %token            T_GT
 
-/* %token            CSS_DATA_TYPE  
-%token            HTML_DATA_TYPE 
-%token            FNNAME */
-
 %type <expression>   EXPR
 %type <expression>   SCALAR
 %type <decls>        CSSRULE
