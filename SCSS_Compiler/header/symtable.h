@@ -183,6 +183,21 @@ int size ()
   return i;
 }
 
+void add_table(TABLES *list, TABLE *node) {
+  TABLES *c = list;
+
+  if(c->cur != 0) {
+    while(c->next != 0)
+      c = (TABLES*) c->next;
+
+    TABLES *n = malloc(sizeof(TABLES));
+    c->next = (struct TABLES *) n;
+    n->cur = (struct TABLE *) node;
+  } else {
+    c->cur = (struct TABLE *) node;
+  }
+}
+
 TABLE *create_decl_table(char *name, TABLE *parent) {
   TABLE *d = (TABLE*) malloc(sizeof(TABLE));
   d->name = name;
@@ -196,7 +211,7 @@ TABLE *create_decl_table(char *name, TABLE *parent) {
     if(parent->children == 0)
       parent->children = malloc(sizeof(TABLES*));
 
-    add_table(parent->children,d);
+    add_table((TABLES*) parent->children,d);
   }
   return d;
 }
@@ -231,21 +246,6 @@ void print_decls(TABLE *decls) {
   }
 }
 
-void add_table(TABLES *list, TABLE *node) {
-  TABLES *c = list;
-
-  if(c->cur != 0) {
-    while(c->next != 0)
-      c = (TABLES*) c->next;
-
-    TABLES *n = malloc(sizeof(TABLES));
-    c->next = (struct TABLES *) n;
-    n->cur = (struct TABLE *) node;
-  } else {
-    c->cur = node;
-  }
-}
-
 void print_decls_top_down(TABLE *decls) {
   if(decls != 0) {
     printf("%s {\n", decls->name);
@@ -258,7 +258,7 @@ void print_decls_top_down(TABLE *decls) {
           printf("%s: %s;\n", c->name, c->value.string);
         c = (SYMREC*) c->next;
       }
-      d = d->parent;
+      d = (TABLE*) d->parent;
     }
     printf("}\n");
 
