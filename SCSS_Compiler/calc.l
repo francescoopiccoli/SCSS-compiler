@@ -10,7 +10,6 @@
 
 //BUGS
 
-
 %}
 
 DIGIT       [0-9]
@@ -29,7 +28,7 @@ PSEUDO      :(active|checked|disabled|empty|enabled|first-child|first-of-type|fo
 [ \v\t\n\r\f] {} // ignore whitespace -> only outside strings?
 {COMMENT}   {} // ignore comments of type "//"
 
-"+"         {return T_PLUS;}   // operators 
+"+"         {return T_PLUS;}
 "-"         {return T_MINUS;}
 "*"         {return T_STAR;} 
 "/"         {return T_DIV;}     
@@ -63,6 +62,6 @@ PSEUDO      :(active|checked|disabled|empty|enabled|first-child|first-of-type|fo
 {ID}        {yylval.string = strdup(yytext); return ID;}
 
 
-.           { printf("Unexpected character: %u\n", yytext[0]); return yytext[0]; } //return error if all else fails
+.           { printf("!!! ERROR Unexpected character: %u !!!\n", yytext[0]); return yytext[0]; } //return error if unrecognized token
 
 %%

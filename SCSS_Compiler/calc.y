@@ -1,6 +1,6 @@
 %{
 /** @file calc.y
- *  @brief Grammar rules for the scss to css compiler/preprocessor.
+ *  @brief Grammar rules for the scss compiler/preprocessor.
  *
  *  This contains the Grammar rules for the preprocessor 
  *  together with some rudimentary error handling and
@@ -35,14 +35,15 @@
 int yylex();
 void yyerror (char const *message);
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
-
-
+VAR_CONTENTS assign_var(SYMREC *var);
+VAR_CONTENTS assign_id(char* id);
+void vardecl_function(VAR_CONTENTS v, SYMREC* s);
 
 %}
-// in this way, the expected token will be printed whenever possible
+// useful for syntax error debugging
 %define parse.error verbose
 
-// here we define all return values that lex can return
+// here we define all the possible return values
 
 %union {
         char* string;
@@ -77,6 +78,8 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %token            T_DIV
 %token            T_GT
 
+// here we define the type of non-terminals
+
 %type <expression>   EXPR
 %type <expression>   SCALAR
 %type <decls>        CSSRULE
@@ -90,18 +93,17 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %type <string>       P 
 %type <string>       PARAMS
 
+//precedence rules
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
 
+//S is the starting symbol
 %start S
 
-// here we define the grammar
 
 %%
 
-// line and statement rules
-
-
+// here we define the grammar productions
 
 S: ST S
   | {}
@@ -111,38 +113,12 @@ ST: VARDECL
   | CSSRULE
   ;
 
-VARDECL: VAR T_COLON EXPR T_SEMICOLON {
-  VAR_CONTENTS v = $3;
-  
-  SYMREC* symbol = insert_variable($1,v.type);
-  symbol->value.number = v.number;
-  symbol->value.string = v.string;
-
-}
+VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1);}
   ;
 
-EXPR: VAR 
-  {
-    if(get_variable($1->name) > 0) {
-      VAR_CONTENTS v;
-      v.type = get_variable($1->name)->type;
-      v.string = get_variable($1->name)->value.string;
-      v.number = get_variable($1->name)->value.number;
-      $$ = v;
-    } else {
-      extern int yylineno;
-      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, $1->name);
-      exit(1);
-    }
-  }
+EXPR: VAR { $$ = assign_var($1); }
   | SCALAR { $$ = $1; }
-  | ID {
-    VAR_CONTENTS v;
-    v.type = VAR_ATOM;
-    v.string = strdup($1);
-    v.number = 0;
-    $$ = v; 
-    }
+  | ID {  $$ = assign_id($1); }
   | FNCALL {
     VAR_CONTENTS v;
     v.type = VAR_FUNCTION;
@@ -305,6 +281,36 @@ int main(int argc, char *argv[])
             
             return flag;
       }
+}
+VAR_CONTENTS assign_var(SYMREC* var){
+
+  if(get_variable(var->name) > 0) {
+      VAR_CONTENTS v;
+      v.type = get_variable(var->name)->type;
+      v.string = get_variable(var->name)->value.string;
+      v.number = get_variable(var->name)->value.number;
+      return v;
+    } else {
+      extern int yylineno;
+      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, var->name);
+      exit(1);
+    }
+
+}
+
+VAR_CONTENTS assign_id(char* id){
+  VAR_CONTENTS v;
+    v.type = VAR_ATOM;
+    v.string = strdup(id);
+    v.number = 0;
+    return v; 
+}
+
+void vardecl_function(VAR_CONTENTS var, SYMREC* sym){
+  VAR_CONTENTS v = var;
+  SYMREC* symbol = insert_variable(sym, v.type);
+  symbol->value.number = v.number;
+  symbol->value.string = v.string;
 }
 
 void yyerror (char const *message)
