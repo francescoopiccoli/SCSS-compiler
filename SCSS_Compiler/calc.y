@@ -34,13 +34,15 @@
 
 int yylex();
 void yyerror (char const *message);
+VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
+
+
 
 %}
 // useful for syntax error debugging
 %define parse.error verbose
 
 // here we define all the possible return values
-
 %union {
         char* string;
         double number;
@@ -96,7 +98,6 @@ void yyerror (char const *message);
 //S is the starting symbol
 %start S
 
-
 %%
 
 // here we define the grammar productions
@@ -107,22 +108,54 @@ S: ST S
 
 ST: VARDECL
   | CSSRULE {
-    /*printf("%d",parent);
-    TABLES *root_node = root_nodes;
-    while(root_node->next != 0) {
-      //print_decls_top_down(root_node->cur);
-      root_node = root_node->next;
-    }*/
+    TABLES *root_node = (TABLES*) root_nodes;
+    while(root_node != 0 && root_node->cur != 0) {
+      print_decls_top_down((TABLE*) root_node->cur);
+      root_node = (TABLES *) root_node->next;
+    }
+    // clear nodes we already printed
+    root_nodes->cur = 0;
   }
   ;
 
-VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1);}
+VARDECL: VAR T_COLON EXPR T_SEMICOLON {
+  VAR_CONTENTS v = $3;
+  
+  SYMREC* symbol = insert_variable($1,v.type);
+  symbol->value.number = v.number;
+  symbol->value.string = v.string;
+
+}
   ;
 
-EXPR: VAR { $$ = assign_var($1); }
+EXPR: VAR 
+  {
+    if(get_variable($1->name) > 0) {
+      VAR_CONTENTS v;
+      v.type = get_variable($1->name)->type;
+      v.string = get_variable($1->name)->value.string;
+      v.number = get_variable($1->name)->value.number;
+      $$ = v;
+    } else {
+      extern int yylineno;
+      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, $1->name);
+      exit(1);
+    }
+  }
   | SCALAR { $$ = $1; }
-  | ID {  $$ = assign_id($1); }
-  | FNCALL { $$ = assign_fncall($1); }
+  | ID {
+    VAR_CONTENTS v;
+    v.type = VAR_ATOM;
+    v.string = strdup($1);
+    v.number = 0;
+    $$ = v; 
+    }
+  | FNCALL {
+    VAR_CONTENTS v;
+    v.type = VAR_FUNCTION;
+    v.string = strdup($1);
+    $$ = v; 
+    }
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
   | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
@@ -170,18 +203,14 @@ PARAMS: T_COMMA EXPR PARAMS {
 /* bugs bugs bugs */
 CSSRULE: SELECTORS 
     {
-      TABLE *d = parent;
       char *selectors = strdup($1);
-      while(d != 0) {
-        char *s2 = strdup(selectors);
-        snprintf(selectors, BUFFER_SIZE_SMALL, "%s %s", d->name, s2);
-        d = (TABLE*) d->parent;
+      if(parent != 0) {
+        snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(selectors));
       }
 
-      //printf("%s { \n", selectors); // print parent selectors as well!
-      parent = create_decl_table($1,parent);
+      parent = create_decl_table(selectors,parent);
       if(parent->parent == 0) {
-        add_root_table(parent);
+        add_table(root_nodes,parent);
       }
     } 
     T_BL DECLS T_BR 
@@ -192,9 +221,6 @@ CSSRULE: SELECTORS
         insert_decl(parent,c->name,c->value.string);
         c = (SYMREC*) c->next;
       }
-      //print_decls(parent);
-      
-      //printf("}\n");
       parent = (TABLE*) parent->parent;
     }
   ;
