@@ -191,6 +191,13 @@ TABLE *create_decl_table(char *name, TABLE *parent) {
 
   struct TABLES *children = malloc(sizeof(TABLES));
   d->children = children;
+
+  if(parent != 0) {
+    if(parent->children == 0)
+      parent->children = malloc(sizeof(TABLES*));
+
+    add_table(parent->children,d);
+  }
   return d;
 }
 
@@ -224,24 +231,41 @@ void print_decls(TABLE *decls) {
   }
 }
 
-void add_root_table(TABLE *node) {
-  if(root_nodes != 0) {
-    TABLES *c = root_nodes;
+void add_table(TABLES *list, TABLE *node) {
+  TABLES *c = list;
+
+  if(c->cur != 0) {
     while(c->next != 0)
       c = (TABLES*) c->next;
-    c->next = node;
+
+    TABLES *n = malloc(sizeof(TABLES));
+    c->next = (struct TABLES *) n;
+    n->cur = (struct TABLE *) node;
+  } else {
+    c->cur = node;
   }
 }
 
 void print_decls_top_down(TABLE *decls) {
   if(decls != 0) {
-    // traversal w/ parent rules listed first
-    //print_decls((TABLE*) decls->parent);
-    SYMREC *c = decls->head;
-    while(c != 0) {
-      if(c > 0 && c->name[0] != '$')
-        printf("%s: %s;\n", c->name, c->value.string);
-      c = (SYMREC*) c->next;
+    printf("%s {\n", decls->name);
+
+    TABLE *d = decls;
+    while(d != 0) {
+      SYMREC *c = d->head;
+      while(c != 0) {
+        if(c > 0 && c->name[0] != '$')
+          printf("%s: %s;\n", c->name, c->value.string);
+        c = (SYMREC*) c->next;
+      }
+      d = d->parent;
+    }
+    printf("}\n");
+
+    TABLES *child = (TABLES*) decls->children;
+    while(child != 0 && child->cur != 0) {
+      print_decls_top_down((TABLE*) child->cur);
+      child = (TABLES *) child->next;
     }
   }
 }
