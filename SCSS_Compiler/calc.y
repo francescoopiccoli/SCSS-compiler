@@ -34,10 +34,6 @@
 
 int yylex();
 void yyerror (char const *message);
-VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
-VAR_CONTENTS assign_var(SYMREC *var);
-VAR_CONTENTS assign_id(char* id);
-void vardecl_function(VAR_CONTENTS v, SYMREC* s);
 
 %}
 // useful for syntax error debugging
@@ -119,12 +115,7 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1);}
 EXPR: VAR { $$ = assign_var($1); }
   | SCALAR { $$ = $1; }
   | ID {  $$ = assign_id($1); }
-  | FNCALL {
-    VAR_CONTENTS v;
-    v.type = VAR_FUNCTION;
-    v.string = strdup($1);
-    $$ = v; 
-    }
+  | FNCALL { $$ = assign_fncall($1); }
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
   | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
@@ -282,112 +273,10 @@ int main(int argc, char *argv[])
             return flag;
       }
 }
-VAR_CONTENTS assign_var(SYMREC* var){
-
-  if(get_variable(var->name) > 0) {
-      VAR_CONTENTS v;
-      v.type = get_variable(var->name)->type;
-      v.string = get_variable(var->name)->value.string;
-      v.number = get_variable(var->name)->value.number;
-      return v;
-    } else {
-      extern int yylineno;
-      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, var->name);
-      exit(1);
-    }
-
-}
-
-VAR_CONTENTS assign_id(char* id){
-  VAR_CONTENTS v;
-    v.type = VAR_ATOM;
-    v.string = strdup(id);
-    v.number = 0;
-    return v; 
-}
-
-void vardecl_function(VAR_CONTENTS var, SYMREC* sym){
-  VAR_CONTENTS v = var;
-  SYMREC* symbol = insert_variable(sym, v.type);
-  symbol->value.number = v.number;
-  symbol->value.string = v.string;
-}
 
 void yyerror (char const *message)
 {
   extern int yylineno;
   fprintf (stderr, "\n!!! ERROR at line %d: %s !!!\n  ", yylineno, message);
   fputc ('\n', stderr);
-}
-
-VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
-
-    VAR_CONTENTS z;
-
-    if(strcmp(operation, "+") == 0 || strcmp(operation, "-") == 0){
-        if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
-            z.type = 2;
-            z.string = v.string;
-            if(strcmp(operation, "+") == 0){
-                z.number = v.number + x.number;
-            }
-            else{
-                z.number = v.number - x.number;
-            }
-        } 
-        else{ 
-            if(strcmp(operation, "+") == 0){
-              extern int yylineno;
-              printf("!!! ERROR at line %d: sum between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
-              exit(1);
-            }
-            else{
-              extern int yylineno;
-              printf("!!! ERROR at line %d: subtraction between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
-              exit(1);
-            }
-        }
-    }
-
-    if(strcmp(operation, "*") == 0){
-        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
-            z.type = 2;
-            if(strcmp(v.string, "") == 0){
-                z.string = x.string;
-            }
-            else{
-                z.string = v.string;
-            }
-                z.number = v.number * x.number;
-        } 
-        else{ 
-             extern int yylineno;
-             printf("!!! ERROR at line %d: multiplication between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
-             exit(1);
-        }
-    }
-
-      if(strcmp(operation, "/") == 0){
-        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
-            z.type = 2;
-            if(strcmp(v.string, "") == 0){
-                z.string = x.string;
-            }
-            else{
-                z.string = v.string;
-            }
-                z.number = v.number / x.number;
-        }
-        else if((strcmp(x.string, v.string) == 0)){
-          z.type = 2;
-          z.string = "";
-          z.number = v.number / x.number;
-        }
-        else{
-             extern int yylineno;
-             printf("!!! ERROR at line %d: division between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
-             exit(1);
-        }
-    }
-    return z;
 }
