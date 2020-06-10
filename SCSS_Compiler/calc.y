@@ -7,13 +7,9 @@
  *  the main function which either prompts for input or
  *  parses a input file to the command line if given as 
  *  argument. 
- *
  *  @author Raffaele Tranquillini  <rtranquillini@unibz.it>
  *  @author Francesco Piccoli <fpiccoli@unibz.it> 
- *
- *
  */
-
 
 //BUGS
 // - prod di relationship
@@ -35,9 +31,8 @@ int yylex();
 void yyerror (char const *message);
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 
-
-
 %}
+
 // useful for syntax error debugging
 %define parse.error verbose
 
@@ -50,8 +45,6 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
         SYMREC *decl;
         VAR_CONTENTS expression;
        }
-
-
 
 // here we define the tokens with its respective precedences
 
@@ -102,26 +95,17 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 // here we define the grammar productions
 
 S: ST S
-  | {}
+  | { /*epsilon*/ }
   ;
 
 ST: VARDECL
-  | CSSRULE {
-    TABLES *root_node = (TABLES*) root_nodes;
-    while(root_node != 0 && root_node->cur != 0) {
-      print_decls_top_down((TABLE*) root_node->cur);
-      root_node = (TABLES *) root_node->next;
-    }
-    // clear nodes we already printed
-    root_nodes->cur = 0;
-  }
+  | CSSRULE { print_cssrule_function();}
   ;
 
 VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1); }
   ;
 
-EXPR: VAR 
-  { $$ = assign_var($1); }
+EXPR: VAR { $$ = assign_var($1); }
   | SCALAR { $$ = $1; }
   | ID { $$ = assign_id($1); }
   | FNCALL { $$ = assign_fncall($1); }
@@ -132,78 +116,26 @@ EXPR: VAR
   | EXPR T_DIV EXPR  {$$ = operations($1, $3, "/");}
   ;
 
-SCALAR: NUM UNIT {
-    VAR_CONTENTS v;
-    v.type = VAR_SCALAR;
-    v.number = $1;
-    v.string = strdup($2);
-    $$ = v; 
-    }
-  | NUM {
-    VAR_CONTENTS v;
-    v.type = VAR_SCALAR;
-    v.number = $1;
-    v.string = "";
-    $$ = v; 
-    }
+SCALAR: NUM UNIT { $$ = scalar_function_with_unit($1, $2); }
+  | NUM { $$ = scalar_function_no_unit($1); }
   ;
 
-FNCALL: ID T_PL P T_PR { 
-  $$ = malloc(BUFFER_SIZE_SMALL);
-  snprintf($$, BUFFER_SIZE_SMALL, "%s(%s)", strdup($1), strdup($3));
-  }
-  /*| FNNAME T_PL P T_PR*/
+FNCALL: ID T_PL P T_PR { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s(%s)", strdup($1), strdup($3)); }
   ;
 
-P: EXPR PARAMS { 
-  $$ = malloc(BUFFER_SIZE_SMALL);
-  snprintf($$, BUFFER_SIZE_SMALL, "%s%s", strdup(var_to_string(&$1)), strdup($2));
-  }
-  | {$$="";}
+P: EXPR PARAMS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s%s", strdup(var_to_string(&$1)), strdup($2)); }
+  | {$$=""; /*epsilon*/}
   ;
 
-PARAMS: T_COMMA EXPR PARAMS { 
-  $$ = malloc(BUFFER_SIZE_SMALL);
-  snprintf($$, BUFFER_SIZE_SMALL, ",%s%s", strdup(var_to_string(&$2)), strdup($3));
-  }
-  | {$$="";}
+PARAMS: T_COMMA EXPR PARAMS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ",%s%s", strdup(var_to_string(&$2)), strdup($3)); }
+  | {$$=""; /*epsilon*/}
   ;
 
 /* bugs bugs bugs */
-CSSRULE: SELECTORS 
-    {
-      char *selectors = strdup($1);
-      if(parent != 0) {
-        snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(selectors));
-      }
-
-      parent = create_decl_table(selectors,parent);
-      if(parent->parent == 0) {
-        add_table(root_nodes,parent);
-      }
-    } 
-    T_BL DECLS T_BR 
-    { 
-      // todo: serious logical bugs -> iteratively insert all of cur layers contents
-      SYMREC *c = $4;
-      while(c != 0) {
-        insert_decl(parent,c->name,c->value.string);
-        c = (SYMREC*) c->next;
-      }
-      parent = (TABLE*) parent->parent;
-    }
+CSSRULE: SELECTORS  { cssrule_function_for_selectors($1); } T_BL DECLS T_BR {cssrule_function_for_decls($4);} 
   ;
 
-SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP {
-  char *s1 = malloc(BUFFER_SIZE_SMALL);
-  strcpy(s1, $1);
-  char *s2 = malloc(BUFFER_SIZE_SMALL);
-  strcpy(s2, $2);
-  char *s3 = malloc(BUFFER_SIZE_SMALL);
-  strcpy(s3, $3);
-
-  snprintf($$,BUFFER_SIZE_SMALL,"%s%s %s", s1, s2, s3);
-}
+SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { selectors_function($$, $1, $2, $3); }
   ;
 
 SELECTOR: ID { $$ = $1; }
@@ -212,41 +144,23 @@ SELECTOR: ID { $$ = $1; }
   ;
 
 PSEUDOCLASS: PSEUDO { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s", strdup($1)); }
-  | {$$="";}
+  | {$$=""; /*epsilon*/}
   ;
 
   RELATIONSHIP: T_COMMA SELECTORS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, ",%s", strdup($2)); }
   | T_GT SELECTORS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "> %s", strdup($2)); }
   | SELECTORS { $$ = $1; }
-  | {$$="";}
+  | {$$=""; /*epsilon*/}
   ;
   
-DECLS: DECL DECLS {
-  if($1 != 0) { 
-    $$ = $1;
-    $$->next = 0;
-
-    if($2 > 0) {
-      $$->next = (struct SYMREC *) $2;
-    }
-  } else {
-    $$ = $2;
-  }
-}
-  | {$$ = 0;}
+DECLS: DECL DECLS { decls_function($$, $1, $2); }
+  | {$$ = 0; /*epsilon*/}
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON {
-  SYMREC *d = malloc(sizeof(SYMREC));
-  d->name = strdup($1);
-  d->value.string = var_to_string(&$3);
-  d->next = 0;
-  d->type = VAR_DECLARATION;
-  $$ = d;
-}
+DECL: ID T_COLON EXPR T_SEMICOLON { $$ = decl_function($1, &$3);}
   | CSSRULE {$$ = 0; /* handled at lower level */}
   | VARDECL {$$ = 0; /*nothing to do */}
-
+  ;
 %%
 
 SYMREC *sym_table = 0;
@@ -255,18 +169,21 @@ TABLES *root_nodes = 0;
 
 #include "lex.yy.c"
 
-int main(int argc, char *argv[]) 
-{      
+void yyerror (char const *message){
+  extern int yylineno;
+  fprintf (stderr, "\n!!! ERROR at line %d: %s !!!\n  ", yylineno, message);
+  fputc ('\n', stderr);
+}
+
+int main(int argc, char *argv[]) {      
       root_nodes = malloc(sizeof(TABLES));
 
- // interactive mode or file mode
-      if(argc < 2) 
-      {
+ // command line interaction or file as input and file as output mode
+      if(argc < 2) {
             printf("To exit at any time, press Ctrl+D (EOF).\n");
             return yyparse();
       } 
-      else 
-      {
+      else {
             FILE *fp = fopen(argv[1],"r");
             if(!fp) 
             {
@@ -279,11 +196,4 @@ int main(int argc, char *argv[])
             
             return flag;
       }
-}
-
-void yyerror (char const *message)
-{
-  extern int yylineno;
-  fprintf (stderr, "\n!!! ERROR at line %d: %s !!!\n  ", yylineno, message);
-  fputc ('\n', stderr);
 }

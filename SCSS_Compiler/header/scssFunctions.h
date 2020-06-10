@@ -8,8 +8,107 @@
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 VAR_CONTENTS assign_var(SYMREC *var);
 VAR_CONTENTS assign_id(char* id);
-VAR_CONTENTS assign_fncall(char* fnacall);
+VAR_CONTENTS assign_fncall(char* fncall);
+VAR_CONTENTS scalar_function_with_unit(double num, char* unit);
+VAR_CONTENTS scalar_function_no_unit(double num);
+
+void print_cssrule_function();
+void selectors_function(char* selectors, char* selector, char* pseudoclass, char* relationship);
 void vardecl_function(VAR_CONTENTS v, SYMREC* s);
+void cssrule_function_for_selectors(char* selectors);
+void cssrule_function_for_decls(SYMREC* s);
+void decls_function(SYMREC* declsHead, SYMREC* decl, SYMREC* declsProd); //dubbi se riscritta in modo corretto
+SYMREC* decl_function(char* id, VAR_CONTENTS* expr);
+
+void print_cssrule_function(){
+  TABLES *root_node = (TABLES*) root_nodes;
+  while(root_node != 0 && root_node->cur != 0) {
+    print_decls_top_down((TABLE*) root_node->cur);
+    root_node = (TABLES *) root_node->next;
+  }
+  // clear nodes we already printed
+  root_nodes->cur = 0;
+  
+}
+
+void cssrule_function_for_selectors(char* sels){
+  char *selectors = strdup(sels);
+  if(parent != 0) {
+    snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(selectors));
+  }
+
+  parent = create_decl_table(selectors,parent);
+  if(parent->parent == 0) {
+    add_table(root_nodes,parent);
+  }
+}
+
+void cssrule_function_for_decls(SYMREC* s){ 
+  // todo: serious logical bugs -> iteratively insert all of cur layers contents
+  SYMREC *c = s;
+  while(c != 0) {
+    insert_decl(parent,c->name,c->value.string);
+    c = (SYMREC*) c->next;
+  }
+  parent = (TABLE*) parent->parent;
+}
+
+void decls_function(SYMREC* declsHead, SYMREC* decl, SYMREC* declsProd){
+ 
+  if(decl != 0) { 
+    declsHead = decl;
+    declsHead->next = 0;
+
+    if(declsProd > 0) {
+      declsHead->next = (struct SYMREC *) declsProd;
+    }
+  } else {
+    declsHead = declsProd;
+  }
+}
+/* decls_function prima era cosi, dubbi se riscritta in modo giusto
+DECLS: DECL DECLS {
+  if($1 != 0) { 
+    $$ = $1;
+    $$->next = 0;
+
+    if($2 > 0) {
+      $$->next = (struct SYMREC *) $2;
+    }
+  } else {
+    $$ = $2;
+  }
+}
+*/
+
+void selectors_function(char* selectors, char* selector, char* pseudoclass, char* relationship){
+  char *s1 = malloc(BUFFER_SIZE_SMALL);
+  strcpy(s1, selector);
+  char *s2 = malloc(BUFFER_SIZE_SMALL);
+  strcpy(s2, pseudoclass);
+  char *s3 = malloc(BUFFER_SIZE_SMALL);
+  strcpy(s3, relationship);
+
+  snprintf(selectors,BUFFER_SIZE_SMALL,"%s%s %s", s1, s2, s3);
+}
+
+
+void vardecl_function(VAR_CONTENTS var, SYMREC* sym){
+  VAR_CONTENTS v = var;
+  SYMREC* symbol = insert_variable(sym, v.type);
+  symbol->value.number = v.number;
+  symbol->value.string = v.string;
+}
+
+SYMREC* decl_function(char* id, VAR_CONTENTS* expr){
+  SYMREC *d = malloc(sizeof(SYMREC));
+  d->name = strdup(id);
+  d->value.string = var_to_string(expr);
+  d->next = 0;
+  d->type = VAR_DECLARATION;
+  return d;
+}
+
 
 VAR_CONTENTS assign_var(SYMREC* var){
 
@@ -35,20 +134,28 @@ VAR_CONTENTS assign_id(char* id){
   return v; 
 }
 
-void vardecl_function(VAR_CONTENTS var, SYMREC* sym){
-  VAR_CONTENTS v = var;
-  SYMREC* symbol = insert_variable(sym, v.type);
-  symbol->value.number = v.number;
-  symbol->value.string = v.string;
-}
-
-VAR_CONTENTS assign_fncall(char* fnacall){
+VAR_CONTENTS assign_fncall(char* fncall){
   VAR_CONTENTS v;
-    v.type = VAR_FUNCTION;
-    v.string = strdup(fnacall);
-    return v; 
+  v.type = VAR_FUNCTION;
+  v.string = strdup(fncall);
+  return v; 
 }
 
+VAR_CONTENTS scalar_function_with_unit(double num, char* unit){
+  VAR_CONTENTS v;
+  v.type = VAR_SCALAR;
+  v.number = num;
+  v.string = strdup(unit);
+  return v;
+}
+
+VAR_CONTENTS scalar_function_no_unit(double num){
+  VAR_CONTENTS v;
+  v.type = VAR_SCALAR;
+  v.number = num;
+  v.string = "";
+  return v; 
+}
 
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
 
