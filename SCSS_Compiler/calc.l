@@ -62,6 +62,6 @@ PSEUDO      :(active|checked|disabled|empty|enabled|first-child|first-of-type|fo
 {ID}        {yylval.string = strdup(yytext); return ID;}
 
 
-.           { printf("!!! ERROR Unexpected character: %u !!!\n", yytext[0]); return yytext[0]; } //return error if unrecognized token
+.           { fprintf(stderr, "!!! ERROR Unexpected character: %u !!!\n", yytext[0]); return yytext[0]; } //return error if unrecognized token
 
 %%

@@ -21,7 +21,7 @@ VAR_CONTENTS assign_var(SYMREC* var){
       return v;
     } else {
       extern int yylineno;
-      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, var->name);
+      fprintf(stderr, "!!! ERROR at line %d: Variable %s not declared !!!", yylineno, var->name);
       exit(1);
     }
 
@@ -68,12 +68,12 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
         else{ 
             if(strcmp(operation, "+") == 0){
               extern int yylineno;
-              printf("!!! ERROR at line %d: sum between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+              fprintf(stderr, "!!! ERROR at line %d: sum between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
               exit(1);
             }
             else{
               extern int yylineno;
-              printf("!!! ERROR at line %d: subtraction between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+              fprintf(stderr, "!!! ERROR at line %d: subtraction between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
               exit(1);
             }
         }
@@ -92,7 +92,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
         } 
         else{ 
              extern int yylineno;
-             printf("!!! ERROR at line %d: multiplication between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+             fprintf(stderr, "!!! ERROR at line %d: multiplication between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
              exit(1);
         }
     }
@@ -115,7 +115,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
         }
         else{
              extern int yylineno;
-             printf("!!! ERROR at line %d: division between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
+             fprintf(stderr, "!!! ERROR at line %d: division between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
              exit(1);
         }
     }

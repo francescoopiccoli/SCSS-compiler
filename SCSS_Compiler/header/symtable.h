@@ -147,18 +147,18 @@ void print_variables ()
   {
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
-          printf("%-10s","scalar");
-          printf("%.1f%s", ptr->value.number, ptr->value.string);
+      printf("%-10s","scalar");
+      printf("%.1f%s", ptr->value.number, ptr->value.string);
         }
-      if (ptr->type == VAR_ATOM) {
-        printf("%-10s","atom");
-        printf("%s", ptr->value.string);
-     
-      }
-      if (ptr->type == VAR_FUNCTION) {
-        printf("%-10s","function");
-        printf("%s", ptr->value.string);
-      }
+    if (ptr->type == VAR_ATOM) {
+      printf("%-10s","atom");
+      printf("%s", ptr->value.string);
+    
+    }
+    if (ptr->type == VAR_FUNCTION) {
+      printf("%-10s","function");
+      printf("%s", ptr->value.string);
+    }
     printf("\n");
   }
   

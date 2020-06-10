@@ -30,7 +30,6 @@
 #include <math.h>
 #include "header/scssFunctions.h"
 #include "header/symtable.h"
-#include "header/error.h"
 
 int yylex();
 void yyerror (char const *message);
