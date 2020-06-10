@@ -4,11 +4,6 @@
 %{
 #include <stdlib.h>
 #include <string.h>
-//#include "header/scssFunctions.h"
-//#include "header/symtable.h"
-
-
-//BUGS
 
 %}
 

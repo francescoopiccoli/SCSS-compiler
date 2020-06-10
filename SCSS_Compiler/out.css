@@ -1,0 +1,52 @@
+/* hi */.code  {
+	height: 28.00%;
+}
+
+.code a  {
+	width: 0.00px;
+	height: 28.00%;
+}
+
+.code a b  {
+	height: 3.00%;
+	color: red;
+	background-color: green;
+	width: 0.00px;
+	height: 28.00%;
+}
+
+.code a b c:hover  {
+	height: 3.00%;
+	color: red;
+	background-color: green;
+	width: 0.00px;
+	height: 28.00%;
+}
+
+.code a b c:hover d  {
+	height: 3.00%;
+	color: red;
+	background-color: green;
+	width: 0.00px;
+	height: 28.00%;
+}
+
+a li  {
+}
+
+b > li  {
+}
+
+#idname .name li  {
+}
+
+.colorDiv:hover > li  {
+	color: rgb(200.00,120.00,100.00);
+}
+
+---------- ---------- ----------
+name       type       value     
+---------- ---------- ----------
+$var4        scalar    40.0px
+$var2        scalar    18.0%
+$var1        scalar    20.0px

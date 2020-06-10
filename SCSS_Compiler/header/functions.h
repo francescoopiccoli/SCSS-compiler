@@ -17,7 +17,7 @@ void selectors_function(char* selectors, char* selector, char* pseudoclass, char
 void vardecl_function(VAR_CONTENTS v, SYMREC* s);
 void cssrule_function_for_selectors(char* selectors);
 void cssrule_function_for_decls(SYMREC* s);
-void decls_function(SYMREC* declsHead, SYMREC* decl, SYMREC* declsProd); //dubbi se riscritta in modo corretto
+SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd); //dubbi se riscritta in modo corretto
 SYMREC* decl_function(char* id, VAR_CONTENTS* expr);
 
 void print_cssrule_function(){
@@ -53,8 +53,8 @@ void cssrule_function_for_decls(SYMREC* s){
   parent = (TABLE*) parent->parent;
 }
 
-void decls_function(SYMREC* declsHead, SYMREC* decl, SYMREC* declsProd){
- 
+SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd){
+  SYMREC *declsHead;
   if(decl != 0) { 
     declsHead = decl;
     declsHead->next = 0;
@@ -65,6 +65,7 @@ void decls_function(SYMREC* declsHead, SYMREC* decl, SYMREC* declsProd){
   } else {
     declsHead = declsProd;
   }
+  return declsHead;
 }
 /* decls_function prima era cosi, dubbi se riscritta in modo giusto
 DECLS: DECL DECLS {

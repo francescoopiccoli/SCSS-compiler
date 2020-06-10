@@ -24,7 +24,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <math.h>
-#include "header/scssFunctions.h"
+#include "header/functions.h"
 #include "header/symtable.h"
 
 int yylex();
@@ -153,7 +153,7 @@ PSEUDOCLASS: PSEUDO { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_S
   | {$$=""; /*epsilon*/}
   ;
   
-DECLS: DECL DECLS { decls_function($$, $1, $2); }
+DECLS: DECL DECLS { $$ = decls_function($1, $2); }
   | {$$ = 0; /*epsilon*/}
   ;
   
