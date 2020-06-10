@@ -148,8 +148,11 @@ void print_variables ()
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
       printf("%-10s","scalar");
-      printf("%.1f%s", ptr->value.number, ptr->value.string);
-        }
+      if(ptr->value.number == round(ptr->value.number)){
+      printf("%.0f%s", ptr->value.number, ptr->value.string);}
+      else{
+      printf("%.1f%s", ptr->value.number, ptr->value.string);}
+    }
     if (ptr->type == VAR_ATOM) {
       printf("%-10s","atom");
       printf("%s", ptr->value.string);
