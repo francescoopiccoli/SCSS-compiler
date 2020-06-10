@@ -138,15 +138,13 @@ SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t)
 void print_variables ()
 {
   SYMREC* ptr;
-  int i = 1;
   
-  printf("---------- ---------- ---------- ----------\n");
-  printf("%-10s %-10s %-10s %-10s", "Number", "Name", "Type", "Value");
-  printf("\n---------- ---------- ---------- ----------\n");
+  printf("---------- ---------- ----------\n");
+  printf("%-10s %-10s %-10s", "name", "type", "value");
+  printf("\n---------- ---------- ----------\n");
   
   for (ptr = sym_table; ptr != (SYMREC *) 0; ptr = (SYMREC *)ptr->next) 
   {
-    printf("%-10i ", i);
     printf("%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
           printf("%-10s","scalar");
@@ -161,7 +159,6 @@ void print_variables ()
         printf("%-10s","function");
         printf("%s", ptr->value.string);
       }
-    i++;
     printf("\n");
   }
   
