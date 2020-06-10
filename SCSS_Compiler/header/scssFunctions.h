@@ -25,14 +25,14 @@ VAR_CONTENTS assign_var(SYMREC* var){
       exit(1);
     }
 
-}
+} 
 
 VAR_CONTENTS assign_id(char* id){
   VAR_CONTENTS v;
-    v.type = VAR_ATOM;
-    v.string = strdup(id);
-    v.number = 0;
-    return v; 
+  v.type = VAR_ATOM;
+  v.string = strdup(id);
+  v.number = 0;
+  return v; 
 }
 
 void vardecl_function(VAR_CONTENTS var, SYMREC* sym){

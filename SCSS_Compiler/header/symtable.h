@@ -255,12 +255,12 @@ void print_decls_top_down(TABLE *decls) {
       SYMREC *c = d->head;
       while(c != 0) {
         if(c > 0 && c->name[0] != '$')
-          printf("%s: %s;\n", c->name, c->value.string);
+          printf("\t%s: %s;\n", c->name, c->value.string);
         c = (SYMREC*) c->next;
       }
       d = (TABLE*) d->parent;
     }
-    printf("}\n");
+    printf("}\n\n");
 
     TABLES *child = (TABLES*) decls->children;
     while(child != 0 && child->cur != 0) {

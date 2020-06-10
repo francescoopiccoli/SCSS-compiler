@@ -118,44 +118,14 @@ ST: VARDECL
   }
   ;
 
-VARDECL: VAR T_COLON EXPR T_SEMICOLON {
-  VAR_CONTENTS v = $3;
-  
-  SYMREC* symbol = insert_variable($1,v.type);
-  symbol->value.number = v.number;
-  symbol->value.string = v.string;
-
-}
+VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1); }
   ;
 
 EXPR: VAR 
-  {
-    if(get_variable($1->name) > 0) {
-      VAR_CONTENTS v;
-      v.type = get_variable($1->name)->type;
-      v.string = get_variable($1->name)->value.string;
-      v.number = get_variable($1->name)->value.number;
-      $$ = v;
-    } else {
-      extern int yylineno;
-      printf("!!! ERROR at line %d: Variable %s not declared !!!", yylineno, $1->name);
-      exit(1);
-    }
-  }
+  { $$ = assign_var($1); }
   | SCALAR { $$ = $1; }
-  | ID {
-    VAR_CONTENTS v;
-    v.type = VAR_ATOM;
-    v.string = strdup($1);
-    v.number = 0;
-    $$ = v; 
-    }
-  | FNCALL {
-    VAR_CONTENTS v;
-    v.type = VAR_FUNCTION;
-    v.string = strdup($1);
-    $$ = v; 
-    }
+  | ID { $$ = assign_id($1); }
+  | FNCALL { $$ = assign_fncall($1); }
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
   | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
