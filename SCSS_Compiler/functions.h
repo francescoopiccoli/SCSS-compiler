@@ -8,7 +8,7 @@
 #include <math.h>
 #include "symtable.h"
 
-VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
+VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 VAR_CONTENTS generate_var(SYMREC *var);
 VAR_CONTENTS generate_id(char* id);
 VAR_CONTENTS generate_atom(char* string);
@@ -86,7 +86,7 @@ void declare_variable(SYMREC* sym, VAR_CONTENTS contents){
   symbol->value.string = strdup(contents.string);
 }
 
-SYMREC* decl_function(char* id, VAR_CONTENTS* expr){
+SYMREC* generate_decl(char* id, VAR_CONTENTS* expr){
   SYMREC *d = malloc(sizeof(SYMREC));
   d->name = strdup(id);
   d->value.string = var_to_string(expr);
@@ -144,7 +144,7 @@ VAR_CONTENTS generate_scalar(double num, char* unit){
   return v;
 }
 
-VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
+VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
 
     VAR_CONTENTS z;
 

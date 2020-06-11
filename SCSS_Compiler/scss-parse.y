@@ -26,7 +26,6 @@
 
 int yylex();
 void yyerror (char const *message);
-VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 
 %}
 
@@ -110,10 +109,10 @@ EXPR: VAR { $$ = generate_var($1); }
   | COLORHEX {char* hashColor = malloc(sizeof($1) + 4); sprintf(hashColor, "#%s", strdup($1)); $$ = generate_id(hashColor); }
   | FNCALL { $$ = generate_fncall($1); }
   | T_PL EXPR T_PR {$$ = $2;}
-  | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
-  | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
-  | EXPR T_STAR EXPR {$$ = operations($1, $3, "*");}
-  | EXPR T_DIV EXPR  {$$ = operations($1, $3, "/");}
+  | EXPR T_PLUS EXPR  {$$ = operation($1, $3, "+");}
+  | EXPR T_MINUS EXPR {$$ = operation($1, $3, "-");}
+  | EXPR T_STAR EXPR {$$ = operation($1, $3, "*");}
+  | EXPR T_DIV EXPR  {$$ = operation($1, $3, "/");}
   | STRING { $$ = generate_atom($1);}
   ;
 
@@ -161,7 +160,7 @@ DECLS: DECL DECLS { $$ = decls_function($1, $2); }
   | {$$ = 0; /*epsilon*/}
   ;
   
-DECL: ID T_COLON EXPR T_SEMICOLON { $$ = decl_function($1, &$3);}
+DECL: ID T_COLON EXPR T_SEMICOLON { $$ = generate_decl($1, &$3);}
   | CSSRULE {$$ = 0; /* handled at lower level */}
   | VARDECL {$$ = 0; /*nothing to do */}
   ;
