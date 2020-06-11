@@ -105,15 +105,8 @@ SYMREC *css_decl_merge(SYMREC* decl, SYMREC* decls) {
 }
 
 char *selector_to_string(char* selector, char* pseudoclass, char* relationship) {
-  char *s1 = malloc(BUFFER_SIZE_SMALL);
-  strcpy(s1, selector);
-  char *s2 = malloc(BUFFER_SIZE_SMALL);
-  strcpy(s2, pseudoclass);
-  char *s3 = malloc(BUFFER_SIZE_SMALL);
-  strcpy(s3, relationship);
   char *ret = malloc(BUFFER_SIZE_SMALL);
-
-  snprintf(ret,BUFFER_SIZE_SMALL,"%s%s %s", s1, s2, s3);
+  snprintf(ret,BUFFER_SIZE_SMALL,"%s%s %s", strdup(selector), strdup(pseudoclass), strdup(relationship));
   return ret;
 }
 
