@@ -45,7 +45,7 @@ STRING      \"(\\.|[^"\\])*\"
 
 \${ID}      {
             char* name = strdup(yytext); 
-            SYMREC* s = get_variable(name);
+            SYMREC* s = generate_variable(name);
             if(s == 0) {
                   s = create_variable_table(name);
             }

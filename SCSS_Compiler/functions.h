@@ -1,3 +1,6 @@
+#ifndef H_FUNCTIONS
+#define H_FUNCTIONS
+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -6,21 +9,15 @@
 #include "symtable.h"
 
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
-VAR_CONTENTS get_var(SYMREC *var);
-VAR_CONTENTS get_id(char* id);
-VAR_CONTENTS get_string(char* string);
-VAR_CONTENTS get_fncall(char* fncall);
-VAR_CONTENTS scalar_function(double num, char* unit);
+VAR_CONTENTS generate_var(SYMREC *var);
+VAR_CONTENTS generate_id(char* id);
+VAR_CONTENTS generate_atom(char* string);
+VAR_CONTENTS generate_fncall(char* fncall);
+VAR_CONTENTS generate_scalar(double num, char* unit);
 
-void print_cssrule_function();
-void selectors_function(char* selectors, char* selector, char* pseudoclass, char* relationship);
-void vardecl_function(VAR_CONTENTS v, SYMREC* s);
-void cssrule_function_for_selectors(char* selectors);
-void cssrule_function_for_decls(SYMREC* s);
-SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd);
-SYMREC* decl_function(char* id, VAR_CONTENTS* expr);
+// TODO: add headers
 
-void print_cssrule_function(){
+void print_css_tree(){
   TABLES *root_node = (TABLES*) root_nodes;
   while(root_node != 0 && root_node->cur != 0) {
     print_decls_top_down((TABLE*) root_node->cur);
@@ -69,23 +66,24 @@ SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd){
   return declsHead;
 }
 
-void selectors_function(char* selectors, char* selector, char* pseudoclass, char* relationship){
+char *selector_to_string(char* selector, char* pseudoclass, char* relationship){
   char *s1 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s1, selector);
   char *s2 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s2, pseudoclass);
   char *s3 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s3, relationship);
+  char *ret = malloc(BUFFER_SIZE_SMALL);
 
-  snprintf(selectors,BUFFER_SIZE_SMALL,"%s%s %s", s1, s2, s3);
+  snprintf(ret,BUFFER_SIZE_SMALL,"%s%s %s", s1, s2, s3);
+  return ret;
 }
 
 
-void vardecl_function(VAR_CONTENTS var, SYMREC* sym){
-  VAR_CONTENTS v = var;
-  SYMREC* symbol = insert_variable(sym, v.type);
-  symbol->value.number = v.number;
-  symbol->value.string = v.string;
+void declare_variable(SYMREC* sym, VAR_CONTENTS contents){
+  SYMREC* symbol = insert_variable(sym, contents.type);
+  symbol->value.number = contents.number;
+  symbol->value.string = strdup(contents.string);
 }
 
 SYMREC* decl_function(char* id, VAR_CONTENTS* expr){
@@ -98,13 +96,13 @@ SYMREC* decl_function(char* id, VAR_CONTENTS* expr){
 }
 
 
-VAR_CONTENTS get_var(SYMREC* var){
+VAR_CONTENTS generate_var(SYMREC* var){
 
-  if(get_variable(var->name) > 0) {
+  if(generate_variable(var->name) > 0) {
       VAR_CONTENTS v;
-      v.type = get_variable(var->name)->type;
-      v.string = get_variable(var->name)->value.string;
-      v.number = get_variable(var->name)->value.number;
+      v.type = generate_variable(var->name)->type;
+      v.string = generate_variable(var->name)->value.string;
+      v.number = generate_variable(var->name)->value.number;
       return v;
     } else {
       extern int yylineno;
@@ -114,7 +112,7 @@ VAR_CONTENTS get_var(SYMREC* var){
 
 } 
 
-VAR_CONTENTS get_id(char* id){
+VAR_CONTENTS generate_id(char* id){
   VAR_CONTENTS v;
   v.type = VAR_ATOM;
   v.string = strdup(id);
@@ -122,7 +120,7 @@ VAR_CONTENTS get_id(char* id){
   return v; 
 }
 
-VAR_CONTENTS get_string(char* string){
+VAR_CONTENTS generate_atom(char* string){
   VAR_CONTENTS v;
   v.type = VAR_ATOM;
   v.string = strdup(string);
@@ -131,14 +129,14 @@ VAR_CONTENTS get_string(char* string){
 }
 
 
-VAR_CONTENTS get_fncall(char* fncall){
+VAR_CONTENTS generate_fncall(char* fncall){
   VAR_CONTENTS v;
   v.type = VAR_FUNCTION;
   v.string = strdup(fncall);
   return v; 
 }
 
-VAR_CONTENTS scalar_function(double num, char* unit){
+VAR_CONTENTS generate_scalar(double num, char* unit){
   VAR_CONTENTS v;
   v.type = VAR_SCALAR;
   v.number = num;
@@ -218,3 +216,5 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
     
     return z;
 }
+
+#endif

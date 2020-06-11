@@ -58,7 +58,7 @@ extern TABLES* root_nodes;
 
 SYMREC* symbol_put(char const *sym_name);
 SYMREC* create_variable_table(char const *sym_name);
-SYMREC* get_variable(char const *sym_name);
+SYMREC* generate_variable(char const *sym_name);
 SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t);
 void print_variables ();
 void add_table(TABLES *list, TABLE *node);
@@ -110,7 +110,7 @@ SYMREC* create_variable_table(char const *sym_name)
 *
 * @return  A pointer to next symbol table record or 0 if not found
 */
-SYMREC* get_variable(char const *sym_name)
+SYMREC* generate_variable(char const *sym_name)
 {
   SYMREC* ptr;
   for (ptr = sym_table; ptr != 0; ptr = (SYMREC*)ptr->next)
@@ -131,7 +131,7 @@ SYMREC* get_variable(char const *sym_name)
 */
 SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t)
 {
-  SYMREC *symbol = get_variable(s->name);
+  SYMREC *symbol = generate_variable(s->name);
   if(symbol == 0) {
     s->type = t;
     s->next = (struct SYMREC*)sym_table;

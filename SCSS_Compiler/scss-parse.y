@@ -98,31 +98,31 @@ S: ST S
   ;
 
 ST: VARDECL
-  | CSSRULE { print_cssrule_function();}
+  | CSSRULE { print_css_tree();}
   ;
 
-VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1); }
+VARDECL: VAR T_COLON EXPR T_SEMICOLON { declare_variable($1,$3); }
   ;
 
-EXPR: VAR { $$ = get_var($1); }
+EXPR: VAR { $$ = generate_var($1); }
   | SCALAR { $$ = $1; }
-  | ID { $$ = get_id($1); }
-  | COLORHEX {char* hashColor = malloc(sizeof($1) + 4); sprintf(hashColor, "#%s", strdup($1)); $$ = get_id(hashColor); }
-  | FNCALL { $$ = get_fncall($1); }
+  | ID { $$ = generate_id($1); }
+  | COLORHEX {char* hashColor = malloc(sizeof($1) + 4); sprintf(hashColor, "#%s", strdup($1)); $$ = generate_id(hashColor); }
+  | FNCALL { $$ = generate_fncall($1); }
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
   | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
   | EXPR T_STAR EXPR {$$ = operations($1, $3, "*");}
   | EXPR T_DIV EXPR  {$$ = operations($1, $3, "/");}
-  | STRING { $$ = get_string($1);}
+  | STRING { $$ = generate_atom($1);}
   ;
 
 COLORHEX:  T_HASH ID {$$ = $2;}
   | T_HASH NUM {char* hashColor = malloc(11); sprintf(hashColor, "%.0f", $2); $$ = hashColor;}
   ;
 
-SCALAR: NUM UNIT { $$ = scalar_function($1, $2); }
-  | NUM { $$ = scalar_function($1, ""); }
+SCALAR: NUM UNIT { $$ = generate_scalar($1, $2); }
+  | NUM { $$ = generate_scalar($1, ""); }
   ;
 
 FNCALL: ID T_PL P T_PR { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s(%s)", strdup($1), strdup($3)); }
@@ -136,11 +136,10 @@ PARAMS: T_COMMA EXPR PARAMS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFE
   | {$$=""; /*epsilon*/}
   ;
 
-/* bugs bugs bugs */
 CSSRULE: SELECTORS  { cssrule_function_for_selectors($1); } T_BL DECLS T_BR {cssrule_function_for_decls($4);} 
   ;
 
-SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { selectors_function($$, $1, $2, $3); }
+SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { $$ = selector_to_string($1, $2, $3); }
   ;
 
 SELECTOR: ID { $$ = $1; }
