@@ -1,13 +1,19 @@
 #ifndef H_SYMTABLE
 #define H_SYMTABLE
 
+/* 
+ * Symbol table related structures and functions
+ */
+
 #include <stdlib.h>       // needed for malloc. 
 #include <string.h>       // needed for strlen.
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
 
-// variable type enumeration
+/*
+ * Accepted variable types
+ */
 enum VAR_TYPE {
   VAR_ATOM = 1,
   VAR_SCALAR = 2,
@@ -15,34 +21,37 @@ enum VAR_TYPE {
   VAR_DECLARATION = 4
 };
 
-
+/*
+ * Content of any accepted variable
+ */
 typedef struct {
     char *string;
     double number;
     enum VAR_TYPE type;
 } VAR_CONTENTS;
 
-// structure of a symbol record 
+/*
+ * Symbol table record, supporting list-like features
+ */
 typedef struct {
-  char *name;           // name of symbol
+  char *name;           // name of symbol (e.g. var name starting with dollar, or CSS selector)
   VAR_CONTENTS value;
-  struct SYMREC *next;  // ptr to next symbol record
+  struct SYMREC *next;
   enum VAR_TYPE type;
 } SYMREC;
 
-typedef struct
-{
-  char *name;
-  char *value;
-  struct DECL *next;
-} DECL;
-
+/*
+ * List of lists/tables, e.g. the list of all root nodes
+ */
 typedef struct
 {
   struct TABLE *cur;
   struct TABLES *next;
 } TABLES;
 
+/*
+ * Named tree-like (symbol) table, with pointers to both parents and children to allow for both top-down and bottom-up navigation
+ */
 typedef struct
 {
   char *name;
@@ -51,32 +60,55 @@ typedef struct
   struct TABLE *parent;
 } TABLE;
 
+// refs to global variables
 extern SYMREC* sym_table;
 extern TABLE* parent;
 extern TABLES* root_nodes;
 
-
+/*
+ * Insert new item into global variables
+ */
 SYMREC* symbol_put(char const *sym_name);
+/*
+ * Create new pointer/table for global variables
+ */
 SYMREC* create_variable_table(char const *sym_name);
+
+/*
+ * Generate a new variable from its name
+ */
 SYMREC* generate_variable(char const *sym_name);
+
+/*
+ * Insert new item into global variables
+ */
 SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t);
-void print_variables ();
+
+/*
+ * Print all global variables to the console for debugging purposes
+ */
+void print_variables();
+
+/*
+ * Add a table (e.g. a root node) to a list of tables
+ */
 void add_table(TABLES *list, TABLE *node);
-void add_table(TABLES *list, TABLE *node);
+
+/*
+ * Insert CSS declaration in a symbol table
+ */
 void insert_decl(TABLE *decls, char *name, char *value);
-void print_decls(TABLE *decls);
+
+/*
+ * Print all CSS declaration in a node using a "top-down" algorithm (that is, from outer to inner layers)
+ */
 void print_decls_top_down(TABLE *decls);
+
+/*
+ * Convert variable to a CSS-accepted string
+ */
 char* var_to_string(VAR_CONTENTS *v);
 
-
-/**
-* Put a symbol in the specified symbol table
-*
-* @param sym_name   Specifies the name of symbol to insert
-* @param sym_type   Specifies the type of symbol to insert
-*
-* @return  A pointer to next symbol table record
-*/
 SYMREC* symbol_put(char const *sym_name)
 {
   SYMREC* ptr = (SYMREC*) malloc (sizeof (SYMREC));
@@ -87,14 +119,6 @@ SYMREC* symbol_put(char const *sym_name)
   return ptr;
 }
 
-
-/**
-* Create a symbol with specified name by allocating memory
-*
-* @param sym_name   Specifies the name of symbol to insert
-*
-* @return  A pointer to the created symbol
-*/
 SYMREC* create_variable_table(char const *sym_name)
 {
   SYMREC* ptr = (SYMREC*) malloc (sizeof (SYMREC));
@@ -103,13 +127,6 @@ SYMREC* create_variable_table(char const *sym_name)
   return ptr;
 }
 
-/**
-* Get a symbol from the symbol table
-*
-* @param sym_name   Specifies the name of symbol to search for
-*
-* @return  A pointer to next symbol table record or 0 if not found
-*/
 SYMREC* generate_variable(char const *sym_name)
 {
   SYMREC* ptr;
@@ -120,15 +137,6 @@ SYMREC* generate_variable(char const *sym_name)
   return 0;
 }
 
-
-/**
-* Insert a symbol in the symbol table 
-*
-* @param s    Specifies a pointer to the symbol to insert
-* @param t    Specifies the type of symbol that has to be inserted
-*
-* @return  A pointer to next symbol table record
-*/
 SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t)
 {
   SYMREC *symbol = generate_variable(s->name);
@@ -144,42 +152,36 @@ SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t)
 
 }
 
-
-
-/**
-* Print the entire symbol table in human readable form
-*
-*/
-void print_variables ()
+void print_variables()
 {
   SYMREC* ptr;
   
-  printf("---------- ---------- ----------\n");
-  printf("%-10s %-10s %-10s", "name", "type", "value");
-  printf("\n---------- ---------- ----------\n");
+  fprintf(stderr,"---------- ---------- ----------\n");
+  fprintf(stderr,"%-10s %-10s %-10s", "name", "type", "value");
+  fprintf(stderr,"\n---------- ---------- ----------\n");
   
   for (ptr = sym_table; ptr != (SYMREC *) 0; ptr = (SYMREC *)ptr->next) 
   {
-    printf("%-12.12s ", ptr->name);
+    fprintf(stderr,"%-12.12s ", ptr->name);
     if (ptr->type == VAR_SCALAR) {
-      printf("%-10s","scalar");
-      if(ptr->value.number == round(ptr->value.number)){
-        printf("%.0f%s", ptr->value.number, ptr->value.string);
+      fprintf(stderr,"%-10s","scalar");
+      if(ptr->value.number == round(ptr->value.number)) {
+        fprintf(stderr,"%.0f%s", ptr->value.number, ptr->value.string);
       }
       else{
-        printf("%.2f%s", ptr->value.number, ptr->value.string);
+        fprintf(stderr,"%.2f%s", ptr->value.number, ptr->value.string);
       }
     }
     if (ptr->type == VAR_ATOM) {
-      printf("%-10s","atom");
-      printf("%s", ptr->value.string);
+      fprintf(stderr,"%-10s","atom");
+      fprintf(stderr,"%s", ptr->value.string);
     
     }
     if (ptr->type == VAR_FUNCTION) {
-      printf("%-10s","function");
-      printf("%s", ptr->value.string);
+      fprintf(stderr,"%-10s","function");
+      fprintf(stderr,"%s", ptr->value.string);
     }
-    printf("\n");
+    fprintf(stderr,"\n");
   }
   
 }
@@ -261,7 +263,7 @@ char* var_to_string(VAR_CONTENTS *v) {
   char *ret;
   switch(v->type) {
     case VAR_ATOM:
-    case VAR_DECLARATION: // avoiding warning 
+    case VAR_DECLARATION:
     case VAR_FUNCTION:
       ret = strdup(v->string);
       break;

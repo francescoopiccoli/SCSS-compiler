@@ -1,5 +1,5 @@
 %{
-/** @file calc.y
+/** @file scss-parse.y
  *  @brief Grammar rules for the scss compiler/preprocessor.
  *
  *  This contains the Grammar rules for the preprocessor together with some rudimentary error handling and
@@ -179,7 +179,7 @@ TABLES *root_nodes = 0;   // array of "root" nodes, that is, CSS rules/nodes wit
 /* 
  * Custom error handler with line number
  */
-void yyerror (char const *message){
+void yyerror (char const *message) {
   extern int yylineno;
   fprintf (stderr, "\n!!! ERROR at line %d: %s !!!\n  ", yylineno, message);
   fputc ('\n', stderr);

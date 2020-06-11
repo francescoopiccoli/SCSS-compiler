@@ -56,7 +56,7 @@ SYMREC* generate_decl(char* id, VAR_CONTENTS* expr);
 VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 
 
-void print_css_tree(){
+void print_css_tree() {
   TABLES *root_node = (TABLES*) root_nodes;
   while(root_node != 0 && root_node->cur != 0) {
     print_decls_top_down((TABLE*) root_node->cur);
@@ -67,7 +67,7 @@ void print_css_tree(){
   
 }
 
-void css_decl_table_init(char* sels){
+void css_decl_table_init(char* sels) {
   char *selectors = malloc(BUFFER_SIZE_SMALL);
   if(parent != 0) {
     snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(sels));
@@ -81,7 +81,7 @@ void css_decl_table_init(char* sels){
   }
 }
 
-void css_decl_insert_all(TABLE *t, SYMREC* s){ 
+void css_decl_insert_all(TABLE *t, SYMREC* s) { 
   SYMREC *c = s;
   while(c != 0) {
     insert_decl(t,c->name,c->value.string);
@@ -89,7 +89,7 @@ void css_decl_insert_all(TABLE *t, SYMREC* s){
   }
 }
 
-SYMREC *css_decl_merge(SYMREC* decl, SYMREC* decls){
+SYMREC *css_decl_merge(SYMREC* decl, SYMREC* decls) {
   SYMREC *declsHead;
   if(decl != 0) { 
     declsHead = decl;
@@ -104,7 +104,7 @@ SYMREC *css_decl_merge(SYMREC* decl, SYMREC* decls){
   return declsHead;
 }
 
-char *selector_to_string(char* selector, char* pseudoclass, char* relationship){
+char *selector_to_string(char* selector, char* pseudoclass, char* relationship) {
   char *s1 = malloc(BUFFER_SIZE_SMALL);
   strcpy(s1, selector);
   char *s2 = malloc(BUFFER_SIZE_SMALL);
@@ -118,13 +118,13 @@ char *selector_to_string(char* selector, char* pseudoclass, char* relationship){
 }
 
 
-void declare_variable(SYMREC* sym, VAR_CONTENTS contents){
+void declare_variable(SYMREC* sym, VAR_CONTENTS contents) {
   SYMREC* symbol = insert_variable(sym, contents.type);
   symbol->value.number = contents.number;
   symbol->value.string = strdup(contents.string);
 }
 
-SYMREC* generate_decl(char* id, VAR_CONTENTS* expr){
+SYMREC* generate_decl(char* id, VAR_CONTENTS* expr) {
   SYMREC *d = malloc(sizeof(SYMREC));
   d->name = strdup(id);
   d->value.string = var_to_string(expr);
@@ -134,7 +134,7 @@ SYMREC* generate_decl(char* id, VAR_CONTENTS* expr){
 }
 
 
-VAR_CONTENTS generate_var(SYMREC* var){
+VAR_CONTENTS generate_var(SYMREC* var) {
 
   if(generate_variable(var->name) > 0) {
       VAR_CONTENTS v;
@@ -150,7 +150,7 @@ VAR_CONTENTS generate_var(SYMREC* var){
 
 } 
 
-VAR_CONTENTS generate_id(char* id){
+VAR_CONTENTS generate_id(char* id) {
   VAR_CONTENTS v;
   v.type = VAR_ATOM;
   v.string = strdup(id);
@@ -158,7 +158,7 @@ VAR_CONTENTS generate_id(char* id){
   return v; 
 }
 
-VAR_CONTENTS generate_atom(char* string){
+VAR_CONTENTS generate_atom(char* string) {
   VAR_CONTENTS v;
   v.type = VAR_ATOM;
   v.string = strdup(string);
@@ -167,14 +167,14 @@ VAR_CONTENTS generate_atom(char* string){
 }
 
 
-VAR_CONTENTS generate_fncall(char* fncall){
+VAR_CONTENTS generate_fncall(char* fncall) {
   VAR_CONTENTS v;
   v.type = VAR_FUNCTION;
   v.string = strdup(fncall);
   return v; 
 }
 
-VAR_CONTENTS generate_scalar(double num, char* unit){
+VAR_CONTENTS generate_scalar(double num, char* unit) {
   VAR_CONTENTS v;
   v.type = VAR_SCALAR;
   v.number = num;
@@ -182,15 +182,15 @@ VAR_CONTENTS generate_scalar(double num, char* unit){
   return v;
 }
 
-VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
+VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation) {
 
     VAR_CONTENTS z;
 
-    if(strcmp(operation, "+") == 0 || strcmp(operation, "-") == 0){
-        if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0){
+    if(strcmp(operation, "+") == 0 || strcmp(operation, "-") == 0) {
+        if(v.type == x.type && v.type == 2 && strcmp(v.string, x.string) == 0) {
             z.type = 2;
             z.string = v.string;
-            if(strcmp(operation, "+") == 0){
+            if(strcmp(operation, "+") == 0) {
                 z.number = v.number + x.number;
             }
             else{
@@ -198,7 +198,7 @@ VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
             }
         } 
         else{ 
-            if(strcmp(operation, "+") == 0){
+            if(strcmp(operation, "+") == 0) {
               extern int yylineno;
               fprintf(stderr, "!!! ERROR at line %d: sum between \"%s\" and \"%s\" not allowed !!!\n", yylineno, v.string, x.string);
               exit(1);
@@ -211,10 +211,10 @@ VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
         }
     }
 
-    if(strcmp(operation, "*") == 0){
-        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
+    if(strcmp(operation, "*") == 0) {
+        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))) {
             z.type = 2;
-            if(strcmp(v.string, "") == 0){
+            if(strcmp(v.string, "") == 0) {
                 z.string = x.string;
             }
             else{
@@ -229,10 +229,10 @@ VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
         }
     }
 
-      if(strcmp(operation, "/") == 0){
-        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))){
+      if(strcmp(operation, "/") == 0) {
+        if(v.type == x.type && v.type == 2 && (strcmp(v.string, "") == 0 || (strcmp(x.string, "") == 0))) {
             z.type = 2;
-            if(strcmp(v.string, "") == 0){
+            if(strcmp(v.string, "") == 0) {
                 z.string = x.string;
             }
             else{
@@ -240,7 +240,7 @@ VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
             }
                 z.number = v.number / x.number;
         }
-        else if((strcmp(x.string, v.string) == 0)){
+        else if((strcmp(x.string, v.string) == 0)) {
           z.type = 2;
           z.string = "";
           z.number = v.number / x.number;
