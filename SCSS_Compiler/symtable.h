@@ -55,6 +55,20 @@ extern SYMREC* sym_table;
 extern TABLE* parent;
 extern TABLES* root_nodes;
 
+
+SYMREC* symbol_put(char const *sym_name);
+SYMREC* create_variable_table(char const *sym_name);
+SYMREC* get_variable(char const *sym_name);
+SYMREC* insert_variable(SYMREC* s, enum VAR_TYPE t);
+void print_variables ();
+void add_table(TABLES *list, TABLE *node);
+void add_table(TABLES *list, TABLE *node);
+void insert_decl(TABLE *decls, char *name, char *value);
+void print_decls(TABLE *decls);
+void print_decls_top_down(TABLE *decls);
+char* var_to_string(VAR_CONTENTS *v);
+
+
 /**
 * Put a symbol in the specified symbol table
 *
@@ -170,22 +184,6 @@ void print_variables ()
   
 }
 
-/**
-* Count the number of symbol table records
-*
-* @return  The number of records
-*/
-int size ()
-{
-  SYMREC* ptr;
-  int i = 0;
-  for (ptr = sym_table; ptr != (SYMREC *) 0; ptr = (SYMREC *)ptr->next) 
-  {
-    i++;
-  }
-  return i;
-}
-
 void add_table(TABLES *list, TABLE *node) {
   TABLES *c = list;
 
@@ -235,20 +233,6 @@ void insert_decl(TABLE *decls, char *name, char *value) {
     decls->head = d; 
   }
 }
-
-void print_decls(TABLE *decls) {
-  if(decls != 0) {
-    // traversal w/ parent rules listed first
-    print_decls((TABLE*) decls->parent);
-    SYMREC *c = decls->head;
-    while(c != 0) {
-      if(c > 0 && c->name[0] != '$')
-        printf("%s: %s;\n", c->name, c->value.string);
-      c = (SYMREC*) c->next;
-    }
-  }
-}
-
 void print_decls_top_down(TABLE *decls) {
   if(decls != 0) {
     printf("%s {\n", decls->name);
