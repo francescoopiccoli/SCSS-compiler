@@ -20,8 +20,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <math.h>
-#include "header/functions.h"
-#include "header/symtable.h"
+
+#include "functions.h"
+#include "symtable.h"
 
 int yylex();
 void yyerror (char const *message);
