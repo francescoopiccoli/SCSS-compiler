@@ -237,7 +237,7 @@ void insert_decl(TABLE *decls, char *name, char *value) {
 }
 void print_decls_top_down(TABLE *decls) {
   if(decls != 0) {
-    printf("%s {\n", decls->name);
+    printf("%s{\n", decls->name);
 
     TABLE *d = decls;
     while(d != 0) {

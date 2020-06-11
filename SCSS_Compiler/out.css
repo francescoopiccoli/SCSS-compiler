@@ -1,0 +1,52 @@
+/* this comment will be kept in the target file */
+.code {
+	height: 28%;
+	font-family: "Acme";
+}
+
+.code a {
+	width: 200px;
+	height: 28%;
+	font-family: "Acme";
+}
+
+.code a b {
+	height: 45%;
+	color: red;
+	background-color: green;
+	width: 200px;
+	height: 28%;
+	font-family: "Acme";
+}
+
+.code a b c:first-child {
+	height: 45%;
+	color: red;
+	background-color: green;
+	width: 200px;
+	height: 28%;
+	font-family: "Acme";
+}
+
+.code a b c:first-child d {
+	height: 45%;
+	color: red;
+	background-color: green;
+	width: 200px;
+	height: 28%;
+	font-family: "Acme";
+}
+
+a li {
+}
+
+b > li {
+}
+
+#idname .name li {
+}
+
+.colorDiv:hover > li {
+	color: rgb(200,120,100);
+}
+
