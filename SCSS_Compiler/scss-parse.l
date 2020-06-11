@@ -20,7 +20,7 @@ STRING      \"(\\.|[^"\\])*\"
 
 \@SYMTAB    {print_variables();} // DEBUG
 \/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ {ECHO; printf("\n");} // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
-[ \v\t\n\r\f] {} // ignore whitespace
+[   \v\t\n\r\f] {} // ignore whitespace
 {COMMENT}   {} // ignore comments of type "//"
 
 "+"         {return T_PLUS;}
