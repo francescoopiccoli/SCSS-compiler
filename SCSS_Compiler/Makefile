@@ -1,6 +1,6 @@
 # todo: rivedere da zero
 
-proj_name=flc
+proj_name=scss-parse
 build_dir=build
 
 
