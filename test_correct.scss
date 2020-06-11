@@ -1,24 +1,26 @@
 $var1 : 20px;
 $var2 : (20%)-2%;
+$var3 : "Acme";
 
-//hi
-/* hi */
+//this comment will be ignored
+/* this comment will be kept */
 
 .code {
 
     a {
-        width: 0px;
+        width: 200px;
         
         b {
-            height: 3%;
+            height: 45%;
             color : red;
             background-color : green;
             $var4 : $var1 * 2;
-            c:hover{
+            c:first-child{
             d{}}
         }
     }
     height: 10% + $var2;
+    font-family: $var3;
 }
 
 a li {}

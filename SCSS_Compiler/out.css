@@ -1,34 +1,40 @@
-/* hi */.code  {
+/* this comment will be kept */
+.code  {
 	height: 28.00%;
+	font-family: "Acme";
 }
 
 .code a  {
-	width: 0.00px;
+	width: 200.00px;
 	height: 28.00%;
+	font-family: "Acme";
 }
 
 .code a b  {
-	height: 3.00%;
+	height: 45.00%;
 	color: red;
 	background-color: green;
-	width: 0.00px;
+	width: 200.00px;
 	height: 28.00%;
+	font-family: "Acme";
 }
 
-.code a b c:hover  {
-	height: 3.00%;
+.code a b c:first-child  {
+	height: 45.00%;
 	color: red;
 	background-color: green;
-	width: 0.00px;
+	width: 200.00px;
 	height: 28.00%;
+	font-family: "Acme";
 }
 
-.code a b c:hover d  {
-	height: 3.00%;
+.code a b c:first-child d  {
+	height: 45.00%;
 	color: red;
 	background-color: green;
-	width: 0.00px;
+	width: 200.00px;
 	height: 28.00%;
+	font-family: "Acme";
 }
 
 a li  {
@@ -47,6 +53,7 @@ b > li  {
 ---------- ---------- ----------
 name       type       value     
 ---------- ---------- ----------
-$var4        scalar    40.0px
-$var2        scalar    18.0%
-$var1        scalar    20.0px
+$var4        scalar    40px
+$var3        atom      "Acme"
+$var2        scalar    18%
+$var1        scalar    20px

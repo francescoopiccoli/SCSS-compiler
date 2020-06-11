@@ -14,12 +14,12 @@ ID          ({LETTER}|_)({LETTER}|{DIGIT}|\-|_)*
 COMMENT     \/\/.*\n
 UNIT        (px|em|\%)
 PSEUDO      :(active|checked|disabled|empty|enabled|first-child|first-of-type|focus|hover|in-range|invalid|last-child|last-of-type|link|only-of-type|only-child|optional|out-of-range|read-only|read-write|required|root|target|valid|visited)
-
+STRING      \"(\\.|[^"\\])*\"
 
 %%
 
 \@SYMTAB    {print_variables();} // DEBUG
-\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ ECHO; // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
+\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ {ECHO; printf("\n");} // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
 [ \v\t\n\r\f] {} // ignore whitespace -> only outside strings?
 {COMMENT}   {} // ignore comments of type "//"
 
@@ -53,6 +53,8 @@ PSEUDO      :(active|checked|disabled|empty|enabled|first-child|first-of-type|fo
             return VAR;}
 
 {PSEUDO}    {yylval.string = strdup(yytext); return PSEUDO;}
+
+{STRING}    {yylval.string = strdup(yytext); return STRING;}
 
 {ID}        {yylval.string = strdup(yytext); return ID;}
 

@@ -6,11 +6,11 @@
 #include "symtable.h"
 
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
-VAR_CONTENTS assign_var(SYMREC *var);
-VAR_CONTENTS assign_id(char* id);
-VAR_CONTENTS assign_fncall(char* fncall);
-VAR_CONTENTS scalar_function_with_unit(double num, char* unit);
-VAR_CONTENTS scalar_function_no_unit(double num);
+VAR_CONTENTS get_var(SYMREC *var);
+VAR_CONTENTS get_id(char* id);
+VAR_CONTENTS get_string(char* string);
+VAR_CONTENTS get_fncall(char* fncall);
+VAR_CONTENTS scalar_function(double num, char* unit);
 
 void print_cssrule_function();
 void selectors_function(char* selectors, char* selector, char* pseudoclass, char* relationship);
@@ -32,9 +32,11 @@ void print_cssrule_function(){
 }
 
 void cssrule_function_for_selectors(char* sels){
-  char *selectors = strdup(sels);
+  char *selectors = malloc(BUFFER_SIZE_SMALL);
   if(parent != 0) {
-    snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(selectors));
+    snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(sels));
+  } else {
+    snprintf(selectors, BUFFER_SIZE_SMALL, "%s", strdup(sels));
   }
 
   parent = create_decl_table(selectors,parent);
@@ -111,7 +113,7 @@ SYMREC* decl_function(char* id, VAR_CONTENTS* expr){
 }
 
 
-VAR_CONTENTS assign_var(SYMREC* var){
+VAR_CONTENTS get_var(SYMREC* var){
 
   if(get_variable(var->name) > 0) {
       VAR_CONTENTS v;
@@ -127,7 +129,7 @@ VAR_CONTENTS assign_var(SYMREC* var){
 
 } 
 
-VAR_CONTENTS assign_id(char* id){
+VAR_CONTENTS get_id(char* id){
   VAR_CONTENTS v;
   v.type = VAR_ATOM;
   v.string = strdup(id);
@@ -135,27 +137,28 @@ VAR_CONTENTS assign_id(char* id){
   return v; 
 }
 
-VAR_CONTENTS assign_fncall(char* fncall){
+VAR_CONTENTS get_string(char* string){
+  VAR_CONTENTS v;
+  v.type = VAR_ATOM;
+  v.string = strdup(string);
+  v.number = 0;
+  return v; 
+}
+
+
+VAR_CONTENTS get_fncall(char* fncall){
   VAR_CONTENTS v;
   v.type = VAR_FUNCTION;
   v.string = strdup(fncall);
   return v; 
 }
 
-VAR_CONTENTS scalar_function_with_unit(double num, char* unit){
+VAR_CONTENTS scalar_function(double num, char* unit){
   VAR_CONTENTS v;
   v.type = VAR_SCALAR;
   v.number = num;
   v.string = strdup(unit);
   return v;
-}
-
-VAR_CONTENTS scalar_function_no_unit(double num){
-  VAR_CONTENTS v;
-  v.type = VAR_SCALAR;
-  v.number = num;
-  v.string = "";
-  return v; 
 }
 
 VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
@@ -227,5 +230,6 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char* operation){
              exit(1);
         }
     }
+    
     return z;
 }

@@ -1,7 +1,0 @@
-[ ] conflitto shift-reduce rimasto: problema 1 token lookahead forte?
-[ ] linux vs mac unexpected ? unexpected $end
-[ ] conflitto - oppure negativi
-[ ] scope var: globale vs locali?
-[ ] come crashare su err. semantici
-[ ] $x : $y; se y non è dichiarato precedentemente dovrebbe crashare
-[ ] error: verbose: come??

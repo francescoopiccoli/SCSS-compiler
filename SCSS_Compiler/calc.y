@@ -52,6 +52,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %token<number>    NUM
 %token<string>    UNIT
 %token<string>    PSEUDO
+%token<string>    STRING
 %token<sym>       VAR
 %token            T_SEMICOLON
 %token<string>    T_COLON
@@ -105,19 +106,20 @@ ST: VARDECL
 VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1); }
   ;
 
-EXPR: VAR { $$ = assign_var($1); }
+EXPR: VAR { $$ = get_var($1); }
   | SCALAR { $$ = $1; }
-  | ID { $$ = assign_id($1); }
-  | FNCALL { $$ = assign_fncall($1); }
+  | ID { $$ = get_id($1); }
+  | FNCALL { $$ = get_fncall($1); }
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
   | EXPR T_MINUS EXPR {$$ = operations($1, $3, "-");}
   | EXPR T_STAR EXPR {$$ = operations($1, $3, "*");}
   | EXPR T_DIV EXPR  {$$ = operations($1, $3, "/");}
+  | STRING { $$ = get_string($1);}
   ;
 
-SCALAR: NUM UNIT { $$ = scalar_function_with_unit($1, $2); }
-  | NUM { $$ = scalar_function_no_unit($1); }
+SCALAR: NUM UNIT { $$ = scalar_function($1, $2); }
+  | NUM { $$ = scalar_function($1, ""); }
   ;
 
 FNCALL: ID T_PL P T_PR { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_SMALL, "%s(%s)", strdup($1), strdup($3)); }
