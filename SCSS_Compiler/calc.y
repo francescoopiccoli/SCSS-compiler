@@ -79,6 +79,7 @@ VAR_CONTENTS operations(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
 %type <string>       RELATIONSHIP 
 %type <string>       P 
 %type <string>       PARAMS
+%type <string>       COLORHEX
 
 //precedence rules
 %left T_MINUS T_PLUS
@@ -105,6 +106,7 @@ VARDECL: VAR T_COLON EXPR T_SEMICOLON { vardecl_function($3, $1); }
 EXPR: VAR { $$ = get_var($1); }
   | SCALAR { $$ = $1; }
   | ID { $$ = get_id($1); }
+  | COLORHEX {char* hashColor = malloc(sizeof($1) + 4); sprintf(hashColor, "#%s", strdup($1)); $$ = get_id(hashColor); }
   | FNCALL { $$ = get_fncall($1); }
   | T_PL EXPR T_PR {$$ = $2;}
   | EXPR T_PLUS EXPR  {$$ = operations($1, $3, "+");}
@@ -112,6 +114,10 @@ EXPR: VAR { $$ = get_var($1); }
   | EXPR T_STAR EXPR {$$ = operations($1, $3, "*");}
   | EXPR T_DIV EXPR  {$$ = operations($1, $3, "/");}
   | STRING { $$ = get_string($1);}
+  ;
+
+COLORHEX:  T_HASH ID {$$ = $2;}
+  | T_HASH NUM {char* hashColor = malloc(11); sprintf(hashColor, "%.0f", $2); $$ = hashColor;}
   ;
 
 SCALAR: NUM UNIT { $$ = scalar_function($1, $2); }
