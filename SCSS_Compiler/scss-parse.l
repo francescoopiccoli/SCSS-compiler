@@ -4,7 +4,6 @@
 %{
 #include <stdlib.h>
 #include <string.h>
-
 %}
 
 DIGIT       [0-9]
@@ -18,10 +17,10 @@ STRING      \"(\\.|[^"\\])*\"
 
 %%
 
-\@SYMTAB    {print_variables();} // DEBUG
+\@SYMTAB    {print_variables();}                                  // function for debugging symbol table
 \/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/ {ECHO; printf("\n");} // report identically in output; regex by https://blog.ostermiller.org/finding-comments-in-source-code-using-regular-expressions/
-[   \v\t\n\r\f] {} // ignore whitespace
-{COMMENT}   {} // ignore comments of type "//"
+[   \v\t\n\r\f] {}                                                // ignore and catch even the weirdest whitespaces
+{COMMENT}   {}                                                    // ignore comments of type "//", they are scss-only and not meant to be shown
 
 "+"         {return T_PLUS;}
 "-"         {return T_MINUS;}
@@ -44,6 +43,8 @@ STRING      \"(\\.|[^"\\])*\"
 
 
 \${ID}      {
+            // parse and return symbol table variable address
+
             char* name = strdup(yytext); 
             SYMREC* s = generate_variable(name);
             if(s == 0) {
