@@ -8,14 +8,53 @@
 #include <math.h>
 #include "symtable.h"
 
-VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
+
+/*
+ * Prints all CSS declaration "trees" from root nodes
+ */
+void print_css_tree();
+
+/*
+ * Initialize the hierarchical table for CSS declarations
+ */
+void css_decl_table_init(char* sels);
+
+/*
+ * Insert all CSS declarations from a list in the a table
+ */
+void css_decl_insert_all(TABLE *t, SYMREC* s);
+
+/*
+ * Append a list of declarations after a single declaration
+ */
+SYMREC *css_decl_merge(SYMREC* decl, SYMREC* declsProd);
+
+/*
+ * Converts a list of selectors to a string
+ */
+char *selector_to_string(char* selector, char* pseudoclass, char* relationship);
+
+/*
+ * Declares a new variable
+ */
+void declare_variable(SYMREC* sym, VAR_CONTENTS contents);
+
+
+/*
+ * Generate various types of accepted variables from raw parameters
+ */
 VAR_CONTENTS generate_var(SYMREC *var);
 VAR_CONTENTS generate_id(char* id);
 VAR_CONTENTS generate_atom(char* string);
 VAR_CONTENTS generate_fncall(char* fncall);
 VAR_CONTENTS generate_scalar(double num, char* unit);
+SYMREC* generate_decl(char* id, VAR_CONTENTS* expr);
 
-// TODO: add headers
+/*
+ * Compute an arithmetic scalar operation on two variables
+ */
+VAR_CONTENTS operation(VAR_CONTENTS v, VAR_CONTENTS x, char *operation);
+
 
 void print_css_tree(){
   TABLES *root_node = (TABLES*) root_nodes;
@@ -23,12 +62,12 @@ void print_css_tree(){
     print_decls_top_down((TABLE*) root_node->cur);
     root_node = (TABLES *) root_node->next;
   }
-  // clear nodes we already printed
+  // clear all nodes we already printed -> work there is "done"
   root_nodes->cur = 0;
   
 }
 
-void cssrule_function_for_selectors(char* sels){
+void css_decl_table_init(char* sels){
   char *selectors = malloc(BUFFER_SIZE_SMALL);
   if(parent != 0) {
     snprintf(selectors, BUFFER_SIZE_SMALL, "%s%s", parent->name, strdup(sels));
@@ -42,26 +81,25 @@ void cssrule_function_for_selectors(char* sels){
   }
 }
 
-void cssrule_function_for_decls(SYMREC* s){ 
+void css_decl_insert_all(TABLE *t, SYMREC* s){ 
   SYMREC *c = s;
   while(c != 0) {
-    insert_decl(parent,c->name,c->value.string);
+    insert_decl(t,c->name,c->value.string);
     c = (SYMREC*) c->next;
   }
-  parent = (TABLE*) parent->parent;
 }
 
-SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd){
+SYMREC *css_decl_merge(SYMREC* decl, SYMREC* decls){
   SYMREC *declsHead;
   if(decl != 0) { 
     declsHead = decl;
     declsHead->next = 0;
 
-    if(declsProd > 0) {
-      declsHead->next = (struct SYMREC *) declsProd;
+    if(decl > 0) {
+      declsHead->next = (struct SYMREC *) decls;
     }
   } else {
-    declsHead = declsProd;
+    declsHead = decls;
   }
   return declsHead;
 }

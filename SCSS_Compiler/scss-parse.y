@@ -29,10 +29,10 @@ void yyerror (char const *message);
 
 %}
 
-// useful for syntax error debugging
+// more useful syntax error messages for the user
 %define parse.error verbose
 
-// here we define all the possible return values
+// all the possible return values
 %union {
         char* string;
         double number;
@@ -40,9 +40,9 @@ void yyerror (char const *message);
         TABLE *decls;
         SYMREC *decl;
         VAR_CONTENTS expression;
-       }
+}
 
-// here we define the tokens with its respective precedences
+// tokens and their respective precedences
 
 %token<string>    ID
 %token<number>    NUM
@@ -65,7 +65,7 @@ void yyerror (char const *message);
 %token            T_DIV
 %token            T_GT
 
-// here we define the type of non-terminals
+// here we define the return type of non-terminals
 
 %type <expression>   EXPR
 %type <expression>   SCALAR
@@ -81,11 +81,11 @@ void yyerror (char const *message);
 %type <string>       PARAMS
 %type <string>       COLORHEX
 
-//precedence rules
+// precedence rules
 %left T_MINUS T_PLUS
 %left T_STAR T_DIV
 
-//S is the starting symbol
+// S is the starting symbol
 %start S
 
 %%
@@ -135,7 +135,7 @@ PARAMS: T_COMMA EXPR PARAMS { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFE
   | {$$=""; /*epsilon*/}
   ;
 
-CSSRULE: SELECTORS  { cssrule_function_for_selectors($1); } T_BL DECLS T_BR {cssrule_function_for_decls($4);} 
+CSSRULE: SELECTORS  { css_decl_table_init($1); } T_BL DECLS T_BR { css_decl_insert_all(parent, $4); parent = (TABLE*) parent->parent; } 
   ;
 
 SELECTORS: SELECTOR PSEUDOCLASS RELATIONSHIP { $$ = selector_to_string($1, $2, $3); }
@@ -156,7 +156,7 @@ PSEUDOCLASS: PSEUDO { $$ = malloc(BUFFER_SIZE_SMALL); snprintf($$, BUFFER_SIZE_S
   | {$$=""; /*epsilon*/}
   ;
   
-DECLS: DECL DECLS { $$ = decls_function($1, $2); }
+DECLS: DECL DECLS { $$ = css_decl_merge($1, $2); }
   | {$$ = 0; /*epsilon*/}
   ;
   
@@ -166,37 +166,49 @@ DECL: ID T_COLON EXPR T_SEMICOLON { $$ = generate_decl($1, &$3);}
   ;
 %%
 
-SYMREC *sym_table = 0;
-TABLE *parent = 0;
-TABLES *root_nodes = 0;
-
 #include "lex.yy.c"
 
+/* 
+ * Global variables for the program 
+ */
+
+SYMREC *sym_table = 0;    // table for variables
+TABLE *parent = 0;        // pointer to "level" of current table in tree
+TABLES *root_nodes = 0;   // array of "root" nodes, that is, CSS rules/nodes with no parent
+
+/* 
+ * Custom error handler with line number
+ */
 void yyerror (char const *message){
   extern int yylineno;
   fprintf (stderr, "\n!!! ERROR at line %d: %s !!!\n  ", yylineno, message);
   fputc ('\n', stderr);
 }
 
-int main(int argc, char *argv[]) {      
-      root_nodes = malloc(sizeof(TABLES));
+/* 
+ * Entry point of application
+ */
 
- // command line interaction or "file in input" mode
+int main(int argc, char *argv[]) {
+  
+      root_nodes = malloc(sizeof(TABLES));
+      // either command line/Bash input, or input file as parameter
+
       if(argc < 2) {
-            printf("To exit at any time, press Ctrl+D (EOF).\n");
+            fprintf(stderr,"To exit at any time, press Ctrl+D (EOF).\n");
+            fprintf(stderr,"-------------------------------------------\n");
             return yyparse();
       } 
       else {
             FILE *fp = fopen(argv[1],"r");
             if(!fp) 
             {
-                  printf("Unable to open file for reading\n");
+                  printf("!!! ERROR: source file cannot be opened !!!\n");
                   exit(0);
             }
             yyin = fp;
             int flag = yyparse();
             fclose(yyin);
-            
             return flag;
       }
 }
