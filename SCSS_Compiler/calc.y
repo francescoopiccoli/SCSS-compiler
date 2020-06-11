@@ -2,18 +2,14 @@
 /** @file calc.y
  *  @brief Grammar rules for the scss compiler/preprocessor.
  *
- *  This contains the Grammar rules for the preprocessor 
- *  together with some rudimentary error handling and
- *  the main function which either prompts for input or
- *  parses a input file to the command line if given as 
+ *  This contains the Grammar rules for the preprocessor together with some rudimentary error handling and
+ *  the main function which either prompts for input or parses a input file to the command line if given as 
  *  argument. 
+
  *  @author Raffaele Tranquillini  <rtranquillini@unibz.it>
  *  @author Francesco Piccoli <fpiccoli@unibz.it> 
  */
 
-//BUGS
-// - prod di relationship
-// - numeri con - passati come identifier invece che come espressioni -> precedenza 
 
 #define YYERROR_VERBOSE 1
 #define BUFFER_SIZE_SMALL 128
@@ -180,7 +176,7 @@ void yyerror (char const *message){
 int main(int argc, char *argv[]) {      
       root_nodes = malloc(sizeof(TABLES));
 
- // command line interaction or file as input and file as output mode
+ // command line interaction or "file in input" mode
       if(argc < 2) {
             printf("To exit at any time, press Ctrl+D (EOF).\n");
             return yyparse();

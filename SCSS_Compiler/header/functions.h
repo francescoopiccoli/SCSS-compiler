@@ -17,7 +17,7 @@ void selectors_function(char* selectors, char* selector, char* pseudoclass, char
 void vardecl_function(VAR_CONTENTS v, SYMREC* s);
 void cssrule_function_for_selectors(char* selectors);
 void cssrule_function_for_decls(SYMREC* s);
-SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd); //dubbi se riscritta in modo corretto
+SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd);
 SYMREC* decl_function(char* id, VAR_CONTENTS* expr);
 
 void print_cssrule_function(){
@@ -46,7 +46,6 @@ void cssrule_function_for_selectors(char* sels){
 }
 
 void cssrule_function_for_decls(SYMREC* s){ 
-  // todo: serious logical bugs -> iteratively insert all of cur layers contents
   SYMREC *c = s;
   while(c != 0) {
     insert_decl(parent,c->name,c->value.string);
@@ -69,20 +68,6 @@ SYMREC *decls_function(SYMREC* decl, SYMREC* declsProd){
   }
   return declsHead;
 }
-/* decls_function prima era cosi, dubbi se riscritta in modo giusto
-DECLS: DECL DECLS {
-  if($1 != 0) { 
-    $$ = $1;
-    $$->next = 0;
-
-    if($2 > 0) {
-      $$->next = (struct SYMREC *) $2;
-    }
-  } else {
-    $$ = $2;
-  }
-}
-*/
 
 void selectors_function(char* selectors, char* selector, char* pseudoclass, char* relationship){
   char *s1 = malloc(BUFFER_SIZE_SMALL);
