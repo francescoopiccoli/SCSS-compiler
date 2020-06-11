@@ -20,7 +20,7 @@ all: clean .flex .yacc .gcc .cleanwd
 .gcc:
 	@echo "Compiling with GNU compiler..."
     #the - in front of command forces make to continue even with errors
-	gcc y.tab.c -ly -g -ggdb -o $(build_dir)/$(proj_name) 
+	gcc y.tab.c -lm -ly -g -ggdb -o $(build_dir)/$(proj_name) 
 
 
 .cleanwd:

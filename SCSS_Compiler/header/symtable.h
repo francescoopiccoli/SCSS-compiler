@@ -5,6 +5,7 @@
 #include <string.h>       // needed for strlen.
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 
 // variable type enumeration
 enum VAR_TYPE {
@@ -149,9 +150,11 @@ void print_variables ()
     if (ptr->type == VAR_SCALAR) {
       printf("%-10s","scalar");
       if(ptr->value.number == round(ptr->value.number)){
-      printf("%.0f%s", ptr->value.number, ptr->value.string);}
+        printf("%.0f%s", ptr->value.number, ptr->value.string);
+      }
       else{
-      printf("%.1f%s", ptr->value.number, ptr->value.string);}
+        printf("%.2f%s", ptr->value.number, ptr->value.string);
+      }
     }
     if (ptr->type == VAR_ATOM) {
       printf("%-10s","atom");
@@ -280,7 +283,12 @@ char* var_to_string(VAR_CONTENTS *v) {
       break;
     case VAR_SCALAR:
       ret = malloc(128);
-      snprintf(ret, 128, "%.2f%s", v->number, strdup(v->string));
+
+      if(v->number == round(v->number))
+        snprintf(ret, 128, "%.0f%s", v->number, strdup(v->string));
+      else
+        snprintf(ret, 128, "%.2f%s", v->number, strdup(v->string));
+      
   }
   return ret;
 }
